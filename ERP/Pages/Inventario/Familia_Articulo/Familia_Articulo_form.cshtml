@@ -1,48 +1,23 @@
 ﻿@page
-@model ERP.Pages.Empleado.Empleado_formModel
+@model ERP.Pages.Inventario.Familia_Articulo.Familia_Articulo_formModel
 @{
 }
 
 <body>
     <section class="form-register">
-        <h1>Nuevo Empleado</h1>
+        <h1>Familia de Articulo</h1>
         <form method="post" autocomplete="off">
 
-            <input class="controls" type="text" name="cedula" id="cedula" placeholder="Ingrese la cedula" required>
+            <input class="controls" type="text" name="nombre" id="nombre" placeholder="Ingrese el nombre" required>
 
-            <input class="controls" type="text" name="nombre" id="fecha_hora_final" placeholder="Ingrese el nombre" required>
+            <input class="controls" type="text" name="codigo" id="codigo" placeholder="Ingrese el codigo" required>
 
-            <input class="controls" type="text" name="apellido1" id="apellido1" placeholder="Ingrese el primer apellido" required>
+            <input class="controls" type="text" name="activo" id="activo" placeholder="Ingrese el activo" required>
 
-            <input class="controls" type="text" name="apellido2" id="apellido2" placeholder="Ingrese el segundo apellido" required>
+            <input class="controls" type="text" name="descripcion" id="descripcion" placeholder="Ingrese la descripcion" required>
 
-            <input class="controls" type="text" name="genero" id="genero" placeholder="Ingrese el genero" required>
+            <button type="submit" asp-page-handler="" class="buttoms">Registrar</button>
 
-            <input class="controls" type="text" name="nacimiento" id="nacimiento" placeholder="Ingrese la fecha de nacimiento" required>
-
-            <input class="controls" type="text" name="edad" id="edad" placeholder="Ingrese la edad" required>
-
-            <input class="controls" type="text" name="residencia" id="residencia" placeholder="Ingrese la residencia" required>
-
-            <input class="controls" type="text" name="telefono" id="telefono" placeholder="Ingrese el telefono" required>
-
-            <input class="controls" type="text" name="ingreso" id="ingreso" placeholder="Ingrese la fecha de ingreso" required>
-
-            <input class="controls" type="text" name="salario" id="salario" placeholder="Ingrese el salario" required>
-
-            <input class="controls" type="text" name="puesto" id="puesto" placeholder="Ingrese el puesto" required>
-
-            <input class="controls" type="text" name="departamento" id="departamento" placeholder="Ingrese el departamento" required>
-
-            <!-- Agregar el combobox para seleccionar el rol del empleado -->
-            <select class="controls" name="rol" id="rol" required>
-                <option value="">Seleccione el rol</option>
-                    <option value="Editor">Editor</option>
-                    <option value="Visualizador">Visualizador</option>
-                    <option value="Reportero">Reportero</option>
-            </select>
-
-            <button type="submit" asp-page-handler="Registrar_actividad" class="buttoms">Registrar</button>
         </form>
     </section>
 </body>
