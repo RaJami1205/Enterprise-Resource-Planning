@@ -1,36 +1,30 @@
 ﻿@page
-@model ERP.Pages.Inventario.Articulo.Articulo_formModel
+@model ERP.Pages.Inventario.Entrada.Entrada_formModel
 @{
 }
 
 <body>
     <section class="form-register">
-        <h1>Articulo</h1>
+        <h1>Entrada</h1>
         <form method="post" autocomplete="off">
+
+            <input class="controls" type="date" name="fecha_hora" id="fecha_hora" placeholder="Ingrese la fecha" required>
 
             <input class="controls" type="text" name="nombre" id="nombre" placeholder="Ingrese el nombre" required>
 
-            <input class="controls" type="text" name="codigo" id="codigo" placeholder="Ingrese el codigo" required>
+            <input class="controls" type="text" name="ubicacion" id="ubicacion" placeholder="Ingrese la ubicacion" required>
 
-            <input class="controls" type="text" name="activo" id="activo" placeholder="Ingrese el activo" required>
+            <input class="controls" type="text" name="capacidad" id="capacidad" placeholder="Ingrese la capacidad en toneladas" required>
 
-            <input class="controls" type="text" name="descripcion" id="descripcion" placeholder="Ingrese la descripcion" required>
-
-            <input class="controls" type="text" name="descripcion" id="descripcion" placeholder="Ingrese la descripcion" required>
+            <input class="controls" type="text" name="espacio" id="espacio" placeholder="Ingrese el espacio cubico" required>
 
             <input class="controls" type="text" name="descripcion" id="descripcion" placeholder="Ingrese la descripcion" required>
 
             <!-- Agregar el combobox para seleccionar el código de departamento -->
             <select class="controls" name="familia" id="familia" required>
                 <option value="">Seleccione una familia</option>
-                <option value ="Familia de Articulos">Familia de Articulos</option>
+                <option value="Familia de Articulos">Familia de Articulos</option>
             </select>
-
-            <input class="controls" type="text" name="peso" id="peso" placeholder="Ingrese el peso" required>
-
-            <input class="controls" type="text" name="costo" id="costo" placeholder="Ingrese el costo" required>
-
-            <input class="controls" type="text" name="precio_estandar" id="precio_estandar" placeholder="Ingrese el precio estandar" required>
 
             <button type="submit" asp-page-handler="" class="buttoms">Registrar</button>
 
