@@ -1,28 +1,30 @@
 ﻿@page
-@model ERP.Pages.Inventario.Menu_InventarioModel
+@model ERP.Pages.Cliente.Cliente_view.Cliente_view_formModel
 @{
 }
 
 <body>
     <section class="form-register">
-        <h1>Menú Inventario</h1>
+        <h1>Cliente</h1>
         <form method="post" autocomplete="off">
 
-            <a class="btn btn-primary btn-lg" href="/Inventario/Articulo/Articulo_list">Articulo</a>
+            <input class="controls" type="text" name="cedula" id="cedula" placeholder="Ingrese la cedula física o jurídica" required>
 
-            <a class="btn btn-primary btn-lg" href="/Inventario/Familia_Articulo/Familia_Articulo_list">Familia de Articulos</a>
+            <input class="controls" type="text" name="nombre" id="nombre" placeholder="Ingrese el nombre" required>
 
-            <a class="btn btn-primary btn-lg" href="/Inventario/Bodega/Bodega_list">Bodega</a>
+            <input class="controls" type="text" name="correo" id="correo" placeholder="Ingrese el correo" required>
 
-            <a class="btn btn-primary btn-lg" href="/Inventario/Reporte/Reporte_Articulo">Reporte de Articulos</a>
+            <input class="controls" type="text" name="telefono" id="telefono" placeholder="Ingrese el telefono" required>
 
-            <a class="btn btn-primary btn-lg" href="/Inventario/Reporte/Reporte_Bodega">Reporte de Bodegas</a>
+            <input class="controls" type="text" name="celular" id="celular" placeholder="Ingrese el celular" required>
 
-            <a class="btn btn-primary btn-lg" href="/Inventario/Reporte/Reporte_Bodega">Reporte de Salidas</a>
+            <input class="controls" type="text" name="fax" id="fax" placeholder="Ingrese el fax" required>
 
-            <a class="btn btn-primary btn-lg" href="/Inventario/Entrada/Entrada_list">Entrada de Articulos</a>
+            <input class="controls" type="text" name="zona" id="zona" placeholder="Ingrese la zona de ubicación" required>
 
-            <a class="btn btn-primary btn-lg" href="/Inventario/Movimiento/Movimiento_list">Movimiento de Bodegas</a>
+            <input class="controls" type="text" name="sector" id="sector" placeholder="Ingrese el sector industrial" required>
+
+            <button type="submit" asp-page-handler="" class="buttoms">Registrar</button>
 
         </form>
     </section>
@@ -69,7 +71,7 @@
     }
 
     /* Estilo para el botón de enviar del formulario */
-    .btn {
+    .buttoms {
         width: 100%; /* Ancho completo del botón */
         background: #1f53c5; /* Color de fondo del botón */
         border: none; /* Sin borde para el botón */

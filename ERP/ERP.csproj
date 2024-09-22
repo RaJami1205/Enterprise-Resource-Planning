@@ -6,4 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Pages\Cliente\Reporte\" />
+    <Folder Include="Pages\Planilla\" />
+  </ItemGroup>
+
 </Project>
