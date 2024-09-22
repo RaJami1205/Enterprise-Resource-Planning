@@ -1,23 +1,20 @@
 ﻿@page
-@model ERP.Pages.Inventario.Familia_Articulo.Familia_Articulo_formModel
+@model ERP.Pages.Empleado.Modulo_Venta.Modulo_Venta_formModel
 @{
 }
 
 <body>
     <section class="form-register">
-        <h1>Familia de Articulo</h1>
+        <h1>Vendedor</h1>
         <form method="post" autocomplete="off">
 
-            <input class="controls" type="text" name="nombre" id="nombre" placeholder="Ingrese el nombre" required>
+            <!-- Agregar el combobox para seleccionar el empleado vendedor -->
+            <select class="controls" name="vendedor" id="vendedor" required>
+                <option value="">Seleccione la cedula del empleado</option>
+                <option value="Editor">Empleados</option>
+            </select>
 
-            <input class="controls" type="text" name="codigo" id="codigo" placeholder="Ingrese el codigo" required>
-
-            <input class="controls" type="text" name="activo" id="activo" placeholder="Ingrese el activo" required>
-
-            <input class="controls" type="text" name="descripcion" id="descripcion" placeholder="Ingrese la descripcion" required>
-
-            <button type="submit" asp-page-handler="" class="buttoms">Registrar</button>
-
+            <button type="submit" asp-page-handler="Registrar_actividad" class="buttoms">Aprobar</button>
         </form>
     </section>
 </body>

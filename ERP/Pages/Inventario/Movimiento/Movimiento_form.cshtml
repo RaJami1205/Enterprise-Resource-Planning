@@ -1,20 +1,40 @@
 ﻿@page
-@model ERP.Pages.Inventario.Familia_Articulo.Familia_Articulo_formModel
+@model ERP.Pages.Inventario.Movimiento.Movimiento_formModel
 @{
 }
 
 <body>
     <section class="form-register">
-        <h1>Familia de Articulo</h1>
+        <h1>Movimiento</h1>
         <form method="post" autocomplete="off">
 
-            <input class="controls" type="text" name="nombre" id="nombre" placeholder="Ingrese el nombre" required>
+            <input class="controls" type="date" name="fecha_hora" id="fecha_hora" required>
 
-            <input class="controls" type="text" name="codigo" id="codigo" placeholder="Ingrese el codigo" required>
+            <!-- Agregar el combobox para seleccionar la cedula del empleado -->
+            <select class="controls" name="cedula_empleado" id="cedula_empleado" required>
+                <option value="">Seleccione un empleado</option>
+                <option value="cedulas">Lista de Cedulas de Empleados</option>
+            </select>
 
-            <input class="controls" type="text" name="activo" id="activo" placeholder="Ingrese el activo" required>
+            <!-- Agregar el combobox para seleccionar el código de la bodega origen -->
+            <select class="controls" name="bodega_origen" id="bodega_origen" required>
+                <option value="">Seleccione la bodega de origen</option>
+                <option value="bodega_origen">Bodegas</option>
+            </select>
 
-            <input class="controls" type="text" name="descripcion" id="descripcion" placeholder="Ingrese la descripcion" required>
+            <!-- Agregar el combobox para seleccionar el código de la bodega destino -->
+            <select class="controls" name="bodega_destino" id="bodega_destino" required>
+                <option value="">Seleccione la bodega de destino</option>
+                <option value="bodega_destino">Bodegas</option>
+            </select>
+
+            <!-- Agregar el combobox para seleccionar el código del artículo -->
+            <select class="controls" name="codigo_articulo" id="codigo_articulo" required>
+                <option value="">Seleccione el codigo de articulo</option>
+                <option value="codigo_destino">articulos</option>
+            </select>
+
+            <input class="controls" type="text" name="cantidad" id="cantidad" placeholder="Ingrese la cantidad a movilizar" required>
 
             <button type="submit" asp-page-handler="" class="buttoms">Registrar</button>
 

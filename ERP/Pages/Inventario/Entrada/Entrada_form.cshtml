@@ -8,23 +8,27 @@
         <h1>Entrada</h1>
         <form method="post" autocomplete="off">
 
-            <input class="controls" type="date" name="fecha_hora" id="fecha_hora" placeholder="Ingrese la fecha" required>
+            <input class="controls" type="date" name="fecha_hora" id="fecha_hora" required>
 
-            <input class="controls" type="text" name="nombre" id="nombre" placeholder="Ingrese el nombre" required>
-
-            <input class="controls" type="text" name="ubicacion" id="ubicacion" placeholder="Ingrese la ubicacion" required>
-
-            <input class="controls" type="text" name="capacidad" id="capacidad" placeholder="Ingrese la capacidad en toneladas" required>
-
-            <input class="controls" type="text" name="espacio" id="espacio" placeholder="Ingrese el espacio cubico" required>
-
-            <input class="controls" type="text" name="descripcion" id="descripcion" placeholder="Ingrese la descripcion" required>
-
-            <!-- Agregar el combobox para seleccionar el código de departamento -->
-            <select class="controls" name="familia" id="familia" required>
-                <option value="">Seleccione una familia</option>
-                <option value="Familia de Articulos">Familia de Articulos</option>
+            <!-- Agregar el combobox para seleccionar la cedula del empleado -->
+            <select class="controls" name="cedula_empleado" id="cedula_empleado" required>
+                <option value="">Seleccione un empleado</option>
+                <option value="cedulas">Lista de Cedulas de Empleados</option>
             </select>
+
+            <!-- Agregar el combobox para seleccionar el código de la bodega destino -->
+            <select class="controls" name="bodega_destino" id="bodega_destino" required>
+                <option value="">Seleccione la bodega de destino</option>
+                <option value="bodega_destino">Bodegas</option>
+            </select>
+
+            <!-- Agregar el combobox para seleccionar el código del artículo -->
+            <select class="controls" name="codigo_articulo" id="codigo_articulo" required>
+                <option value="">Seleccione el codigo de articulo</option>
+                <option value="codigo_destino">articulos</option>
+            </select>
+
+            <input class="controls" type="text" name="cantidad" id="cantidad" placeholder="Ingrese la cantidad a entregar" required>
 
             <button type="submit" asp-page-handler="" class="buttoms">Registrar</button>
 
@@ -43,7 +47,7 @@
 
     /* Estilo para el fondo del cuerpo de la página */
     body {
-        background: #f9f4a7;
+        background: linear-gradient(130deg, blue, skyblue);
     }
 
     /* Estilo para la sección del formulario de registro */

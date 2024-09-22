@@ -1,20 +1,28 @@
 ﻿@page
-@model ERP.Pages.Inventario.Familia_Articulo.Familia_Articulo_formModel
+@model ERP.Pages.Empleado.Historico_Salario.Historico_Salario_formModel
 @{
 }
 
 <body>
     <section class="form-register">
-        <h1>Familia de Articulo</h1>
+        <h1>Historico de Salario</h1>
         <form method="post" autocomplete="off">
 
-            <input class="controls" type="text" name="nombre" id="nombre" placeholder="Ingrese el nombre" required>
+            <input class="controls" type="date" name="fecha_inicio" id="fecha_inicio" required>
 
-            <input class="controls" type="text" name="codigo" id="codigo" placeholder="Ingrese el codigo" required>
+            <input class="controls" type="date" name="fecha_final" id="fecha_final" required>
 
-            <input class="controls" type="text" name="activo" id="activo" placeholder="Ingrese el activo" required>
+            <input class="controls" type="text" name="nombre_puesto" id="nombre_puesto" placeholder="Ingrese el nombre del puesto" required>
 
-            <input class="controls" type="text" name="descripcion" id="descripcion" placeholder="Ingrese la descripcion" required>
+            <input class="controls" type="text" name="nombre_departamento" id="nombre_departamento" placeholder="Ingrese el nombre del departamento" required>
+
+            <input class="controls" type="text" name="monto" id="monto" placeholder="Ingrese el monto del salario" required>
+
+            <!-- Agregar el combobox para seleccionar la cedula del empleado -->
+            <select class="controls" name="empleado" id="empleado" required>
+                <option value="">Seleccione una familia</option>
+                <option value="cedulas">Lista de Cedulas de Empleados</option>
+            </select>
 
             <button type="submit" asp-page-handler="" class="buttoms">Registrar</button>
 
