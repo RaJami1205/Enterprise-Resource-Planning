@@ -7,8 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\Caso\Caso_view\" />
-    <Folder Include="Pages\Caso\Reporte\" />
     <Folder Include="Pages\Planilla\" />
   </ItemGroup>
 

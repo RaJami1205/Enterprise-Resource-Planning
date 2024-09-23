@@ -1,16 +1,48 @@
 ﻿@page
-@model ERP.Pages.Caso.Menu_CasoModel
+@model ERP.Pages.Caso.Caso_view.Caso_view_formModel
 @{
 }
 
 <body>
     <section class="form-register">
-        <h1>Menú Caso</h1>
+        <h1>Caso</h1>
         <form method="post" autocomplete="off">
 
-            <a class="btn btn-primary btn-lg" href="/Caso/Caso_view/Caso_view_list">Caso</a>
+            <!-- Agregar el combobox para seleccionar el propietario -->
+            <select class="controls" name="propietario" id="propietario" required>
+                <option value="propietario">Seleccione un propietario</option>
+                <option value="propietario">Lista de Propietarios</option>
+            </select>
 
-            <a class="btn btn-primary btn-lg" href="/Caso/Reporte/Menu_reporte">Reportes</a>
+            <!-- Agregar el combobox para seleccionar el origen -->
+            <select class="controls" name="origen" id="origen" required>
+                <option value="origen">Seleccione un origen de Factura o Cotización</option>
+                <option value="origen">Lista de Facturas y Cotizaciones</option>
+            </select>
+
+            <input class="controls" type="text" name="nombre_cuenta" id="nombre_cuenta" placeholder="Ingrese el nombre de la cuenta" required>
+
+            <input class="controls" type="text" name="nombre_contacto" id="nombre_contacto" placeholder="Ingrese el nombre de contacto" required>
+
+            <input class="controls" type="text" name="asunto" id="asunto" placeholder="Ingrese el asunto" required>
+
+            <input class="controls" type="text" name="direccion" id="direccion" placeholder="Ingrese la direccion" required>
+
+            <input class="controls" type="text" name="descripcion" id="descripcion" placeholder="Ingrese la descripcion" required>
+
+            <!-- Agregar el combobox para seleccionar el estado -->
+            <select class="controls" name="estado" id="estado" required>
+                <option value="estado">Seleccione un estado</option>
+                <option value="estado">Activo</option>
+                <option value="estado">Rechazado</option>
+                <option value="estado">En Espera</option>
+            </select>
+
+            <input class="controls" type="text" name="tipo" id="tipo" placeholder="Ingrese el tipo" required>
+
+            <input class="controls" type="text" name="prioridad" id="prioridad" placeholder="Ingrese la prioridad" required>
+
+            <button type="submit" asp-page-handler="" class="buttoms">Registrar</button>
 
         </form>
     </section>
@@ -57,7 +89,7 @@
     }
 
     /* Estilo para el botón de enviar del formulario */
-    .btn {
+    .buttoms {
         width: 100%; /* Ancho completo del botón */
         background: #1f53c5; /* Color de fondo del botón */
         border: none; /* Sin borde para el botón */
