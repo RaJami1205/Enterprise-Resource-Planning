@@ -1,36 +1,54 @@
 ﻿@page
-@model ERP.Pages.Inventario.Entrada.Entrada_formModel
+@model ERP.Pages.Factura.Factura_view.Factura_formModel
 @{
 }
 
 <body>
     <section class="form-register">
-        <h1>Entrada</h1>
+        <h1>Factura</h1>
         <form method="post" autocomplete="off">
 
-            <input class="controls" type="date" name="fecha_hora" id="fecha_hora" required>
+            <input class="controls" type="text" name="numero" id="numero" placeholder="Ingrese el número" required>
 
-            <!-- Agregar el combobox para seleccionar la cedula del empleado -->
-            <select class="controls" name="cedula_empleado" id="cedula_empleado" required>
-                <option value="cedula">Seleccione un empleado</option>
-                <option value="cedula">Lista de Cedulas de Empleados</option>
+            <input class="controls" type="text" name="nombre_local" id="nombre_local" placeholder="Ingrese el nombre del local" required>
+
+            <input class="controls" type="text" name="cedula_local" id="cedula_local" placeholder="Ingrese la cedula jurídica del local" required>
+
+            <input class="controls" type="text" name="telefono_local" id="telefono_local" placeholder="Ingrese el telefono del local" required>
+
+            <!-- Agregar el combobox para seleccionar el cliente -->
+            <select class="controls" name="cliente" id="cliente" required>
+                <option value="cliente">Seleccione el cliente</option>
+                <option value="cliente">Lista de Clientes</option>
             </select>
 
-            <!-- Agregar el combobox para seleccionar el código de la bodega destino -->
-            <select class="controls" name="bodega_destino" id="bodega_destino" required>
-                <option value="bodega_destino">Seleccione la bodega de destino</option>
-                <option value="bodega_destino">Lista de Bodegas</option>
+            <!-- Agregar el combobox para seleccionar la cotización -->
+            <select class="controls" name="cotizacion" id="cotizacion" required>
+                <option value="cotizacion">Seleccione la cotizacion</option>
+                <option value="cotizacion">Lista de cotizaciones</option>
             </select>
 
-            <!-- Agregar el combobox para seleccionar el código del artículo -->
-            <select class="controls" name="codigo_articulo" id="codigo_articulo" required>
-                <option value="articulo">Seleccione el codigo de articulo</option>
-                <option value="articulo">Lista de Articulos</option>
+            <!-- Agregar el combobox para seleccionar el vendedor -->
+            <select class="controls" name="vendedor" id="vendedor" required>
+                <option value="vendedor">Seleccione el vendedor</option>
+                <option value="vendedor">Lista de vendedores</option>
             </select>
 
-            <input class="controls" type="text" name="cantidad" id="cantidad" placeholder="Ingrese la cantidad a entregar" required>
+            <input class="controls" type="date" name="fecha" id="fecha" required>
 
-            <button type="submit" asp-page-handler="" class="buttoms">Registrar</button>
+            <!-- Agregar el combobox para seleccionar el estado -->
+            <select class="controls" name="estado" id="estado" required>
+                <option value="estado">Seleccione el estado</option>
+            </select>
+
+            <!-- Agregar el combobox para seleccionar el articulo -->
+            <select class="controls" name="articulo" id="articulo" required>
+                <option value="articulo">Seleccione el articulo</option>
+            </select>
+
+            <input class="controls" type="text" name="cantidad" id="cantidad" placeholder="Ingrese la cantidad de articulos" required>
+
+            <button type="submit" asp-page-handler="" class="buttoms">Facturar</button>
 
         </form>
     </section>

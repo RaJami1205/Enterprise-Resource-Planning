@@ -1,36 +1,16 @@
 ﻿@page
-@model ERP.Pages.Inventario.Entrada.Entrada_formModel
+@model ERP.Pages.Cotizacion.Menu_CotizacionModel
 @{
 }
 
 <body>
     <section class="form-register">
-        <h1>Entrada</h1>
+        <h1>Menú Cotizacion</h1>
         <form method="post" autocomplete="off">
 
-            <input class="controls" type="date" name="fecha_hora" id="fecha_hora" required>
+            <a class="btn btn-primary btn-lg" href="/Cotizacion/Cotizacion_view/Cotizacion_view_list">Cotizacion</a>
 
-            <!-- Agregar el combobox para seleccionar la cedula del empleado -->
-            <select class="controls" name="cedula_empleado" id="cedula_empleado" required>
-                <option value="cedula">Seleccione un empleado</option>
-                <option value="cedula">Lista de Cedulas de Empleados</option>
-            </select>
-
-            <!-- Agregar el combobox para seleccionar el código de la bodega destino -->
-            <select class="controls" name="bodega_destino" id="bodega_destino" required>
-                <option value="bodega_destino">Seleccione la bodega de destino</option>
-                <option value="bodega_destino">Lista de Bodegas</option>
-            </select>
-
-            <!-- Agregar el combobox para seleccionar el código del artículo -->
-            <select class="controls" name="codigo_articulo" id="codigo_articulo" required>
-                <option value="articulo">Seleccione el codigo de articulo</option>
-                <option value="articulo">Lista de Articulos</option>
-            </select>
-
-            <input class="controls" type="text" name="cantidad" id="cantidad" placeholder="Ingrese la cantidad a entregar" required>
-
-            <button type="submit" asp-page-handler="" class="buttoms">Registrar</button>
+            <a class="btn btn-primary btn-lg" href="/Cotizacion/Reporte/Menu_reporte">Reportes</a>
 
         </form>
     </section>
@@ -77,7 +57,7 @@
     }
 
     /* Estilo para el botón de enviar del formulario */
-    .buttoms {
+    .btn {
         width: 100%; /* Ancho completo del botón */
         background: #1f53c5; /* Color de fondo del botón */
         border: none; /* Sin borde para el botón */
