@@ -13,9 +13,9 @@ go
 /* Tabla para almacenar información de los empleados */
 CREATE TABLE Empleado (
     cedula INT PRIMARY KEY NOT NULL, /* Identificador único del empleado */
-    nombre VARCHAR(255) NOT NULL, /* Nombre del empleado */
-    apellido1 VARCHAR(255) NOT NULL, /* Primer apellido del empleado */
-    apellido2 VARCHAR(255) NOT NULL, /* Segundo apellido del empleado */
+    nombre VARCHAR(25) NOT NULL, /* Nombre del empleado */
+    apellido1 VARCHAR(25) NOT NULL, /* Primer apellido del empleado */
+    apellido2 VARCHAR(25) NOT NULL, /* Segundo apellido del empleado */
     fecha_nacimiento DATE NOT NULL, /* Fecha de nacimiento del empleado */
     genero VARCHAR(50) NOT NULL, /* Género del empleado (Masculino, Femenino, Otro) */
 	edad INT NOT NULL, /* Edad del empleado (entre 18 y 80 años) */
@@ -23,7 +23,7 @@ CREATE TABLE Empleado (
     departamento VARCHAR(25) NOT NULL, /* Departamento al que pertenece el empleado */
     permiso_vendedor VARCHAR(20) NOT NULL, /* Permiso de vendedor (Con permiso, Sin permiso) */
     numero_telefono INT NOT NULL, /* Número de teléfono del empleado */
-    salario_actual INT NOT NULL, /* Salario actual del empleado */
+    salario_actual DECIMAL(10,2) NOT NULL, /* Salario actual del empleado */
 	puesto VARCHAR(40) NOT NULL, /* Puesto que ocupa el empleado */
 	CONSTRAINT chk_genero CHECK (genero IN ('Masculino', 'Femenino', 'Otro')), /* Restricción para validar el género */
 	CONSTRAINT chk_permisos_vendedor CHECK (permiso_vendedor IN ('Con permiso', 'Sin permiso')), /* Validación para permisos de vendedor */
@@ -79,20 +79,20 @@ CREATE TABLE Salario (
 /* Tabla para almacenar las familias de productos en el inventario */
 CREATE TABLE Familia (
     codigo INT PRIMARY KEY, /* Código único de la familia */
-    nombre VARCHAR(255) NOT NULL, /* Nombre de la familia */
+    nombre VARCHAR(25) NOT NULL, /* Nombre de la familia */
     descripcion VARCHAR(255) NOT NULL /* Descripción de la familia */
 );
 
 /* Tabla para almacenar los artículos en el inventario */
 CREATE TABLE Articulo (
     codigo INT PRIMARY KEY, /* Código único del artículo */
-    nombre VARCHAR(255) NOT NULL, /* Nombre del artículo */
+    nombre VARCHAR(25) NOT NULL, /* Nombre del artículo */
     cantidad INT NOT NULL, /* Cantidad en inventario */
 	activo VARCHAR(50) NOT NULL, /* Estado del artículo (Activo/Inactivo) */
     descripcion VARCHAR(255) NOT NULL, /* Descripción del artículo */
-    peso INT NOT NULL, /* Peso del artículo */
-	costo INT NOT NULL, /* Costo del artículo */
-    precio_estandar INT NOT NULL, /* Precio estándar del artículo */
+    peso DECIMAL(10,2) NOT NULL, /* Peso del artículo */
+	costo DECIMAL(10,2) NOT NULL, /* Costo del artículo */
+    precio_estandar DECIMAL(10,2) NOT NULL, /* Precio estándar del artículo */
     codigo_familia INT NOT NULL, /* Código de la familia a la que pertenece el artículo */
     FOREIGN KEY (codigo_familia) REFERENCES Familia(codigo) /* Llave foránea a la tabla Familia */
 );
@@ -101,7 +101,7 @@ CREATE TABLE Articulo (
 CREATE TABLE Bodega (
     codigo_bodega INT PRIMARY KEY, /* Código único de la bodega */
     numero INT NOT NULL, /* Número de identificación de la bodega */
-    ubicacion VARCHAR(255) NOT NULL, /* Ubicación de la bodega */
+    ubicacion VARCHAR(25) NOT NULL, /* Ubicación de la bodega */
     capacidad INT NOT NULL, /* Capacidad total de la bodega */
 	espacio_cubico DECIMAL(10,2) /* Espacio cúbico disponible en la bodega */
 );
@@ -129,7 +129,7 @@ CREATE TABLE BodegaArticulo (
 CREATE TABLE Entrada (
     fecha_hora DATETIME NOT NULL, /* Fecha y hora de la entrada */
     cantidad INT NOT NULL, /* Cantidad de productos ingresados */
-    precio INT NOT NULL, /* Precio total de la entrada */
+    precio DECIMAL(10,2) NOT NULL, /* Precio total de la entrada */
     codigo_bodega INT NOT NULL, /* Código de la bodega donde ingresan los productos */
     cedula_administrador INT NOT NULL, /* Cédula del administrador responsable */
 	PRIMARY KEY(fecha_hora,cedula_administrador,codigo_bodega), /* Llave primaria compuesta */
@@ -143,7 +143,6 @@ CREATE TABLE EntradaArticulo (
 	codigo_bodega INT NOT NULL, /* Código de la bodega */
     cedula_administrador INT NOT NULL, /* Cédula del administrador */
 	codigo_articulo INT NOT NULL, /* Código del artículo ingresado */
-	cantidad INT NOT NULL, /* Cantidad del artículo ingresado */
 	PRIMARY KEY(fecha_hora_entrada,cedula_administrador,codigo_bodega,codigo_articulo), /* Llave primaria compuesta */
     FOREIGN KEY(fecha_hora_entrada,cedula_administrador,codigo_bodega) REFERENCES Entrada(fecha_hora,cedula_administrador,codigo_bodega), /* Llave foránea a Entrada */
 	FOREIGN KEY(codigo_articulo) REFERENCES Articulo(codigo) /* Llave foránea a Artículo */
@@ -169,7 +168,6 @@ CREATE TABLE MovimientoArticulo (
     codigo_bodega_origen INT NOT NULL, /* Bodega de origen */
     codigo_bodega_destino INT NOT NULL, /* Bodega de destino */
 	codigo_articulo INT NOT NULL, /* Código del artículo */
-	cantidad INT NOT NULL, /* Cantidad del artículo */
 	PRIMARY KEY(fecha_hora_movimiento,cedula_administrador,codigo_bodega_origen, codigo_bodega_destino,codigo_articulo), /* Llave primaria compuesta */
     FOREIGN KEY (fecha_hora_movimiento,cedula_administrador,codigo_bodega_origen, codigo_bodega_destino) REFERENCES Movimiento(fecha_hora,cedula_administrador,codigo_bodega_origen, codigo_bodega_destino), /* Llave foránea a Movimiento */
 	FOREIGN KEY (codigo_articulo) REFERENCES Articulo(codigo) /* Llave foránea a Artículo */
@@ -275,6 +273,8 @@ CREATE TABLE Factura (
 CREATE TABLE FacturaArticulo (
     num_facturacion INT NOT NULL, /* Número de la factura */
     codigo_articulo INT NOT NULL, /* Código del artículo */
+	cantidad INT NOT NULL, /* Cantidad de articulos*/
+	monto DECIMAL(10,2) NOT NULL, /*Monto del articulo*/
     FOREIGN KEY (num_facturacion) REFERENCES Factura(num_facturacion), /* Llave foránea a Factura */
 	FOREIGN KEY (codigo_articulo) REFERENCES Articulo(codigo) /* Llave foránea a Artículo */
 );
@@ -295,6 +295,7 @@ CREATE TABLE Caso (
 	origen_cotizacion INT, /* Referencia a la cotización de origen, si aplica */
     origen_factura INT, /* Referencia a la factura de origen, si aplica */
 
+	FOREIGN KEY (cedula_propietario) REFERENCES Empleado(cedula),
     FOREIGN KEY (origen_cotizacion) REFERENCES Cotizacion(num_cotizacion), /* Llave foránea a Cotización */
     FOREIGN KEY (origen_factura) REFERENCES Factura(num_facturacion), /* Llave foránea a Factura */
     CONSTRAINT chk_origen CHECK ((origen_cotizacion IS NOT NULL AND origen_factura IS NULL) OR (origen_cotizacion IS NULL AND origen_factura IS NOT NULL)) /* Validación para evitar referencias simultáneas a cotización y factura */
@@ -302,6 +303,7 @@ CREATE TABLE Caso (
 
 /* Tabla para registrar las tareas asociadas a los casos */
 CREATE TABLE TareaCaso (
+	codigo_tarea INT PRIMARY KEY, /*Código de la tarea*/
 	codigo_caso INT NOT NULL, /* Código del caso asociado */
 	fecha DATE NOT NULL, /* Fecha de la tarea */
 	descripcion VARCHAR(255) NOT NULL, /* Descripción de la tarea */
