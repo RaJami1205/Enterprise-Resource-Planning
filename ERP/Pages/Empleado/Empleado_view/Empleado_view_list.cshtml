@@ -15,7 +15,26 @@
             <th>Apellido 2</th>
             <th>Puesto</th>
             <th>Departamento</th>
-            <th>Rol</th>
+            <th>Vendedor</th>
+            <th>Accion</th>
         </tr>
     </thead>
+    <tbody>
+        @foreach (var item in Model.listaEmpleados)
+        {
+            <tr>
+                <td>@item.cedula</td>
+                <td>@item.nombre</td>
+                <td>@item.apellido1</td>
+                <td>@item.apellido2</td>
+                <td>@item.puesto</td>
+                <td>@item.departamento</td>
+                <td>@item.permiso_vendedor</td>
+                <td>
+                    <a class="btn btn-primary btn-sm">Editar</a>
+                    <a class="btn btn-primary btn-danger btn-sm">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
