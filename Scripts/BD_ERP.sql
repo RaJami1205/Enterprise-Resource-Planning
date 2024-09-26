@@ -19,6 +19,7 @@ CREATE TABLE Empleado (
     fecha_nacimiento DATE NOT NULL, /* Fecha de nacimiento del empleado */
     genero VARCHAR(50) NOT NULL, /* Género del empleado (Masculino, Femenino, Otro) */
 	edad INT NOT NULL, /* Edad del empleado (entre 18 y 80 años) */
+	residencia VARCHAR(80) NOT NULL, /* Lugar en el que reside*/
 	fecha_ingreso DATE NOT NULL, /* Fecha en que ingresó a la empresa */
     departamento VARCHAR(25) NOT NULL, /* Departamento al que pertenece el empleado */
     permiso_vendedor VARCHAR(20) NOT NULL, /* Permiso de vendedor (Con permiso, Sin permiso) */
@@ -63,7 +64,7 @@ CREATE TABLE HistoricoPuesto (
 );
 
 /* Tabla para almacenar los pagos de salarios mensuales de los empleados */
-CREATE TABLE Salario (
+CREATE TABLE SalarioMensual (
 	anno INT NOT NULL, /* Año del pago */
 	mes INT NOT NULL, /* Mes del pago (1-12) */
     pago DECIMAL(10,2) NOT NULL, /* Monto del pago */
@@ -80,6 +81,7 @@ CREATE TABLE Salario (
 CREATE TABLE Familia (
     codigo INT PRIMARY KEY, /* Código único de la familia */
     nombre VARCHAR(25) NOT NULL, /* Nombre de la familia */
+	activo VARCHAR(25) NOT NULL, /*Nombre del activo*/
     descripcion VARCHAR(255) NOT NULL /* Descripción de la familia */
 );
 
@@ -197,11 +199,8 @@ CREATE TABLE SalidaArticulo (
 -----------MODULO CLIENTE------------
 /* Tabla para gestionar la información de los clientes */
 CREATE TABLE Cliente (
-    cedula INT PRIMARY KEY, /* Cédula del cliente */
+    cedula_juridica INT PRIMARY KEY, /* Cédula Juridica del cliente */
     nombre VARCHAR(255) NOT NULL, /* Nombre del cliente */
-    apellido1 VARCHAR(255) NOT NULL, /* Primer apellido del cliente */
-    apellido2 VARCHAR(255) NOT NULL, /* Segundo apellido del cliente */
-    correo VARCHAR(255) NOT NULL, /* Correo electrónico del cliente */
 	telefono INT NOT NULL, /* Teléfono del cliente */
 	celular INT NOT NULL, /* Celular del cliente */
 	fax VARCHAR(50) NOT NULL, /* Fax del cliente */
@@ -228,7 +227,7 @@ CREATE TABLE Cotizacion (
 	razon_negacion VARCHAR(255) NOT NULL, /* Razón de negación si corresponde */
 	cedula_cliente INT NOT NULL, /* Cédula del cliente */
     FOREIGN KEY (cedula_vendedor) REFERENCES Empleado(cedula), /* Llave foránea a Empleado */
-	FOREIGN KEY (cedula_cliente) REFERENCES Cliente(cedula), /* Llave foránea a Cliente */
+	FOREIGN KEY (cedula_cliente) REFERENCES Cliente(cedula_juridica), /* Llave foránea a Cliente */
 	CONSTRAINT chk_mes_cierre CHECK (mes_cierre BETWEEN 1 AND 12), /* Validación del mes de cierre */
     CONSTRAINT chk_estado CHECK (estado IN ('abierta', 'aprobada', 'denegada')), /* Validación del estado de la cotización */
 	CONSTRAINT chk_probabilidad CHECK (probabilidad >= 1.00 AND probabilidad <= 100.00) /* Validación de probabilidad de éxito */
@@ -264,9 +263,8 @@ CREATE TABLE Factura (
 	fecha DATE NOT NULL, /* Fecha de emisión de la factura */
     estado VARCHAR(60) NOT NULL, /* Estado de la factura (pagada, pendiente, etc.) */
     cedula_vendedor INT NOT NULL, /* Cédula del vendedor */
-    cedula_cliente INT NOT NULL, /* Cédula del cliente */
     FOREIGN KEY (cedula_vendedor) REFERENCES Empleado(cedula), /* Llave foránea a Empleado */
-    FOREIGN KEY (cedula_cliente) REFERENCES Cliente(cedula) /* Llave foránea a Cliente */
+    FOREIGN KEY (cedula_juridica) REFERENCES Cliente(cedula_juridica) /* Llave foránea a Cliente */
 );
 
 /* Tabla que asocia artículos con facturas */
