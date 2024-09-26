@@ -201,6 +201,7 @@ CREATE TABLE SalidaArticulo (
 CREATE TABLE Cliente (
     cedula_juridica INT PRIMARY KEY, /* Cédula Juridica del cliente */
     nombre VARCHAR(255) NOT NULL, /* Nombre del cliente */
+	correo VARCHAR(200) NOT NULL, /*Correo del cliente*/
 	telefono INT NOT NULL, /* Teléfono del cliente */
 	celular INT NOT NULL, /* Celular del cliente */
 	fax VARCHAR(50) NOT NULL, /* Fax del cliente */
