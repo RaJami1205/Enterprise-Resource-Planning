@@ -38,7 +38,7 @@
 
             <input class="controls" type="text" name="edad" id="edad" placeholder="Ingrese la edad" required value="@Model.Empleado.edad">
 
-            <input class="controls" type="text" name="residencia" id="residencia" placeholder="Ingrese la residencia" required>
+            <input class="controls" type="text" name="residencia" id="residencia" placeholder="Ingrese la residencia" required value="@Model.Empleado.residencia">
 
             <input class="controls" type="text" name="numero_telefono" id="numero_telefono" placeholder="Ingrese el telefono" required value="@Model.Empleado.numero_telefono">
 
@@ -51,14 +51,6 @@
             <input class="controls" type="text" name="departamento" id="departamento" placeholder="Ingrese el departamento" required value="@Model.Empleado.departamento">
 
             <input class="controls" type="text" name="permiso_vendedor" id="permiso_vendedor" placeholder="Ingrese el permiso" required value="@Model.Empleado.permiso_vendedor">
-
-            <!-- Agregar el combobox para seleccionar el rol del empleado -->
-            <select class="controls" name="rol" id="rol" required>
-                <option value="">Seleccione el rol</option>
-                <option value="Editor">Editor</option>
-                <option value="Visualizador">Visualizador</option>
-                <option value="Reportero">Reportero</option>
-            </select>
 
             <button type="submit" asp-page-handler="Registrar_actividad" class="buttoms">Registrar</button>
         </form>

@@ -15,7 +15,7 @@ namespace ERP.Pages.Cliente.Cliente_view
             try
             {
                 conexionBD.abrir();
-                String sql = "SELECT cedula, nombre, zona, sector FROM Cliente";
+                String sql = "SELECT cedula_juridica, nombre, zona, sector FROM Cliente";
                 SqlCommand command = conexionBD.obtenerComando(sql);
                 using (SqlDataReader reader = command.ExecuteReader())
                 {

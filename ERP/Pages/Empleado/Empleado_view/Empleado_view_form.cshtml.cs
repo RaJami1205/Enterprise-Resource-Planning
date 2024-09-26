@@ -31,6 +31,7 @@ namespace ERP.Pages.Empleado.Empleado_view
             Empleado.genero = Request.Form["genero"];
             Empleado.fecha_nacimiento = Request.Form["fecha_nacimiento"];
             Empleado.edad = Request.Form["edad"];
+            Empleado.residencia = Request.Form["residencia"];
             Empleado.fecha_ingreso = Request.Form["fecha_ingreso"];
             Empleado.numero_telefono = Request.Form["numero_telefono"];
             Empleado.salario_actual = Request.Form["salario_actual"];
@@ -42,8 +43,8 @@ namespace ERP.Pages.Empleado.Empleado_view
             {
                 conexionBD.abrir();
                 string query = @"
-                    INSERT INTO Empleado (cedula, nombre, apellido1, apellido2, fecha_nacimiento, genero, edad, fecha_ingreso, departamento, permiso_vendedor, numero_telefono, salario_actual, puesto)
-                    VALUES (@cedula, @nombre, @apellido1, @apellido2, @fecha_nacimiento, @genero, @edad, @fecha_ingreso, @departamento, @permiso_vendedor, @numero_telefono, @salario_actual, @puesto)";
+                    INSERT INTO Empleado (cedula, nombre, apellido1, apellido2, fecha_nacimiento, genero, edad, residencia, fecha_ingreso, departamento, permiso_vendedor, numero_telefono, salario_actual, puesto)
+                    VALUES (@cedula, @nombre, @apellido1, @apellido2, @fecha_nacimiento, @genero, @edad, @residencia, @fecha_ingreso, @departamento, @permiso_vendedor, @numero_telefono, @salario_actual, @puesto)";
                 SqlCommand command = conexionBD.obtenerComando(query);
                 command.Parameters.AddWithValue("@cedula", Empleado.cedula);
                 command.Parameters.AddWithValue("@nombre", Empleado.nombre);
@@ -52,6 +53,7 @@ namespace ERP.Pages.Empleado.Empleado_view
                 command.Parameters.AddWithValue("@fecha_nacimiento", Empleado.fecha_nacimiento);
                 command.Parameters.AddWithValue("@genero", Empleado.genero);
                 command.Parameters.AddWithValue("@edad", Empleado.edad);
+                command.Parameters.AddWithValue("@residencia", Empleado.residencia);
                 command.Parameters.AddWithValue("@fecha_ingreso", Empleado.fecha_ingreso);
                 command.Parameters.AddWithValue("@departamento", Empleado.departamento);
                 command.Parameters.AddWithValue("@permiso_vendedor", Empleado.permiso_vendedor);
@@ -70,6 +72,7 @@ namespace ERP.Pages.Empleado.Empleado_view
                 Empleado.fecha_nacimiento = "";
                 Empleado.genero = "";
                 Empleado.edad = "";
+                Empleado.residencia = "";
                 Empleado.fecha_ingreso = "";
                 Empleado.departamento = "";
                 Empleado.permiso_vendedor = "";
@@ -95,6 +98,7 @@ namespace ERP.Pages.Empleado.Empleado_view
             public string fecha_nacimiento { get; set; }
             public string genero { get; set; }
             public string edad { get; set; }
+            public string residencia { get; set; }
             public string fecha_ingreso { get; set; }
             public string departamento { get; set; }
             public string permiso_vendedor { get; set; }

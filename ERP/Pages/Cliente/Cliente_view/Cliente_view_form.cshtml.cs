@@ -26,8 +26,6 @@ namespace ERP.Pages.Cliente.Cliente_view
         {
             Cliente.cedula = Request.Form["cedula"];
             Cliente.nombre = Request.Form["nombre"];
-            Cliente.apellido1 = Request.Form["apellido1"];
-            Cliente.apellido2 = Request.Form["apellido2"];
             Cliente.correo = Request.Form["correo"];
             Cliente.telefono = Request.Form["telefono"];
             Cliente.celular = Request.Form["celular"];
@@ -39,13 +37,11 @@ namespace ERP.Pages.Cliente.Cliente_view
             {
                 conexionBD.abrir();
                 string query = @"
-                    INSERT INTO Cliente (cedula, nombre, apellido1, apellido2, correo, telefono, celular, fax, zona, sector)
-                    VALUES (@cedula, @nombre, @apellido1, @apellido2, @correo, @telefono, @celular, @fax, @zona, @sector)";
+                    INSERT INTO Cliente (cedula_juridica, nombre, correo, telefono, celular, fax, zona, sector)
+                    VALUES (@cedula_juridica, @nombre, @correo, @telefono, @celular, @fax, @zona, @sector)";
                 SqlCommand command = conexionBD.obtenerComando(query);
-                command.Parameters.AddWithValue("@cedula", Cliente.cedula);
+                command.Parameters.AddWithValue("@cedula_juridica", Cliente.cedula);
                 command.Parameters.AddWithValue("@nombre", Cliente.nombre);
-                command.Parameters.AddWithValue("@apellido1", Cliente.apellido1);
-                command.Parameters.AddWithValue("@apellido2", Cliente.apellido2);
                 command.Parameters.AddWithValue("@correo", Cliente.correo);
                 command.Parameters.AddWithValue("@telefono", Cliente.telefono);
                 command.Parameters.AddWithValue("@celular", Cliente.celular);
@@ -59,8 +55,6 @@ namespace ERP.Pages.Cliente.Cliente_view
                 // Limpieza del formulario
                 Cliente.cedula = "";
                 Cliente.nombre = "";
-                Cliente.apellido1 = "";
-                Cliente.apellido2 = "";
                 Cliente.correo = "";
                 Cliente.telefono = "";
                 Cliente.celular = "";
@@ -81,8 +75,6 @@ namespace ERP.Pages.Cliente.Cliente_view
         {
             public string cedula { get; set; }
             public string nombre { get; set; }
-            public string apellido1 { get; set; }
-            public string apellido2 { get; set; }
             public string correo { get; set; }
             public string telefono { get; set; }
             public string celular { get; set; }
