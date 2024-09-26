@@ -3,26 +3,45 @@
 @{
 }
 
+<!-- Interfaz gráfica html de formulario de Cliente -->
 <body>
     <section class="form-register">
         <h1>Cliente</h1>
+
+        <!-- Mensaje emergente de éxito luego de una inserción correcta -->
+        @if (Model.mensaje_exito.Length > 0)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>@Model.mensaje_exito</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        <!-- Mensaje emergente de error luego de una inserción fallida mostrando el problema ocurrido -->
+        @if (Model.mensaje_error.Length > 0)
+        {
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>@Model.mensaje_error</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
         <form method="post" autocomplete="off">
 
-            <input class="controls" type="text" name="cedula" id="cedula" placeholder="Ingrese la cedula física o jurídica" required>
+            <input class="controls" type="text" name="cedula" id="cedula" placeholder="Ingrese la cedula física o jurídica" required value="@Model.Cliente.cedula">
 
-            <input class="controls" type="text" name="nombre" id="nombre" placeholder="Ingrese el nombre" required>
+            <input class="controls" type="text" name="nombre" id="nombre" placeholder="Ingrese el nombre" required value="@Model.Cliente.nombre">
 
-            <input class="controls" type="text" name="correo" id="correo" placeholder="Ingrese el correo" required>
+            <input class="controls" type="text" name="correo" id="correo" placeholder="Ingrese el correo" required value="@Model.Cliente.correo">
 
-            <input class="controls" type="text" name="telefono" id="telefono" placeholder="Ingrese el telefono" required>
+            <input class="controls" type="text" name="telefono" id="telefono" placeholder="Ingrese el telefono" required value="@Model.Cliente.telefono">
 
-            <input class="controls" type="text" name="celular" id="celular" placeholder="Ingrese el celular" required>
+            <input class="controls" type="text" name="celular" id="celular" placeholder="Ingrese el celular" required value="@Model.Cliente.celular">
 
-            <input class="controls" type="text" name="fax" id="fax" placeholder="Ingrese el fax" required>
+            <input class="controls" type="text" name="fax" id="fax" placeholder="Ingrese el fax" required value="@Model.Cliente.fax">
 
-            <input class="controls" type="text" name="zona" id="zona" placeholder="Ingrese la zona de ubicación" required>
+            <input class="controls" type="text" name="zona" id="zona" placeholder="Ingrese la zona de ubicación" required value="@Model.Cliente.zona">
 
-            <input class="controls" type="text" name="sector" id="sector" placeholder="Ingrese el sector industrial" required>
+            <input class="controls" type="text" name="sector" id="sector" placeholder="Ingrese el sector industrial" required value="@Model.Cliente.sector">
 
             <button type="submit" asp-page-handler="" class="buttoms">Registrar</button>
 

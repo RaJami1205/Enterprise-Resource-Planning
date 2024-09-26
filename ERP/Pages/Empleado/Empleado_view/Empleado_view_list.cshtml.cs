@@ -1,15 +1,20 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Data.SqlClient;
-using ERP.Pages;
 
 namespace ERP.Pages.Empleado.Empleado_view
 {
     public class Empleado_view_listModel : PageModel
     {
-        public List<EmpleadoInfo> listaEmpleados = new List<EmpleadoInfo>();
-        public Conexion conexionBD = new Conexion();
+        public List<EmpleadoInfo> listaEmpleados = new List<EmpleadoInfo>(); // Lista que almacena los datos de los Empleados
+        public Conexion conexionBD = new Conexion(); // Instancia de la clase Conexion para manejar la conexión a la base de datos
 
+        /// <summary>
+        /// Método que se ejecuta cuando se accede a la página (GET request).
+        /// Objetivo: Recuperar la lista de empleados desde la base de datos y almacenarla en la listaEmpleados.
+        /// Salidas: Una lista de objetos EmpleadoInfo que contienen información básica de los empleados.
+        /// Restricciones: En caso de error, el programa manejará la excepción, cerrando la conexión y mostrando un mensaje.
+        /// </summary>
         public void OnGet()
         {
             try
@@ -45,6 +50,7 @@ namespace ERP.Pages.Empleado.Empleado_view
         }
     }
 
+    // Clase que representa el modelo de vista para la lista de empleados
     public class EmpleadoInfo {
         public string cedula { get; set; }
         public string nombre { get; set; }

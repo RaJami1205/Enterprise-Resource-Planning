@@ -3,6 +3,7 @@
 @{
 }
 
+<!-- Interfaz gráfica html de la lista de Empleados -->
 <br />
 <h2> Lista de Empleados </h2>
 <a class="btn btn-primary btn-sm" href="/Empleado/Empleado_view/Empleado_view_form"> Nuevo Empleado</a>
@@ -20,6 +21,7 @@
         </tr>
     </thead>
     <tbody>
+        <!-- Ciclo que extrae los datos de la tabla de Empleados para mostrar toda información registrada -->
         @foreach (var item in Model.listaEmpleados)
         {
             <tr>

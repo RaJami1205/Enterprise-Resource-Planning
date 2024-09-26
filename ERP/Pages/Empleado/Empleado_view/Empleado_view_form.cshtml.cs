@@ -6,15 +6,22 @@ namespace ERP.Pages.Empleado.Empleado_view
 {
     public class Empleado_view_formModel : PageModel
     {
-        public EmpleadoInfo Empleado { get; set; } = new EmpleadoInfo();
-        public Conexion conexionBD = new Conexion();
-        public string mensaje_error = "";
-        public string mensaje_exito = "";
+        public EmpleadoInfo Empleado { get; set; } = new EmpleadoInfo(); // Lista que guarda toda la información de los requests
+        public Conexion conexionBD = new Conexion(); // Instancia de la clase Conexion para manejar la conexión a la base de datos
+        public string mensaje_error = ""; // Variable para almacenar mensajes de error
+        public string mensaje_exito = ""; // Variable para almacenar mensajes de éxito
 
         public void OnGet()
         {
         }
 
+        /// <summary>
+        /// Método que se ejecuta cuando se envía el formulario (POST request).
+        /// Objetivo: Recibir los datos del formulario de empleado, insertarlos en la base de datos y manejar errores.
+        /// Entradas: Datos del formulario (cedula, nombre, apellidos, fecha de nacimiento, género, edad, fecha de ingreso, teléfono, salario, puesto, departamento, permiso de vendedor).
+        /// Salidas: Mensaje de éxito o mensaje de error.
+        /// Restricciones: Todos los campos deben estar debidamente validados antes de enviarse.
+        /// </summary>
         public void OnPost()
         {
             Empleado.cedula = Request.Form["cedula"];
@@ -78,6 +85,7 @@ namespace ERP.Pages.Empleado.Empleado_view
             }
         }
 
+        // Clase que representa el modelo de vista para el formulario de empleado
         public class EmpleadoInfo
         {
             public string cedula { get; set; }

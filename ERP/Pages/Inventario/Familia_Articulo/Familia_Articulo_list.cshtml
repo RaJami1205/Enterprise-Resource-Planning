@@ -3,6 +3,7 @@
 @{
 }
 
+<!-- Interfaz gráfica html de la lista de Familias de Artículos -->
 <br />
 <h2> Lista de Familias de Articulos </h2>
 <a class="btn btn-primary btn-sm" href="/Inventario/Familia_Articulo/Familia_Articulo_form"> Nueva Familia</a>
@@ -11,7 +12,23 @@
         <tr>
             <th>Codigo</th>
             <th>Nombre</th>
-            <th>Activo</th>
+            <th>Descripcion</th>
+            <th>Accion</th>
         </tr>
     </thead>
+    <tbody>
+        <!-- Ciclo que extrae los datos de la tabla de Familias de Artículos para mostrar toda información registrada -->
+        @foreach (var item in Model.listaFamiliArticulos)
+        {
+            <tr>
+                <td>@item.codigo</td>
+                <td>@item.nombre</td>
+                <td>@item.descripcion</td>
+                <td>
+                    <a class="btn btn-primary btn-sm">Editar</a>
+                    <a class="btn btn-primary btn-danger btn-sm">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
