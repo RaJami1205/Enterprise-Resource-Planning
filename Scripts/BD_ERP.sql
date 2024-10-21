@@ -10,6 +10,38 @@ use ERP;
 go
 
 -----------MODULO USUARIO------------
+
+CREATE TABLE Accion (
+	accion_id INT PRIMARY KEY,
+	accion VARCHAR(100) NOT NULL,
+	rol VARCHAR(15) NOT NULL,
+);
+
+/* Tabla para gestionar los roles de los empleados */
+CREATE TABLE Rol (
+	rol_id INT PRIMARY KEY,
+    rol VARCHAR(15) NOT NULL, /* Rol del empleado (Edición, Visualización, Reportería) */
+	CONSTRAINT chk_rol CHECK (rol IN ('Edición', 'Visualización', 'Reportería')) /* Validación de los roles permitidos */
+);
+
+CREATE TABLE AccionRol (
+	accion_id INT NOT NULL,
+	rol_id INT NOT NULL,
+	FOREIGN KEY (accion_id) REFERENCES Accion(accion_id),
+	FOREIGN KEY (rol_id) REFERENCES Rol(rol_id)
+);
+
+/* Tabla para registrar los departamentos */
+CREATE TABLE Departamento (
+	departamento_id INT PRIMARY KEY NOT NULL,
+	nombre varchar(200) NOT NULL,
+);
+
+CREATE TABLE Puesto (
+	puesto_id INT PRIMARY KEY,
+	puesto VARCHAR(200) NOT NULL,
+);
+
 /* Tabla para almacenar información de los empleados */
 CREATE TABLE Empleado (
     cedula INT PRIMARY KEY NOT NULL, /* Identificador único del empleado */
@@ -18,26 +50,33 @@ CREATE TABLE Empleado (
     apellido2 VARCHAR(25) NOT NULL, /* Segundo apellido del empleado */
     fecha_nacimiento DATE NOT NULL, /* Fecha de nacimiento del empleado */
     genero VARCHAR(50) NOT NULL, /* Género del empleado (Masculino, Femenino, Otro) */
-	edad INT NOT NULL, /* Edad del empleado (entre 18 y 80 años) */
 	residencia VARCHAR(80) NOT NULL, /* Lugar en el que reside*/
 	fecha_ingreso DATE NOT NULL, /* Fecha en que ingresó a la empresa */
-    departamento VARCHAR(25) NOT NULL, /* Departamento al que pertenece el empleado */
+    departamento INT NOT NULL, /* Departamento al que pertenece el empleado */
     permiso_vendedor VARCHAR(20) NOT NULL, /* Permiso de vendedor (Con permiso, Sin permiso) */
     numero_telefono INT NOT NULL, /* Número de teléfono del empleado */
     salario_actual DECIMAL(10,2) NOT NULL, /* Salario actual del empleado */
-	puesto VARCHAR(40) NOT NULL, /* Puesto que ocupa el empleado */
+	puesto INT NOT NULL, /* Puesto que ocupa el empleado */
 	CONSTRAINT chk_genero CHECK (genero IN ('Masculino', 'Femenino', 'Otro')), /* Restricción para validar el género */
 	CONSTRAINT chk_permisos_vendedor CHECK (permiso_vendedor IN ('Con permiso', 'Sin permiso')), /* Validación para permisos de vendedor */
-	CONSTRAINT chk_edad CHECK (edad BETWEEN 18 AND 80) /* Validación de edad entre 18 y 80 años */
+	FOREIGN KEY (departamento) REFERENCES Departamento(departamento_id),
+	FOREIGN KEY (puesto) REFERENCES Puesto(puesto_id),
 );
 
-/* Tabla para gestionar los roles de los empleados */
-CREATE TABLE Rol (
-    rol VARCHAR(15) NOT NULL, /* Rol del empleado (Edición, Visualización, Reportería) */
-    cedula_empleado INT NOT NULL, /* Cédula del empleado relacionado */
-    PRIMARY KEY (rol,cedula_empleado), /* Llave primaria compuesta por rol y cédula */
-    FOREIGN KEY (cedula_empleado) REFERENCES Empleado(cedula), /* Llave foránea a la tabla Empleado */
-	CONSTRAINT chk_rol CHECK (rol IN ('Edición', 'Visualización', 'Reportería')) /* Validación de los roles permitidos */
+/* Tabla para almacenar los usuarios del sistema */
+CREATE TABLE Logueo_Usuario (
+	usuario VARCHAR(75) NOT NULL,
+	contrasenna VARCHAR(75) NOT NULL,
+	cedula_empleado INT NOT NULL,
+
+	FOREIGN KEY (cedula_empleado) REFERENCES Empleado(cedula)
+);
+
+CREATE TABLE EmpleadoRol (
+	rol INT NOT NULL ,
+	cedula_empleado INT NOT NULL,
+	FOREIGN KEY (rol) REFERENCES Rol(rol_id),
+	FOREIGN KEY (cedula_empleado) REFERENCES Empleado(cedula)
 );
 
 /* Tabla para registrar el historial de salarios de los empleados */
@@ -70,11 +109,40 @@ CREATE TABLE SalarioMensual (
     pago DECIMAL(10,2) NOT NULL, /* Monto del pago */
 	cantidad_horas INT NOT NULL, /* Cantidad de horas trabajadas */
 	cedula_empleado INT NOT NULL, /* Cédula del empleado */
-	PRIMARY KEY (pago,cedula_empleado), /* Llave primaria compuesta */
+	PRIMARY KEY (anno,mes,cedula_empleado), /* Llave primaria compuesta */
     FOREIGN KEY (cedula_empleado) REFERENCES Empleado(cedula), /* Llave foránea a Empleado */
 	CONSTRAINT chk_anno CHECK (anno > 1980), /* Validación del año */
 	CONSTRAINT chk_mes CHECK (mes BETWEEN 1 AND 12) /* Validación del mes */
 );
+
+-----------TABLAS GENERALES------------
+/* Tabla para gestionar las zonas geográficas */
+CREATE TABLE Zona (
+	zona_id INT PRIMARY KEY,
+	nombre varchar(75) NOT NULL
+);
+
+/* Tabla para gestionar los sectores industriales */
+CREATE TABLE Sector (
+	sector_id INT PRIMARY KEY,
+	nombre varchar(75) NOT NULL
+);
+
+-----------MODULO CLIENTE------------
+/* Tabla para gestionar la información de los clientes */
+CREATE TABLE Cliente (
+    cedula_juridica INT PRIMARY KEY, /* Cédula Juridica del cliente */
+    nombre VARCHAR(255) NOT NULL, /* Nombre del cliente */
+	correo VARCHAR(200) NOT NULL, /*Correo del cliente*/
+	telefono INT NOT NULL, /* Teléfono del cliente */
+	celular INT NOT NULL, /* Celular del cliente */
+	fax VARCHAR(50) NOT NULL, /* Fax del cliente */
+    zona INT NOT NULL, /* Zona geográfica del cliente */
+    sector INT NOT NULL /* Sector del cliente */
+	FOREIGN KEY (zona) REFERENCES Zona(zona_id),
+	FOREIGN KEY (sector) REFERENCES Sector(sector_id)
+);
+
 
 -----------MODULO INVENTARIO------------
 /* Tabla para almacenar las familias de productos en el inventario */
@@ -130,8 +198,6 @@ CREATE TABLE BodegaArticulo (
 /* Tabla para registrar las entradas de productos en una bodega */
 CREATE TABLE Entrada (
     fecha_hora DATETIME NOT NULL, /* Fecha y hora de la entrada */
-    cantidad INT NOT NULL, /* Cantidad de productos ingresados */
-    precio DECIMAL(10,2) NOT NULL, /* Precio total de la entrada */
     codigo_bodega INT NOT NULL, /* Código de la bodega donde ingresan los productos */
     cedula_administrador INT NOT NULL, /* Cédula del administrador responsable */
 	PRIMARY KEY(fecha_hora,cedula_administrador,codigo_bodega), /* Llave primaria compuesta */
@@ -145,6 +211,8 @@ CREATE TABLE EntradaArticulo (
 	codigo_bodega INT NOT NULL, /* Código de la bodega */
     cedula_administrador INT NOT NULL, /* Cédula del administrador */
 	codigo_articulo INT NOT NULL, /* Código del artículo ingresado */
+	cantidad INT NOT NULL, /* Cantidad de productos ingresados */
+    precio DECIMAL(10,2) NOT NULL, /* Precio total de la entrada */
 	PRIMARY KEY(fecha_hora_entrada,cedula_administrador,codigo_bodega,codigo_articulo), /* Llave primaria compuesta */
     FOREIGN KEY(fecha_hora_entrada,cedula_administrador,codigo_bodega) REFERENCES Entrada(fecha_hora,cedula_administrador,codigo_bodega), /* Llave foránea a Entrada */
 	FOREIGN KEY(codigo_articulo) REFERENCES Articulo(codigo) /* Llave foránea a Artículo */
@@ -153,7 +221,6 @@ CREATE TABLE EntradaArticulo (
 /* Tabla para registrar movimientos de artículos entre bodegas */
 CREATE TABLE Movimiento (
     fecha_hora DATETIME NOT NULL, /* Fecha y hora del movimiento */
-    cantidad INT NOT NULL, /* Cantidad movida */
     cedula_administrador INT NOT NULL, /* Cédula del administrador */
     codigo_bodega_origen INT NOT NULL, /* Bodega de origen */
     codigo_bodega_destino INT NOT NULL, /* Bodega de destino */
@@ -170,9 +237,41 @@ CREATE TABLE MovimientoArticulo (
     codigo_bodega_origen INT NOT NULL, /* Bodega de origen */
     codigo_bodega_destino INT NOT NULL, /* Bodega de destino */
 	codigo_articulo INT NOT NULL, /* Código del artículo */
+	cantidad INT NOT NULL, /* Cantidad movida */
 	PRIMARY KEY(fecha_hora_movimiento,cedula_administrador,codigo_bodega_origen, codigo_bodega_destino,codigo_articulo), /* Llave primaria compuesta */
     FOREIGN KEY (fecha_hora_movimiento,cedula_administrador,codigo_bodega_origen, codigo_bodega_destino) REFERENCES Movimiento(fecha_hora,cedula_administrador,codigo_bodega_origen, codigo_bodega_destino), /* Llave foránea a Movimiento */
 	FOREIGN KEY (codigo_articulo) REFERENCES Articulo(codigo) /* Llave foránea a Artículo */
+);
+
+-----------MODULO FACTURACION------------
+/* Tabla para gestionar los estados de factura */
+CREATE TABLE EstadoFactura (
+	estadofactura_id INT PRIMARY KEY NOT NULL,
+	nombre varchar(75)
+);
+
+/* Tabla para gestionar las facturas emitidas */
+CREATE TABLE Factura (
+    num_facturacion INT PRIMARY KEY, /* Número único de la factura */
+    telefono_local INT NOT NULL, /* Teléfono del local */
+    cedula_juridica INT NOT NULL, /* Cédula jurídica del cliente */
+    nombre_local VARCHAR(200) NOT NULL, /* Nombre del local del cliente */
+	fecha DATE NOT NULL, /* Fecha de emisión de la factura */
+    estado INT NOT NULL, /* Estado de la factura (pagada, pendiente, etc.) */
+    cedula_vendedor INT NOT NULL, /* Cédula del vendedor */
+    FOREIGN KEY (cedula_vendedor) REFERENCES Empleado(cedula), /* Llave foránea a Empleado */
+    FOREIGN KEY (cedula_juridica) REFERENCES Cliente(cedula_juridica), /* Llave foránea a Cliente */
+	FOREIGN KEY (estado) REFERENCES EstadoFactura(estadofactura_id) /* Llave foránea a Cliente */
+);
+
+/* Tabla que asocia artículos con facturas */
+CREATE TABLE FacturaArticulo (
+    num_facturacion INT NOT NULL, /* Número de la factura */
+    codigo_articulo INT NOT NULL, /* Código del artículo */
+	cantidad INT NOT NULL, /* Cantidad de articulos*/
+	monto DECIMAL(10,2) NOT NULL, /*Monto del articulo*/
+    FOREIGN KEY (num_facturacion) REFERENCES Factura(num_facturacion), /* Llave foránea a Factura */
+	FOREIGN KEY (codigo_articulo) REFERENCES Articulo(codigo) /* Llave foránea a Artículo */
 );
 
 /* Tabla para registrar las salidas de productos de una bodega */
@@ -180,9 +279,12 @@ CREATE TABLE Salida (
 	fecha_hora DATETIME NOT NULL, /* Fecha y hora de la salida */
     cedula_vendedor INT NOT NULL, /* Cédula del vendedor */
     codigo_bodega INT NOT NULL, /* Código de la bodega de salida */
+	factura INT NOT NULL,
     PRIMARY KEY (fecha_hora,cedula_vendedor, codigo_bodega), /* Llave primaria compuesta */
 	FOREIGN KEY (cedula_vendedor) REFERENCES Empleado(cedula), /* Llave foránea a Empleado */
-    FOREIGN KEY (codigo_bodega) REFERENCES Bodega(codigo_bodega) /* Llave foránea a Bodega */
+    FOREIGN KEY (codigo_bodega) REFERENCES Bodega(codigo_bodega), /* Llave foránea a Bodega */
+	FOREIGN KEY (factura) REFERENCES Factura(num_facturacion) /* Llave foránea a Bodega */
+
 );
 
 /* Tabla para registrar los artículos que salen de una bodega en una salida específica */
@@ -191,34 +293,34 @@ CREATE TABLE SalidaArticulo (
     cedula_vendedor INT NOT NULL, /* Cédula del vendedor */
     codigo_bodega INT NOT NULL, /* Código de la bodega de salida */
     codigo_articulo INT NOT NULL, /* Código del artículo */
+	cantidad INT NOT NULL, /* Cantidad de articulos fuera de la bodega*/
     PRIMARY KEY (codigo_articulo, fecha_hora_salida,cedula_vendedor, codigo_bodega), /* Llave primaria compuesta */
     FOREIGN KEY (codigo_articulo) REFERENCES Articulo(codigo), /* Llave foránea a Artículo */
     FOREIGN KEY (fecha_hora_salida,cedula_vendedor, codigo_bodega) REFERENCES Salida(fecha_hora,cedula_vendedor, codigo_bodega) /* Llave foránea a Salida */
 );
 
------------MODULO CLIENTE------------
-/* Tabla para gestionar la información de los clientes */
-CREATE TABLE Cliente (
-    cedula_juridica INT PRIMARY KEY, /* Cédula Juridica del cliente */
-    nombre VARCHAR(255) NOT NULL, /* Nombre del cliente */
-	correo VARCHAR(200) NOT NULL, /*Correo del cliente*/
-	telefono INT NOT NULL, /* Teléfono del cliente */
-	celular INT NOT NULL, /* Celular del cliente */
-	fax VARCHAR(50) NOT NULL, /* Fax del cliente */
-    zona VARCHAR(50) NOT NULL, /* Zona geográfica del cliente */
-    sector VARCHAR(50) NOT NULL /* Sector del cliente */
+-----------MODULO COTIZACION------------
+/* Tabla para gestionar los estados de cotización */
+CREATE TABLE EstadoCotizacion (
+	estadocotizacion_id INT PRIMARY KEY NOT NULL,
+	nombre varchar(75)
 );
 
------------MODULO COTIZACION------------
+/* Tabla para gestionar los tipos de cotizaciones */
+CREATE TABLE TipoCotizacion (
+	tipocotizacion_id INT PRIMARY KEY NOT NULL,
+	nombre varchar(75)
+);
+
 /* Tabla para gestionar las cotizaciones realizadas a los clientes */
 CREATE TABLE Cotizacion (
     num_cotizacion INT PRIMARY KEY, /* Número único de la cotización */
 	orden_compra VARCHAR(50) NOT NULL, /* Orden de compra asociada */
-	tipo VARCHAR(30) NOT NULL, /* Tipo de cotización */
+	tipo INT NOT NULL, /* Tipo de cotización */
 	descripcion VARCHAR(255) NOT NULL, /* Descripción de la cotización */
-	zona VARCHAR(50) NOT NULL, /* Zona de la cotización */
-    sector VARCHAR(50) NOT NULL, /* Sector de la cotización */
-	estado VARCHAR(10) NOT NULL, /* Estado de la cotización (abierta, aprobada, denegada) */
+	zona INT NOT NULL, /* Zona de la cotización */
+    sector INT NOT NULL, /* Sector de la cotización */
+	estado INT NOT NULL, /* Estado de la cotización (abierta, aprobada, denegada) */
 	monto_total DECIMAL(10, 2) NOT NULL, /* Monto total de la cotización */
 	mes_cierre INT NOT NULL, /* Mes estimado de cierre de la cotización */
     cedula_vendedor INT NOT NULL, /* Cédula del vendedor encargado */
@@ -230,8 +332,11 @@ CREATE TABLE Cotizacion (
     FOREIGN KEY (cedula_vendedor) REFERENCES Empleado(cedula), /* Llave foránea a Empleado */
 	FOREIGN KEY (cedula_cliente) REFERENCES Cliente(cedula_juridica), /* Llave foránea a Cliente */
 	CONSTRAINT chk_mes_cierre CHECK (mes_cierre BETWEEN 1 AND 12), /* Validación del mes de cierre */
-    CONSTRAINT chk_estado CHECK (estado IN ('abierta', 'aprobada', 'denegada')), /* Validación del estado de la cotización */
-	CONSTRAINT chk_probabilidad CHECK (probabilidad >= 1.00 AND probabilidad <= 100.00) /* Validación de probabilidad de éxito */
+	CONSTRAINT chk_probabilidad CHECK (probabilidad >= 1.00 AND probabilidad <= 100.00), /* Validación de probabilidad de éxito */
+	FOREIGN KEY (zona) REFERENCES Zona(zona_id),
+	FOREIGN KEY (sector) REFERENCES Sector(sector_id),
+	FOREIGN KEY (estado) REFERENCES EstadoCotizacion(estadocotizacion_id),
+	FOREIGN KEY (tipo) REFERENCES TipoCotizacion(tipocotizacion_id)
 );
 
 /* Tabla para gestionar las tareas relacionadas con las cotizaciones */
@@ -254,31 +359,24 @@ CREATE TABLE CotizacionArticulo (
 	FOREIGN KEY (codigo_articulo) REFERENCES Articulo(codigo) /* Llave foránea a Artículo */
 );
 
------------MODULO FACTURACION------------
-/* Tabla para gestionar las facturas emitidas */
-CREATE TABLE Factura (
-    num_facturacion INT PRIMARY KEY, /* Número único de la factura */
-    telefono_local INT NOT NULL, /* Teléfono del local */
-    cedula_juridica INT NOT NULL, /* Cédula jurídica del cliente */
-    nombre_local VARCHAR(200) NOT NULL, /* Nombre del local del cliente */
-	fecha DATE NOT NULL, /* Fecha de emisión de la factura */
-    estado VARCHAR(60) NOT NULL, /* Estado de la factura (pagada, pendiente, etc.) */
-    cedula_vendedor INT NOT NULL, /* Cédula del vendedor */
-    FOREIGN KEY (cedula_vendedor) REFERENCES Empleado(cedula), /* Llave foránea a Empleado */
-    FOREIGN KEY (cedula_juridica) REFERENCES Cliente(cedula_juridica) /* Llave foránea a Cliente */
-);
-
-/* Tabla que asocia artículos con facturas */
-CREATE TABLE FacturaArticulo (
-    num_facturacion INT NOT NULL, /* Número de la factura */
-    codigo_articulo INT NOT NULL, /* Código del artículo */
-	cantidad INT NOT NULL, /* Cantidad de articulos*/
-	monto DECIMAL(10,2) NOT NULL, /*Monto del articulo*/
-    FOREIGN KEY (num_facturacion) REFERENCES Factura(num_facturacion), /* Llave foránea a Factura */
-	FOREIGN KEY (codigo_articulo) REFERENCES Articulo(codigo) /* Llave foránea a Artículo */
-);
-
 -----------MODULO REGISTRO DE CASOS------------
+/* Tabla para gestionar los tipos de cotizaciones */
+CREATE TABLE TipoCaso (
+	tipocaso_id INT PRIMARY KEY,
+	nombre varchar(75) NOT NULL
+);
+
+/* Tabla para gestionar los tipos de cotizaciones */
+CREATE TABLE EstadoCaso (
+	estado_id INT PRIMARY KEY,
+	nombre varchar(75) NOT NULL
+);
+
+CREATE TABLE PrioridadCaso (
+	prioridad_id INT PRIMARY KEY,
+	nombre varchar(75) NOT NULL
+);
+
 /* Tabla para registrar casos relacionados con cotizaciones o facturas */
 CREATE TABLE Caso (
     codigo INT PRIMARY KEY, /* Código único del caso */
@@ -287,9 +385,9 @@ CREATE TABLE Caso (
 	asunto VARCHAR(255) NOT NULL, /* Asunto del caso */
 	direccion VARCHAR(255) NOT NULL, /* Dirección relacionada al caso */
 	descripcion VARCHAR(255) NOT NULL, /* Descripción del caso */
-	estado VARCHAR(60) NOT NULL, /* Estado del caso */
-	tipo VARCHAR(30) NOT NULL, /* Tipo del caso (soporte, reclamo, etc.) */
-	prioridad VARCHAR(20) NOT NULL, /* Prioridad del caso */
+	estado INT NOT NULL, /* Estado del caso */
+	tipo INT NOT NULL, /* Tipo del caso (soporte, reclamo, etc.) */
+	prioridad INT NOT NULL, /* Prioridad del caso */
 	cedula_propietario INT NOT NULL, /* Cédula del propietario del caso */
 	origen_cotizacion INT, /* Referencia a la cotización de origen, si aplica */
     origen_factura INT, /* Referencia a la factura de origen, si aplica */
@@ -297,6 +395,9 @@ CREATE TABLE Caso (
 	FOREIGN KEY (cedula_propietario) REFERENCES Empleado(cedula),
     FOREIGN KEY (origen_cotizacion) REFERENCES Cotizacion(num_cotizacion), /* Llave foránea a Cotización */
     FOREIGN KEY (origen_factura) REFERENCES Factura(num_facturacion), /* Llave foránea a Factura */
+	FOREIGN KEY (tipo) REFERENCES TipoCaso(tipocaso_id), /* Llave foránea a TipoCaso */
+	FOREIGN KEY (prioridad) REFERENCES PrioridadCaso(prioridad_id), /* Llave foránea a TipoCaso */
+	FOREIGN KEY (estado) REFERENCES EstadoCaso(estado_id), /* Llave foránea a TipoCaso */
     CONSTRAINT chk_origen CHECK ((origen_cotizacion IS NOT NULL AND origen_factura IS NULL) OR (origen_cotizacion IS NULL AND origen_factura IS NOT NULL)) /* Validación para evitar referencias simultáneas a cotización y factura */
 );
 
@@ -308,5 +409,5 @@ CREATE TABLE TareaCaso (
 	descripcion VARCHAR(255) NOT NULL, /* Descripción de la tarea */
 	cedula_usuario INT NOT NULL, /* Cédula del usuario asignado */
 	FOREIGN KEY (codigo_caso) REFERENCES Caso(codigo), /* Llave foránea a Caso */
-	FOREIGN KEY (cedula_usuario) REFERENCES Empleado(cedula) /* Llave foránea a Empleado */
+	FOREIGN KEY (cedula_usuario) REFERENCES Empleado(cedula) /* Llave foránea a Empleado */
 );
