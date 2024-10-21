@@ -5,7 +5,7 @@
 
 <body>
     <section class="form-register">
-        <h1>Nuevo Empleado</h1>
+        <h1>Empleado</h1>
 
         @if (Model.mensaje_exito.Length > 0)
         {
@@ -32,11 +32,14 @@
 
             <input class="controls" type="text" name="apellido2" id="apellido2" placeholder="Ingrese el segundo apellido" required value="@Model.Empleado.apellido2">
 
-            <input class="controls" type="text" name="genero" id="genero" placeholder="Ingrese el genero" required value="@Model.Empleado.genero">
+            <!-- Agregar el combobox para seleccionar el género -->
+            <select class="controls" name="genero" id="genero required" value="@Model.Empleado.genero">
+                <option value="genero">Seleccione el género</option>
+                <option value="genero">Masculino</option>
+                <option value="genero">Femenino</option>
+            </select>
 
             <input class="controls" type="date" name="fecha_nacimiento" id="fecha_nacimiento" placeholder="Ingrese la fecha de nacimiento" required value="@Model.Empleado.fecha_nacimiento">
-
-            <input class="controls" type="text" name="edad" id="edad" placeholder="Ingrese la edad" required value="@Model.Empleado.edad">
 
             <input class="controls" type="text" name="residencia" id="residencia" placeholder="Ingrese la residencia" required value="@Model.Empleado.residencia">
 
@@ -46,11 +49,23 @@
 
             <input class="controls" type="text" name="salario_actual" id="salario_actual" placeholder="Ingrese el salario" required value="@Model.Empleado.salario_actual">
 
-            <input class="controls" type="text" name="puesto" id="puesto" placeholder="Ingrese el puesto" required value="@Model.Empleado.puesto">
+            <!-- Agregar el combobox para seleccionar el puesto -->
+            <select class="controls" name="puesto" id="puesto" required value="@Model.Empleado.puesto">
+                <option value="propietario">Seleccione un puesto</option>
+                <option value="propietario">Lista de departamentos</option>
+            </select>
 
-            <input class="controls" type="text" name="departamento" id="departamento" placeholder="Ingrese el departamento" required value="@Model.Empleado.departamento">
+            <!-- Agregar el combobox para seleccionar el departamento -->
+            <select class="controls" name="departamento" id="departamento" required value="@Model.Empleado.departamento">
+                <option value="propietario">Seleccione el departamento</option>
+                <option value="propietario">Lista de departamentos</option>
+            </select>
 
             <input class="controls" type="text" name="permiso_vendedor" id="permiso_vendedor" placeholder="Ingrese el permiso" required value="@Model.Empleado.permiso_vendedor">
+
+            <input class="controls" type="text" name="usuario" id="usuario" placeholder="Ingrese el usuario" required value="@Model.Empleado.usuario">
+
+            <input class="controls" type="text" name="contraseña" id="contraseña" placeholder="Ingrese la contraseña" required value="@Model.Empleado.contraseña">
 
             <button type="submit" asp-page-handler="Registrar_actividad" class="buttoms">Registrar</button>
         </form>

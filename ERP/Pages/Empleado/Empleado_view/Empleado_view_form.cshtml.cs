@@ -30,7 +30,6 @@ namespace ERP.Pages.Empleado.Empleado_view
             Empleado.apellido2 = Request.Form["apellido2"];
             Empleado.genero = Request.Form["genero"];
             Empleado.fecha_nacimiento = Request.Form["fecha_nacimiento"];
-            Empleado.edad = Request.Form["edad"];
             Empleado.residencia = Request.Form["residencia"];
             Empleado.fecha_ingreso = Request.Form["fecha_ingreso"];
             Empleado.numero_telefono = Request.Form["numero_telefono"];
@@ -38,14 +37,16 @@ namespace ERP.Pages.Empleado.Empleado_view
             Empleado.puesto = Request.Form["puesto"];
             Empleado.departamento = Request.Form["departamento"];
             Empleado.permiso_vendedor = Request.Form["permiso_vendedor"];
+            Empleado.usuario = Request.Form["usuario"];
+            Empleado.contraseña = Request.Form["contraseña"];
 
             try
             {
                 conexionBD.abrir();
-                string query = @"
+                string query_1 = @"
                     INSERT INTO Empleado (cedula, nombre, apellido1, apellido2, fecha_nacimiento, genero, edad, residencia, fecha_ingreso, departamento, permiso_vendedor, numero_telefono, salario_actual, puesto)
                     VALUES (@cedula, @nombre, @apellido1, @apellido2, @fecha_nacimiento, @genero, @edad, @residencia, @fecha_ingreso, @departamento, @permiso_vendedor, @numero_telefono, @salario_actual, @puesto)";
-                SqlCommand command = conexionBD.obtenerComando(query);
+                SqlCommand command = conexionBD.obtenerComando(query_1);
                 command.Parameters.AddWithValue("@cedula", Empleado.cedula);
                 command.Parameters.AddWithValue("@nombre", Empleado.nombre);
                 command.Parameters.AddWithValue("@apellido1", Empleado.apellido1);
@@ -62,7 +63,19 @@ namespace ERP.Pages.Empleado.Empleado_view
                 command.Parameters.AddWithValue("@puesto", Empleado.puesto);
 
                 command.ExecuteNonQuery();
+                conexionBD.cerrar();
 
+                conexionBD.abrir();
+                string query_2 = @"
+                    INSERT INTO Empleado (cedula, nombre, apellido1, apellido2, fecha_nacimiento, genero, edad, residencia, fecha_ingreso, departamento, permiso_vendedor, numero_telefono, salario_actual, puesto)
+                    VALUES (@cedula, @nombre, @apellido1, @apellido2, @fecha_nacimiento, @genero, @edad, @residencia, @fecha_ingreso, @departamento, @permiso_vendedor, @numero_telefono, @salario_actual, @puesto)";
+                SqlCommand command_1 = conexionBD.obtenerComando(query_2);
+                command_1.Parameters.AddWithValue("@usuario", Empleado.usuario);
+                command_1.Parameters.AddWithValue("@contraseña", Empleado.contraseña);
+                
+
+                command.ExecuteNonQuery();
+                conexionBD.cerrar();
 
                 // Limpieza del formulario
                 Empleado.cedula = "";
@@ -71,7 +84,6 @@ namespace ERP.Pages.Empleado.Empleado_view
                 Empleado.apellido2 = "";
                 Empleado.fecha_nacimiento = "";
                 Empleado.genero = "";
-                Empleado.edad = "";
                 Empleado.residencia = "";
                 Empleado.fecha_ingreso = "";
                 Empleado.departamento = "";
@@ -79,12 +91,15 @@ namespace ERP.Pages.Empleado.Empleado_view
                 Empleado.numero_telefono = "";
                 Empleado.salario_actual = "";
                 Empleado.puesto = "";
+                Empleado.usuario = "";
+                Empleado.contraseña = "";
 
                 mensaje_exito = "Actividad registrada exitosamente";
             }
             catch (Exception ex)
             {
                 mensaje_error = ex.Message;
+                conexionBD.cerrar();
             }
         }
 
@@ -105,6 +120,8 @@ namespace ERP.Pages.Empleado.Empleado_view
             public string numero_telefono { get; set; }
             public string salario_actual { get; set; }
             public string puesto { get; set; }
+            public string usuario { get; set; }
+            public string contraseña { get; set; }
         }
     }
 }

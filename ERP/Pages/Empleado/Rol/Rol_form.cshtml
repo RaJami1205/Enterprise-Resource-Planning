@@ -1,22 +1,22 @@
 ﻿@page
-@model IndexModel
+@model ERP.Pages.Empleado.Rol.Rol_formModel
 @{
-    ViewData["Title"] = "Home page";
 }
 
-<!-- Interfaz gráfica html del Inicio de Sesión -->
+<!-- Interfaz gráfica html del formulario del Rol -->
 <body>
     <section class="form-register">
-        <h1>Inicio de Sesión</h1>
+        <h1>Rol</h1>
+
         <form method="post" autocomplete="off">
 
-            <input class="controls" type="text" name="usuario" id="usuario" placeholder="Ingrese el usuario" required>
+            <input class="controls" type="text" name="id" id="id" placeholder="Ingrese el número ID" required>
 
-            <input class="controls" type="text" name="contraseña" id="contraseña" placeholder="Ingrese la contraseña" required>
+            <input class="controls" type="text" name="nombre" id="nombre" placeholder="Ingrese el nombre" required>
 
-            <button type="submit" asp-page-handler="" class="buttoms">Iniciar Sesión</button>
+            <input class="controls" type="text" name="accion" id="accion" placeholder="Ingrese la acción permitida" required>
 
-
+            <button type="submit" asp-page-handler="Registrar_actividad" class="buttoms">Registrar</button>
         </form>
     </section>
 </body>
