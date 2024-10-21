@@ -36,11 +36,11 @@ namespace ERP.Pages.Empleado.Empleado_view
                         empleado.genero = reader.GetString(5);
                         empleado.residencia = reader.GetString(6);
                         empleado.fecha_ingreso = reader.GetDateTime(7).ToString("yyyy-MM-dd");
-                        empleado.departamento = reader.GetString(8); // Departamento desde la vista
-                        empleado.vendedor = reader.GetString(9); // Permiso de vendedor
-                        empleado.telefono = reader.GetInt32(10).ToString(); // Número de teléfono
-                        empleado.salario = reader.GetDecimal(11).ToString("F2"); // Salario formateado con 2 decimales
-                        empleado.puesto = reader.GetString(12); // Puesto desde la vista
+                        empleado.departamento = reader.GetString(8); 
+                        empleado.vendedor = reader.GetString(9); 
+                        empleado.telefono = reader.GetInt32(10).ToString(); 
+                        empleado.salario = reader.GetDecimal(11).ToString("F2"); 
+                        empleado.puesto = reader.GetString(12); 
 
                         listaEmpleados.Add(empleado);
                     }

@@ -10,6 +10,7 @@
 <table class="table">
     <thead>
         <tr>
+            <th>Cedula</th>
             <th>Nombre</th>
             <th>Apellido</th>
             <th>Apellido</th>
@@ -30,6 +31,7 @@
         @foreach (var item in Model.listaEmpleados)
         {
             <tr>
+                <td>@item.cedula</td>
                 <td>@item.nombre</td>
                 <td>@item.apellido1</td>
                 <td>@item.apellido2</td>
@@ -43,7 +45,7 @@
                 <td>@item.telefono</td>
                 <td>@item.salario</td>
                 <td>
-                    <a class="btn btn-primary btn-sm">Editar</a>
+                    <a class="btn btn-primary btn-sm" href="/Empleado/Empleado_view/Empleado_view_edit?cedula=@item.cedula">Editar</a>
                 </td>
             </tr>
         }

@@ -35,13 +35,13 @@ namespace ERP.Pages
                 command.Parameters.AddWithValue("@contrasenna", contrasenna);
 
                 // Ejecutar el comando y obtener el resultado
-                int resultado = (int)command.ExecuteScalar();
+                Boolean resultado = (Boolean)command.ExecuteScalar();
 
                 // Cerrar la conexión
                 conexionBD.cerrar();
 
                 // Verificar si el usuario fue encontrado
-                if (resultado == 1)
+                if (resultado)
                 {
                     UsuarioEncontrado = true;               }
                 else
