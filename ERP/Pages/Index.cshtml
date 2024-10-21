@@ -1,74 +1,141 @@
 ﻿@page
-@model IndexModel
+@model ERP.Pages.PaginaInicioModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "InicioSesion";
 }
-
-<!-- Interfaz gráfica html del Inicio de Sesión -->
-<body>
-    <section class="form-register">
-        <h1>Inicio de Sesión</h1>
-        <form method="post" autocomplete="off">
-
-            <input class="controls" type="text" name="usuario" id="usuario" placeholder="Ingrese el usuario" required>
-
-            <input class="controls" type="text" name="contraseña" id="contraseña" placeholder="Ingrese la contraseña" required>
-
-            <button type="submit" asp-page-handler="" class="buttoms">Iniciar Sesión</button>
-
-
-        </form>
-    </section>
-</body>
 
 <!-- Estilos CSS para la página -->
 <style>
-    /* Resetea márgenes y rellenos, y aplica box-sizing border-box para todos los elementos */
     * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
     }
 
-    /* Estilo para el fondo del cuerpo de la página */
     body {
-        background: linear-gradient(130deg, blue, skyblue);
+        background: linear-gradient(130deg, #001f3f, #0074D9); /* Fondo personalizado con tonos de azul */
+        font-family: Calibri, sans-serif;
+        color: white;
+        text-align: center;
     }
 
-    /* Estilo para la sección del formulario de registro */
-    .form-register {
-        width: 400px; /* Ancho del formulario */
-        background: #24303c; /* Color de fondo del formulario */
-        padding: 30px; /* Relleno interno del formulario */
-        margin: auto; /* Centra el formulario horizontalmente */
-        margin-top: 100px; /* Margen superior para separación de la parte superior de la página */
-        border-radius: 4px; /* Bordes redondeados del formulario */
-        font-family: Calibri; /* Fuente del texto en el formulario */
-        color: white; /* Color del texto en el formulario */
-        box-shadow: 7px 13px 37px #000; /* Sombra del formulario para un efecto elevado */
+    .container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
     }
 
-    /* Estilo para los campos de entrada del formulario */
-    .controls {
-        width: 100%; /* Ancho completo del campo de entrada */
-        background: #24303c; /* Color de fondo del campo de entrada */
-        padding: 10px; /* Relleno interno del campo de entrada */
-        border-radius: 4px; /* Bordes redondeados del campo de entrada */
-        margin-bottom: 16px; /* Margen inferior entre los campos de entrada */
-        border: 1px solid #1f53c5; /* Borde del campo de entrada */
-        font-family: Calibri; /* Fuente del texto en el campo de entrada */
-        font-size: 18px; /* Tamaño de la fuente en el campo de entrada */
-        color: white; /* Color del texto en el campo de entrada */
+    .header {
+        padding: 30px;
+        background-color: #001f3f;
+        border-bottom: 4px solid #0074D9;
+        margin-bottom: 30px;
     }
 
-    /* Estilo para el botón de enviar del formulario */
-    .buttoms {
-        width: 100%; /* Ancho completo del botón */
-        background: #1f53c5; /* Color de fondo del botón */
-        border: none; /* Sin borde para el botón */
-        padding: 12px; /* Relleno interno del botón */
-        color: white; /* Color del texto en el botón */
-        margin: 16px 0; /* Margen superior e inferior para el botón */
-        font-size: 18px; /* Tamaño de la fuente en el botón */
+        .header h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 20px;
+            margin-bottom: 0;
+        }
+
+    .content {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-top: 20px;
+    }
+
+    .info-box {
+        background: #24303c;
+        border-radius: 8px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        width: 48%;
+        padding: 20px;
+        text-align: left;
+    }
+
+        .info-box h2 {
+            font-size: 30px;
+            margin-bottom: 15px;
+        }
+
+        .info-box p {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+    .cta-box {
+        background: #1f53c5;
+        border-radius: 8px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        padding: 20px;
+        text-align: center;
+    }
+
+        .cta-box h3 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+    .btn {
+        display: inline-block;
+        padding: 14px 28px;
+        margin: 10px;
+        background-color: #0074D9;
+        color: white;
+        text-decoration: none;
+        font-size: 18px;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn:hover {
+            background-color: #001f3f;
+        }
+
+    .footer {
+        margin-top: 40px;
+        padding: 20px;
+        background-color: #001f3f;
+        color: #cccccc;
+        font-size: 16px;
+        border-top: 4px solid #0074D9;
     }
 </style>
+
+<!-- Interfaz gráfica HTML de la página de inicio -->
+<body>
+    <header class="header">
+        <h1>Bienvenido al Sistema ERP</h1>
+        <p>Gestión eficiente para tu empresa, desde producción hasta contabilidad.</p>
+    </header>
+
+    <div class="container">
+        <!-- Sección principal con la información y los botones de acción -->
+        <div class="content">
+            <div class="info-box">
+                <h2>¿Qué es un ERP?</h2>
+                <p>
+                    Un sistema ERP (Enterprise Resource Planning) es una plataforma integral que permite a las empresas gestionar todos sus recursos en un solo lugar. Desde la producción y el inventario hasta las ventas y la contabilidad, el ERP ayuda a centralizar las operaciones y mejorar la eficiencia.
+                </p>
+                <p>
+                    Con nuestro ERP, podrás integrar múltiples áreas de tu empresa para que trabajen juntas de manera eficiente, con una visión clara de todo el proceso, desde la producción hasta la entrega del producto final.
+                </p>
+            </div>
+
+            <div class="cta-box">
+                <h3>Empieza a optimizar tu negocio ahora</h3>
+                <a class="btn" href="/Login">Iniciar Sesión</a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        &copy; 2024 ERP - Todos los derechos reservados | Contáctanos: contacto@erp.com
+    </footer>
+</body>

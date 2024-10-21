@@ -1,0 +1,169 @@
+﻿@page
+@model ERP.Pages.PaginaInicio2Model
+@{
+}
+
+<!-- Estilos CSS para la página -->
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background: linear-gradient(130deg, #0074D9, #001f3f);
+        font-family: Calibri, sans-serif;
+        color: white;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .header {
+        padding: 20px;
+        background-color: #001f3f;
+        border-bottom: 4px solid #0074D9;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .header h1 {
+        font-size: 36px;
+        margin: 0;
+    }
+
+    .user-menu {
+        background-color: #0074D9;
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    .user-menu a {
+        color: white;
+        text-decoration: none;
+        padding: 10px 15px;
+        background-color: #001f3f;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+    }
+
+    .user-menu a:hover {
+        background-color: #133b8b;
+    }
+
+    .dashboard {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        margin-top: 40px;
+    }
+
+    .dashboard-item {
+        background: #24303c;
+        width: 30%;
+        padding: 20px;
+        margin: 20px;
+        border-radius: 8px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        text-align: center;
+        transition: transform 0.3s ease;
+    }
+
+    .dashboard-item:hover {
+        transform: translateY(-10px);
+    }
+
+    .dashboard-item h2 {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    .dashboard-item p {
+        font-size: 18px;
+        margin-bottom: 20px;
+        line-height: 1.6;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 12px 24px;
+        background-color: #0074D9;
+        color: white;
+        text-decoration: none;
+        font-size: 16px;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+        background-color: #001f3f;
+    }
+
+    .footer {
+        margin-top: 40px;
+        padding: 20px;
+        background-color: #001f3f;
+        color: #cccccc;
+        font-size: 16px;
+        border-top: 4px solid #0074D9;
+        text-align: center;
+    }
+</style>
+
+<!-- Interfaz gráfica HTML del panel de control -->
+<body>
+    <header class="header">
+        <h1>Panel de Control ERP</h1>
+        <div class="user-menu">
+            <a href="/Perfil">Mi Perfil</a>
+            <a href="/Logout">Cerrar Sesión</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2>Bienvenido</h2>
+        <p>Accede a las áreas principales del sistema ERP para gestionar la empresa de manera eficiente.</p>
+
+        <div class="dashboard">
+            <div class="dashboard-item">
+                <h2>Inventario</h2>
+                <p>Administra el inventario de tu empresa, actualiza el stock y revisa reportes en tiempo real.</p>
+                <a class="btn" href="/Inventario">Acceder al Inventario</a>
+            </div>
+
+            <div class="dashboard-item">
+                <h2>Ventas</h2>
+                <p>Gestiona las ventas, revisa el historial de pedidos y analiza los resultados de tus transacciones.</p>
+                <a class="btn" href="/Ventas">Acceder a Ventas</a>
+            </div>
+
+            <div class="dashboard-item">
+                <h2>Contabilidad</h2>
+                <p>Revisa los estados financieros, genera facturas y administra las cuentas por pagar y cobrar.</p>
+                <a class="btn" href="/Contabilidad">Acceder a Contabilidad</a>
+            </div>
+
+            <div class="dashboard-item">
+                <h2>Recursos Humanos</h2>
+                <p>Gestiona el personal de tu empresa, administra nóminas y mantén el control de la documentación.</p>
+                <a class="btn" href="/RecursosHumanos">Acceder a Recursos Humanos</a>
+            </div>
+
+            <div class="dashboard-item">
+                <h2>Reportes</h2>
+                <p>Genera reportes personalizados para analizar el rendimiento de diferentes áreas de la empresa.</p>
+                <a class="btn" href="/Reportes">Acceder a Reportes</a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        &copy; 2024 ERP - Todos los derechos reservados | Contáctanos: soporte@erp.com
+    </footer>
+</body>
