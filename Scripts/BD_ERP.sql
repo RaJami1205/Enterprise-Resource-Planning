@@ -69,10 +69,10 @@ CREATE TABLE LogueoUsuario (
 	contrasenna VARCHAR(75) NOT NULL,
 	cedula_empleado INT NOT NULL,
 
+	PRIMARY KEY (usuario,contrasenna,cedula_empleado),
 	FOREIGN KEY (cedula_empleado) REFERENCES Empleado(cedula)
 );
 
-SELECT * FROM LogueoUsuario
 
 CREATE TABLE EmpleadoRol (
 	rol INT NOT NULL ,
