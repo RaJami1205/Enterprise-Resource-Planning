@@ -3,18 +3,10 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace ERP.Pages
 {
-    public class IndexModel : PageModel
+    public class PaginaInicioModel : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
-
-        public IndexModel(ILogger<IndexModel> logger)
-        {
-            _logger = logger;
-        }
-
         public void OnGet()
         {
-
         }
     }
 }

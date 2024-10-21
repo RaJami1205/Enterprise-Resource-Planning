@@ -64,13 +64,15 @@ CREATE TABLE Empleado (
 );
 
 /* Tabla para almacenar los usuarios del sistema */
-CREATE TABLE Logueo_Usuario (
+CREATE TABLE LogueoUsuario (
 	usuario VARCHAR(75) NOT NULL,
 	contrasenna VARCHAR(75) NOT NULL,
 	cedula_empleado INT NOT NULL,
 
 	FOREIGN KEY (cedula_empleado) REFERENCES Empleado(cedula)
 );
+
+SELECT * FROM LogueoUsuario
 
 CREATE TABLE EmpleadoRol (
 	rol INT NOT NULL ,
