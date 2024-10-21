@@ -34,7 +34,7 @@ namespace ERP.Pages.Cliente.Cliente_view
             Cliente.sector = Request.Form["sector"];
 
             try
-            {
+            { 
                 conexionBD.abrir();
                 string query = @"
                     INSERT INTO Cliente (cedula_juridica, nombre, correo, telefono, celular, fax, zona, sector)

@@ -1,11 +1,11 @@
 ﻿@page
-@model ERP.Pages.Empleado.Empleado_view.Empleado_view_formModel
+@model ERP.Pages.Empleado.Empleado_view.Empleado_view_editModel
 @{
 }
 
 <body>
     <section class="form-register">
-        <h1>Empleado</h1>
+        <h1>Editar Empleado</h1>
 
         @if (Model.mensaje_exito.Length > 0)
         {
@@ -24,7 +24,7 @@
 
         <form method="post" autocomplete="off">
 
-            <input class="controls" type="text" name="cedula" id="cedula" placeholder="Ingrese la cedula" required value="@Model.Empleado.cedula">
+            <input class="controls" type="text" name="cedula" id="cedula" placeholder="Ingrese la cédula" required value="@Model.Empleado.cedula">
 
             <input class="controls" type="text" name="nombre" id="nombre" placeholder="Ingrese el nombre" required value="@Model.Empleado.nombre">
 
@@ -64,11 +64,7 @@
 
             <input class="controls" type="text" name="permiso_vendedor" id="permiso_vendedor" placeholder="Ingrese el permiso" required value="@Model.Empleado.permiso_vendedor">
 
-            <input class="controls" type="text" name="usuario" id="usuario" placeholder="Ingrese el usuario" required value="@Model.Empleado.usuario">
-
-            <input class="controls" type="text" name="contraseña" id="contraseña" placeholder="Ingrese la contraseña" required value="@Model.Empleado.contraseña">
-
-            <button type="submit" asp-page-handler="Registrar_actividad" class="buttoms">Registrar</button>
+            <button type="submit" asp-page-handler="Registrar_actividad" class="buttoms">Modificar</button>
         </form>
     </section>
 </body>
