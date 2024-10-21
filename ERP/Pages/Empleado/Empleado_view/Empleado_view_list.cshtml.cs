@@ -20,7 +20,7 @@ namespace ERP.Pages.Empleado.Empleado_view
             try
             {
                 conexionBD.abrir();
-                String sql = "SELECT cedula, nombre, apellido1, apellido2, departamento, permiso_vendedor, puesto FROM Empleado";
+                String sql = "SELECT * FROM Vista_Empleado_Completa";
                 SqlCommand command = conexionBD.obtenerComando(sql);
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
@@ -28,13 +28,19 @@ namespace ERP.Pages.Empleado.Empleado_view
                     {
 
                         EmpleadoInfo empleado = new EmpleadoInfo();
-                        empleado.cedula = "" + reader.GetInt32(0);
-                        empleado.nombre = "" + reader.GetString(1);
-                        empleado.apellido1 = "" + reader.GetString(2);
-                        empleado.apellido2 = "" + reader.GetString(3);
-                        empleado.departamento = "" + reader.GetString(4);
-                        empleado.permiso_vendedor = "" + reader.GetString(5);
-                        empleado.puesto = "" + reader.GetString(6);
+                        empleado.cedula = reader.GetInt32(0).ToString();
+                        empleado.nombre = reader.GetString(1);
+                        empleado.apellido1 = reader.GetString(2);
+                        empleado.apellido2 = reader.GetString(3);
+                        empleado.edad = reader.GetInt32(4).ToString();
+                        empleado.genero = reader.GetString(5);
+                        empleado.residencia = reader.GetString(6);
+                        empleado.fecha_ingreso = reader.GetDateTime(7).ToString("yyyy-MM-dd");
+                        empleado.departamento = reader.GetString(8); // Departamento desde la vista
+                        empleado.vendedor = reader.GetString(9); // Permiso de vendedor
+                        empleado.telefono = reader.GetInt32(10).ToString(); // Número de teléfono
+                        empleado.salario = reader.GetDecimal(11).ToString("F2"); // Salario formateado con 2 decimales
+                        empleado.puesto = reader.GetString(12); // Puesto desde la vista
 
                         listaEmpleados.Add(empleado);
                     }
@@ -56,8 +62,14 @@ namespace ERP.Pages.Empleado.Empleado_view
         public string nombre { get; set; }
         public string apellido1 { get; set; }
         public string apellido2 { get; set; }
+        public string edad { get; set; }
+        public string genero { get; set; }
+        public string residencia { get; set; }
+        public string fecha_ingreso { get; set; }
         public string departamento { get; set; }
-        public string permiso_vendedor { get; set; }
         public string puesto { get; set; }
+        public string vendedor { get; set; }
+        public string telefono { get; set; }
+        public string salario { get; set; }
     }
 }

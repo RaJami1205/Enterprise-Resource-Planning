@@ -32,12 +32,7 @@
 
             <input class="controls" type="text" name="apellido2" id="apellido2" placeholder="Ingrese el segundo apellido" required value="@Model.Empleado.apellido2">
 
-            <!-- Agregar el combobox para seleccionar el género -->
-            <select class="controls" name="genero" id="genero required" value="@Model.Empleado.genero">
-                <option value="genero">Seleccione el género</option>
-                <option value="genero">Masculino</option>
-                <option value="genero">Femenino</option>
-            </select>
+            <input class="controls" type="text" name="genero" id="genero" placeholder="Ingrese el género" required value="@Model.Empleado.genero">
 
             <input class="controls" type="date" name="fecha_nacimiento" id="fecha_nacimiento" placeholder="Ingrese la fecha de nacimiento" required value="@Model.Empleado.fecha_nacimiento">
 
@@ -52,13 +47,19 @@
             <!-- Agregar el combobox para seleccionar el puesto -->
             <select class="controls" name="puesto" id="puesto" required value="@Model.Empleado.puesto">
                 <option value="propietario">Seleccione un puesto</option>
-                <option value="propietario">Lista de departamentos</option>
+                @foreach (var puesto in Model.listaPuestos)
+                {
+                    <option value="@puesto">@puesto</option>
+                }
             </select>
 
             <!-- Agregar el combobox para seleccionar el departamento -->
             <select class="controls" name="departamento" id="departamento" required value="@Model.Empleado.departamento">
                 <option value="propietario">Seleccione el departamento</option>
-                <option value="propietario">Lista de departamentos</option>
+                @foreach (var departamento in Model.listaDepartamentos)
+                {
+                    <option value="@departamento">@departamento</option>
+                }
             </select>
 
             <input class="controls" type="text" name="permiso_vendedor" id="permiso_vendedor" placeholder="Ingrese el permiso" required value="@Model.Empleado.permiso_vendedor">
