@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Data;
 using System.Data.SqlClient;
+using System.Data;
 
 namespace ERP.Pages.Empleado.Historico_Salario
 {
-    public class Historico_Salario_formModel : PageModel
+    public class Historico_Salario_editModel : PageModel
     {
         public HistoricoSalarioInfo HistoricoSalario { get; set; } = new HistoricoSalarioInfo(); // Lista que guarda toda la información de los requests
         public Conexion conexionBD = new Conexion(); // Instancia de la clase Conexion para manejar la conexión a la base de datos
@@ -23,6 +23,34 @@ namespace ERP.Pages.Empleado.Historico_Salario
         /// </summary>
         public void OnGet()
         {
+            string cedula = Request.Query["cedula"];
+
+            try
+            {
+                conexionBD.abrir();
+                String sql = "SELECT * FROM HistoricoSalario WHERE cedula_empleado = @cedula";
+                SqlCommand command = conexionBD.obtenerComando(sql);
+                command.Parameters.AddWithValue("@cedula", cedula);
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        HistoricoSalario.puesto = reader.GetInt32(0).ToString();
+                        HistoricoSalario.fecha_inicio = reader.GetDateTime(1).ToString("yyyy-MM-dd");
+                        HistoricoSalario.fecha_final = reader.GetDateTime(2).ToString("yyyy-MM-dd");
+                        HistoricoSalario.departamento = reader.GetInt32(0).ToString();
+                        HistoricoSalario.monto = reader.GetInt32(0).ToString();
+                        HistoricoSalario.cedula = reader.GetInt32(0).ToString();
+                    }
+                }
+                conexionBD.cerrar();
+            }
+            catch (Exception ex)
+            {
+                mensaje_error = ex.Message;
+                conexionBD.cerrar();
+            }
+
             conexionBD.abrir();
             string sqlCedula = "SELECT cedula FROM Empleado";
             SqlCommand command_cedula = conexionBD.obtenerComando(sqlCedula);
@@ -67,7 +95,7 @@ namespace ERP.Pages.Empleado.Historico_Salario
         /// Salidas: Mensaje de éxito o mensaje de error.
         /// Restricciones: Todos los campos deben estar debidamente validados antes de enviarse.
         /// </summary>
-        public void OnPost() 
+        public void OnPost()
         {
             HistoricoSalario.fecha_inicio = Request.Form["fecha_inicio"];
             HistoricoSalario.fecha_final = Request.Form["fecha_final"];
@@ -79,7 +107,7 @@ namespace ERP.Pages.Empleado.Historico_Salario
             try
             {
                 conexionBD.abrir();
-                string sqlHistoricoSalario = "InsertarHistoricoSalario";
+                string sqlHistoricoSalario = "ModificarHistoricoSalario";
                 SqlCommand command = conexionBD.obtenerComando(sqlHistoricoSalario);
                 command.CommandType = System.Data.CommandType.StoredProcedure;
                 SqlParameter errorParameter = new SqlParameter("@ErrorMsg", SqlDbType.VarChar, 255)

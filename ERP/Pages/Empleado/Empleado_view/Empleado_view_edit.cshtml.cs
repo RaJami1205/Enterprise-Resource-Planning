@@ -23,7 +23,6 @@ namespace ERP.Pages.Empleado.Empleado_view
         public void OnGet()
         {
             string cedula = Request.Query["cedula"];
-            Console.WriteLine(cedula); 
 
             try
             {
