@@ -12,18 +12,14 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
         public List<string> Sectores { get; set; } = new List<string>();
         public List<string> EstadosCotizacion { get; set; } = new List<string>();
         public List<string> TiposCotizacion { get; set; } = new List<string>();
-        public List<int> Clientes { get; set; } = new List<int>();
-        public List<int> Empleados { get; set; } = new List<int>();
+        public List<string> Clientes { get; set; } = new List<string>();
+        public List<string> Empleados { get; set; } = new List<string>();
 
         public string mensaje_error = "";
         public string mensaje_exito = "";
 
         public Conexion conexionBD = new Conexion(); // Instancia para la conexión a la base de datos
 
-        /// <summary>
-        /// Método que se ejecuta cuando se accede a la página (GET request).
-        /// Objetivo: Cargar las listas de Zonas, Sectores, Estados de Cotización y Tipos de Cotización.
-        /// </summary>
         public void OnGet()
         {
             try
@@ -80,6 +76,7 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
                 }
                 conexionBD.cerrar();
 
+                // Obtener Empleados
                 conexionBD.abrir();
                 string query4 = "SELECT cedula FROM Empleado";
                 SqlCommand commandEmpleado = conexionBD.obtenerComando(query4);
@@ -87,11 +84,12 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
                 {
                     while (reader.Read())
                     {
-                        Empleados.Add(reader.GetInt32(0));
+                        Empleados.Add(reader.GetInt32(0).ToString());
                     }
                 }
                 conexionBD.cerrar();
 
+                // Obtener Clientes
                 conexionBD.abrir();
                 string query5 = "SELECT cedula_juridica FROM Cliente";
                 SqlCommand commandCliente = conexionBD.obtenerComando(query5);
@@ -99,7 +97,7 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
                 {
                     while (reader.Read())
                     {
-                        Clientes.Add(reader.GetInt32(0));
+                        Clientes.Add(reader.GetInt32(0).ToString());
                     }
                 }
                 conexionBD.cerrar();
@@ -111,24 +109,23 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
             }
         }
 
-        /// <summary>
-        /// Método que se ejecuta cuando se envía el formulario (POST request).
-        /// Objetivo: Registrar una nueva cotización utilizando un procedimiento almacenado.
-        /// </summary>
         public void OnPost()
         {
             Cotizacion.num_cotizacion = Request.Form["num_cotizacion"];
             Cotizacion.orden_compra = Request.Form["orden_compra"];
+            Cotizacion.tipo = Request.Form["tipo"];
             Cotizacion.descripcion = Request.Form["descripcion"];
-            Cotizacion.monto_total = Request.Form["monto_total"];
-            Cotizacion.mes_cierre = Request.Form["mes_cierre"];
-            Cotizacion.probabilidad = Request.Form["probabilidad"];
-            Cotizacion.cedula_vendedor = Request.Form["empleado"];
-            Cotizacion.cedula_cliente = Request.Form["cliente"];
             Cotizacion.zona = Request.Form["zona"];
             Cotizacion.sector = Request.Form["sector"];
             Cotizacion.estado = Request.Form["estado"];
-            Cotizacion.tipo = Request.Form["tipo"];
+            Cotizacion.monto_total = Request.Form["monto_total"];
+            Cotizacion.mes_cierre = Request.Form["mes_cierre"];
+            Cotizacion.cedula_vendedor = Request.Form["empleado"];
+            Cotizacion.fecha_inicio = Request.Form["fecha_inicio"];
+            Cotizacion.fecha_cierre = Request.Form["fecha_cierre"];
+            Cotizacion.probabilidad = Request.Form["probabilidad"];
+            Cotizacion.razon_negacion = Request.Form["razon_negacion"];
+            Cotizacion.cedula_cliente = Request.Form["cliente"];
 
             try
             {
@@ -137,8 +134,8 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
                 SqlCommand command = conexionBD.obtenerComando(query);
                 command.CommandType = CommandType.StoredProcedure;
 
-                // Declarar parámetro de error para capturar un posible mensaje de error
-                SqlParameter errorParameter = new SqlParameter("@ErrorMsg", SqlDbType.VarChar, 255)
+                // Parámetro de error de salida
+                SqlParameter errorParameter = new SqlParameter("@ErrorMsg", SqlDbType.NVarChar, 255)
                 {
                     Direction = ParameterDirection.Output
                 };
@@ -153,8 +150,11 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
                 command.Parameters.AddWithValue("@estado", Cotizacion.estado);
                 command.Parameters.AddWithValue("@monto_total", Cotizacion.monto_total);
                 command.Parameters.AddWithValue("@mes_cierre", Cotizacion.mes_cierre);
-                command.Parameters.AddWithValue("@probabilidad", Cotizacion.probabilidad);
                 command.Parameters.AddWithValue("@cedula_vendedor", Cotizacion.cedula_vendedor);
+                command.Parameters.AddWithValue("@fecha_inicio", Cotizacion.fecha_inicio);
+                command.Parameters.AddWithValue("@fecha_cierre", Cotizacion.fecha_cierre);
+                command.Parameters.AddWithValue("@probabilidad", Cotizacion.probabilidad);
+                command.Parameters.AddWithValue("@razon_negacion", Cotizacion.razon_negacion);
                 command.Parameters.AddWithValue("@cedula_cliente", Cotizacion.cedula_cliente);
                 command.Parameters.Add(errorParameter);
 
@@ -172,16 +172,16 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
                 {
                     mensaje_error = $"Error al registrar la cotización: {errorMsg}";
                 }
+
                 conexionBD.cerrar();
             }
             catch (Exception ex)
             {
                 mensaje_error = ex.Message;
                 conexionBD.cerrar();
-                OnGet();
             }
 
-            // Volver a cargar las listas
+            // Volver a cargar las listas en caso de error
             OnGet();
         }
     }
@@ -191,15 +191,19 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
     {
         public string num_cotizacion { get; set; }
         public string orden_compra { get; set; }
+        public string tipo { get; set; }
         public string descripcion { get; set; }
-        public string monto_total { get; set; }
-        public string mes_cierre { get; set; }
-        public string probabilidad { get; set; }
-        public string cedula_vendedor { get; set; }
-        public string cedula_cliente { get; set; }
         public string zona { get; set; }
         public string sector { get; set; }
         public string estado { get; set; }
-        public string tipo { get; set; }
+        public string monto_total { get; set; }
+        public string mes_cierre { get; set; }
+        public string cedula_vendedor { get; set; }
+        public string fecha_inicio { get; set; }
+        public string fecha_cierre { get; set; }
+        public string probabilidad { get; set; }
+        public string razon_negacion { get; set; }
+        public string cedula_cliente { get; set; }
     }
 }
+
