@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using static ERP.Pages.Inventario.Articulo.Articulo_listModel;
+using System.Data.SqlClient;
 
 namespace ERP.Pages.Empleado.Historico_Salario
 {
     public class Historico_Salario_listModel : PageModel
     {
-        public List<HistoricoSalarioInfo> listaHistoricoSalarios = new List<HistoricoSalarioInfo>(); // Lista que almacena los datos de los Empleados
+        public List<HistoricoSalarioVista> listaHistoricoSalarios = new List<HistoricoSalarioVista>(); // Lista que almacena los datos de los Empleados
         public Conexion conexionBD = new Conexion(); // Instancia de la clase Conexion para manejar la conexión a la base de datos
 
         /// <summary>
@@ -16,11 +18,44 @@ namespace ERP.Pages.Empleado.Historico_Salario
         /// </summary>
         public void OnGet()
         {
+            try
+            {
+                conexionBD.abrir();
+                String sql = "SELECT * FROM VistaHistorialEmpleados";
+                SqlCommand command = conexionBD.obtenerComando(sql);
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+
+                        HistoricoSalarioVista HistoricoSalario = new HistoricoSalarioVista();
+                        HistoricoSalario.cedula = reader.GetInt32(0).ToString();
+                        HistoricoSalario.nombre = reader.GetString(1);
+                        HistoricoSalario.apellido1 = reader.GetString(2);
+                        HistoricoSalario.apellido2 = reader.GetString(3);
+                        HistoricoSalario.puesto = reader.GetString(4);
+                        HistoricoSalario.departamento = reader.GetString(5);
+                        HistoricoSalario.monto = reader.GetInt32(6).ToString();
+                        HistoricoSalario.fecha_inicio = reader.GetDateTime(7).ToString("yyyy-MM-dd");
+                        HistoricoSalario.fecha_final = reader.GetDateTime(8).ToString("yyyy-MM-dd");
+
+                        listaHistoricoSalarios.Add(HistoricoSalario);
+                    }
+                }
+                conexionBD.cerrar();
+            }
+            catch (Exception ex)
+            {
+                // Aquí se maneja el error
+                Console.WriteLine("Error: " + ex.Message);
+                conexionBD.cerrar();
+            }
         }
 
-        // Clase que representa el modelo de vista para la lista de empleados
-        public class HistoricoSalarioInfo
+        // Clase que representa el modelo de vista para la lista de históricos de salarios
+        public class HistoricoSalarioVista
         {
+            public string cedula { get; set; }
             public string nombre { get; set; }
             public string apellido1 { get; set; }
             public string apellido2 { get; set; }

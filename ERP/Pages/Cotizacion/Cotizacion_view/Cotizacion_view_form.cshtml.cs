@@ -206,4 +206,3 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
         public string cedula_cliente { get; set; }
     }
 }
-

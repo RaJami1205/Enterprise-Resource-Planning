@@ -1,5 +1,5 @@
 ﻿@page
-@model ERP.Pages.Empleado.Historico_Salario.Historico_Salario_formModel
+@model ERP.Pages.Empleado.Historico_Salario.Historico_Salario_editModel
 @{
 }
 
@@ -43,7 +43,7 @@
             <!-- Agregar el combobox para seleccionar el puesto -->
             <select class="controls" name="puesto" id="puesto" required value="@Model.HistoricoSalario.puesto">
                 <option value="propietario">Seleccione un puesto</option>
-                @foreach (var puesto in Model.listaPuestos) 
+                @foreach (var puesto in Model.listaPuestos)
                 {
                     <option value="@puesto">@puesto</option>
                 }

@@ -10,6 +10,7 @@
 <table class="table">
     <thead>
         <tr>
+            <th>Cédula</th>
             <th>Nombre</th>
             <th>Apellido</th>
             <th>Apellido</th>
@@ -18,6 +19,27 @@
             <th>Monto</th>
             <th>Fecha de Inicio</th>
             <th>Fecha Final</th>
+            <th>Acción</th>
         </tr>
     </thead>
+    <tbody>
+        <!-- Ciclo que extrae los datos de la tabla de los artículos para mostrar toda información registrada -->
+        @foreach (var item in Model.listaHistoricoSalarios)
+        {
+            <tr>
+                <td>@item.cedula</td>
+                <td>@item.nombre</td>
+                <td>@item.apellido1</td>
+                <td>@item.apellido2</td>
+                <td>@item.puesto</td>
+                <td>@item.departamento</td>
+                <td>@item.monto</td>
+                <td>@item.fecha_inicio</td>
+                <td>@item.fecha_final</td>
+                <td>
+                    <a class="btn btn-primary btn-sm" href="/Empleado/Historico_Salario/Historico_Salario_edit?cedula=@item.cedula">Editar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
