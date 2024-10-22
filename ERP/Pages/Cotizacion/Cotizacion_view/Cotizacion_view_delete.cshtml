@@ -1,0 +1,36 @@
+﻿@page
+@using System.Data.SqlClient;
+@using System.Data;
+@{
+    Conexion conexionBD = new Conexion();
+    try
+    {
+        string id = Request.Query["num_cotizacion"];
+        conexionBD.abrir();
+        string query = "EliminarCotizacion";
+        SqlCommand command = conexionBD.obtenerComando(query);
+        command.CommandType = CommandType.StoredProcedure;
+
+        // Parámetro de error de salida
+        SqlParameter errorParameter = new SqlParameter("@ErrorMsg", SqlDbType.NVarChar, 255)
+        {
+            Direction = ParameterDirection.Output
+        };
+
+        command.Parameters.AddWithValue("@num_cotizacion", id);
+
+        command.Parameters.Add(errorParameter);
+
+        // Ejecutar el procedimiento almacenado
+        command.ExecuteNonQuery();
+
+        // Capturar el mensaje de error, si existe
+        string errorMsg = (string)command.Parameters["@ErrorMsg"].Value;
+
+        conexionBD.cerrar();
+    }
+    catch (Exception ex)
+    {
+    }
+    Response.Redirect("/Cotizacion/Cotizacion_view/Cotizacion_view_list");
+}

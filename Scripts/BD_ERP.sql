@@ -261,10 +261,12 @@ CREATE TABLE Factura (
 	fecha DATE NOT NULL, /* Fecha de emisión de la factura */
     estado INT NOT NULL, /* Estado de la factura (pagada, pendiente, etc.) */
     cedula_vendedor INT NOT NULL, /* Cédula del vendedor */
+	num_cotizacion INT,
+	FOREIGN KEY (num_cotizacion) REFERENCES Cotizacion(num_cotizacion),
     FOREIGN KEY (cedula_vendedor) REFERENCES Empleado(cedula), /* Llave foránea a Empleado */
     FOREIGN KEY (cedula_juridica) REFERENCES Cliente(cedula_juridica), /* Llave foránea a Cliente */
 	FOREIGN KEY (estado) REFERENCES EstadoFactura(estadofactura_id) /* Llave foránea a Cliente */
-);
+);-----------------------------------------------------------------------------------------------------------------------------------------------Agregue num cotizacion
 
 /* Tabla que asocia artículos con facturas */
 CREATE TABLE FacturaArticulo (

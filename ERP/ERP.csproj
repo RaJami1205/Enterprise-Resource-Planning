@@ -7,11 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+    <Compile Remove="Pages\Planilla\Planilla_view\Registro_Planilla\**" />
+    <Content Remove="Pages\Planilla\Planilla_view\Registro_Planilla\**" />
+    <EmbeddedResource Remove="Pages\Planilla\Planilla_view\Registro_Planilla\**" />
+    <None Remove="Pages\Planilla\Planilla_view\Registro_Planilla\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\Planilla\Planilla_view\Registro_Planilla\" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
   </ItemGroup>
 
 </Project>

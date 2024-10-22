@@ -1,0 +1,96 @@
+﻿@page
+@model ERP.Pages.Cotizacion.CotizacionTarea.CotizacionTareaFormModel
+@{
+}
+
+<body>
+    <section class="form-register">
+        <h1>Registrar Tarea de Cotización</h1>
+
+        <!-- Mensaje emergente de éxito luego de una inserción correcta -->
+        @if (Model.mensaje_exito.Length > 0)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>@Model.mensaje_exito</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        <!-- Mensaje emergente de error luego de una inserción fallida mostrando el problema ocurrido -->
+        @if (Model.mensaje_error.Length > 0)
+        {
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>@Model.mensaje_error</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        <form method="post" autocomplete="off">
+
+            <!-- Código de la Tarea -->
+            <input class="controls" type="number" name="codigo_tarea" id="codigo_tarea" placeholder="Ingrese el código de la tarea" required value="@Model.Tarea.codigo_tarea">
+
+            <!-- Descripción de la Tarea -->
+            <input class="controls" type="text" name="descripcion" id="descripcion" placeholder="Ingrese la descripción de la tarea" required value="@Model.Tarea.descripcion">
+
+            <!-- Número de Cotización (ComboBox) -->
+            <select class="controls" name="num_cotizacion" id="num_cotizacion" required>
+                <option value="" disabled selected>Seleccione el número de cotización</option>
+                @foreach (var cotizacion in Model.cotizaciones)
+                {
+                    <option value="@cotizacion">@cotizacion</option>
+                }
+            </select>
+
+            <!-- Botón de Registro -->
+            <button type="submit" asp-page-handler="" class="buttoms">Registrar</button>
+
+        </form>
+    </section>
+</body>
+
+<!-- Estilos CSS para la página -->
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background: linear-gradient(130deg, blue, skyblue);
+    }
+
+    .form-register {
+        width: 400px;
+        background: #24303c;
+        padding: 30px;
+        margin: auto;
+        margin-top: 100px;
+        border-radius: 4px;
+        font-family: Calibri;
+        color: white;
+        box-shadow: 7px 13px 37px #000;
+    }
+
+    .controls {
+        width: 100%;
+        background: #24303c;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 16px;
+        border: 1px solid #1f53c5;
+        font-family: Calibri;
+        font-size: 18px;
+        color: white;
+    }
+
+    .buttoms {
+        width: 100%;
+        background: #1f53c5;
+        border: none;
+        padding: 12px;
+        color: white;
+        margin: 16px 0;
+        font-size: 18px;
+    }
+</style>

@@ -1,0 +1,59 @@
+﻿@page
+@using System.Data.SqlClient;
+@using System.Data;
+@{
+    Conexion conexionBD = new Conexion();
+    string id = Request.Query["num_cotizacion"];
+
+    try
+    {
+        // Asegúrate de que el ID no esté vacío o nulo
+        if (!string.IsNullOrEmpty(id))
+        {
+            conexionBD.abrir();
+            string query = "EliminarCotizacion"; // Nombre del procedimiento almacenado
+            SqlCommand command = conexionBD.obtenerComando(query);
+            command.CommandType = CommandType.StoredProcedure;
+
+            // Parámetro de entrada
+            command.Parameters.AddWithValue("@num_cotizacion", id);
+
+            // Parámetro de error de salida
+            SqlParameter errorParameter = new SqlParameter("@ErrorMsg", SqlDbType.NVarChar, 255)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+            command.Parameters.Add(errorParameter);
+
+            // Ejecutar el procedimiento almacenado
+            command.ExecuteNonQuery();
+
+            // Capturar el mensaje de error, si existe
+            string errorMsg = command.Parameters["@ErrorMsg"].Value?.ToString();
+
+            if (!string.IsNullOrEmpty(errorMsg))
+            {
+                // Mostrar mensaje de error si es necesario
+                ViewData["ErrorMessage"] = errorMsg;
+            }
+        }
+        else
+        {
+            // Manejo de error si el ID está vacío o nulo
+            ViewData["ErrorMessage"] = "Número de cotización no proporcionado.";
+        }
+    }
+    catch (Exception ex)
+    {
+        // Loguear la excepción o manejar errores adicionales
+        ViewData["ErrorMessage"] = "Ocurrió un error: " + ex.Message;
+    }
+    finally
+    {
+        // Asegurarse de cerrar la conexión siempre
+        conexionBD.cerrar();
+    }
+
+    // Redirigir de vuelta a la lista de cotizaciones
+    Response.Redirect("/Cotizacion/CotizacionTarea/CotizacionTareaList");
+}
