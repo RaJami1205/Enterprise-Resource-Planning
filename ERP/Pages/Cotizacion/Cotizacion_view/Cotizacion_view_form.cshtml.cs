@@ -12,6 +12,8 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
         public List<string> Sectores { get; set; } = new List<string>();
         public List<string> EstadosCotizacion { get; set; } = new List<string>();
         public List<string> TiposCotizacion { get; set; } = new List<string>();
+        public List<int> Clientes { get; set; } = new List<int>();
+        public List<int> Empleados { get; set; } = new List<int>();
 
         public string mensaje_error = "";
         public string mensaje_exito = "";
@@ -77,6 +79,30 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
                     }
                 }
                 conexionBD.cerrar();
+
+                conexionBD.abrir();
+                string query4 = "SELECT cedula FROM Empleado";
+                SqlCommand commandEmpleado = conexionBD.obtenerComando(query4);
+                using (SqlDataReader reader = commandEmpleado.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Empleados.Add(reader.GetInt32(0));
+                    }
+                }
+                conexionBD.cerrar();
+
+                conexionBD.abrir();
+                string query5 = "SELECT cedula_juridica FROM Cliente";
+                SqlCommand commandCliente = conexionBD.obtenerComando(query4);
+                using (SqlDataReader reader = commandCliente.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Clientes.Add(reader.GetInt32(0));
+                    }
+                }
+                conexionBD.cerrar();
             }
             catch (Exception ex)
             {
@@ -97,8 +123,8 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
             Cotizacion.monto_total = decimal.Parse(Request.Form["monto_total"]);
             Cotizacion.mes_cierre = int.Parse(Request.Form["mes_cierre"]);
             Cotizacion.probabilidad = decimal.Parse(Request.Form["probabilidad"]);
-            Cotizacion.nombre_vendedor = Request.Form["nombre_vendedor"];
-            Cotizacion.nombre_cliente = Request.Form["nombre_cliente"];
+            Cotizacion.cedula_vendedor = int.Parse(Request.Form["empleado"]);
+            Cotizacion.cedula_cliente = int.Parse(Request.Form["cliente"]);
             Cotizacion.zona = Request.Form["zona"];
             Cotizacion.sector = Request.Form["sector"];
             Cotizacion.estado = Request.Form["estado"];
@@ -124,8 +150,8 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
                 command.Parameters.AddWithValue("@monto_total", Cotizacion.monto_total);
                 command.Parameters.AddWithValue("@mes_cierre", Cotizacion.mes_cierre);
                 command.Parameters.AddWithValue("@probabilidad", Cotizacion.probabilidad);
-                command.Parameters.AddWithValue("@nombre_vendedor", Cotizacion.nombre_vendedor);
-                command.Parameters.AddWithValue("@nombre_cliente", Cotizacion.nombre_cliente);
+                command.Parameters.AddWithValue("@cedula_vendedor", Cotizacion.cedula_vendedor);
+                command.Parameters.AddWithValue("@cedula_cliente", Cotizacion.cedula_cliente);
                 command.Parameters.AddWithValue("@zona", Cotizacion.zona);
                 command.Parameters.AddWithValue("@sector", Cotizacion.sector);
                 command.Parameters.AddWithValue("@estado", Cotizacion.estado);
@@ -168,8 +194,8 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
         public decimal monto_total { get; set; }
         public int mes_cierre { get; set; }
         public decimal probabilidad { get; set; }
-        public string nombre_vendedor { get; set; }
-        public string nombre_cliente { get; set; }
+        public int cedula_vendedor { get; set; }
+        public int cedula_cliente { get; set; }
         public string zona { get; set; }
         public string sector { get; set; }
         public string estado { get; set; }

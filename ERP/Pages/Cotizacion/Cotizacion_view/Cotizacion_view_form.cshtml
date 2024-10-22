@@ -44,11 +44,23 @@
             <!-- Probabilidad (1.00 - 100.00) -->
             <input class="controls" type="number" step="0.01" name="probabilidad" id="probabilidad" placeholder="Ingrese la probabilidad (1.00 - 100.00)" min="1" max="100" required value="@Model.Cotizacion.probabilidad">
 
-            <!-- Nombre del Vendedor -->
-            <input class="controls" type="text" name="nombre_vendedor" id="nombre_vendedor" placeholder="Ingrese el nombre del vendedor" required value="@Model.Cotizacion.nombre_vendedor">
+            <!-- Cedula del Vendedor -->
+            <select class="controls" name="empleado" id="empleado" required>
+                <option value="" disabled selected>Seleccione el vendedor</option>
+                @foreach (var empleado in Model.Empleados)
+                {
+                    <option value="@empleado">@empleado</option>
+                }
+            </select>
 
-            <!-- Nombre del Cliente -->
-            <input class="controls" type="text" name="nombre_cliente" id="nombre_cliente" placeholder="Ingrese el nombre del cliente" required value="@Model.Cotizacion.nombre_cliente">
+            <!-- Cedula del Cliente -->
+            <select class="controls" name="cliente" id="cliente" required>
+                <option value="" disabled selected>Seleccione el vendedor</option>
+                @foreach (var cliente in Model.Clientes)
+                {
+                    <option value="@cliente">@cliente</option>
+                }
+            </select>
 
             <!-- Zona (ComboBox) -->
             <select class="controls" name="zona" id="zona" required>
