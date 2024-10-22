@@ -94,7 +94,7 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
 
                 conexionBD.abrir();
                 string query5 = "SELECT cedula_juridica FROM Cliente";
-                SqlCommand commandCliente = conexionBD.obtenerComando(query4);
+                SqlCommand commandCliente = conexionBD.obtenerComando(query5);
                 using (SqlDataReader reader = commandCliente.ExecuteReader())
                 {
                     while (reader.Read())
@@ -117,14 +117,14 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
         /// </summary>
         public void OnPost()
         {
-            Cotizacion.num_cotizacion = int.Parse(Request.Form["num_cotizacion"]);
+            Cotizacion.num_cotizacion = Request.Form["num_cotizacion"];
             Cotizacion.orden_compra = Request.Form["orden_compra"];
             Cotizacion.descripcion = Request.Form["descripcion"];
-            Cotizacion.monto_total = decimal.Parse(Request.Form["monto_total"]);
-            Cotizacion.mes_cierre = int.Parse(Request.Form["mes_cierre"]);
-            Cotizacion.probabilidad = decimal.Parse(Request.Form["probabilidad"]);
-            Cotizacion.cedula_vendedor = int.Parse(Request.Form["empleado"]);
-            Cotizacion.cedula_cliente = int.Parse(Request.Form["cliente"]);
+            Cotizacion.monto_total = Request.Form["monto_total"];
+            Cotizacion.mes_cierre = Request.Form["mes_cierre"];
+            Cotizacion.probabilidad = Request.Form["probabilidad"];
+            Cotizacion.cedula_vendedor = Request.Form["empleado"];
+            Cotizacion.cedula_cliente = Request.Form["cliente"];
             Cotizacion.zona = Request.Form["zona"];
             Cotizacion.sector = Request.Form["sector"];
             Cotizacion.estado = Request.Form["estado"];
@@ -188,19 +188,17 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
     // Clase que representa la estructura de la cotización
     public class CotizacionInfo
     {
-        public int num_cotizacion { get; set; }
+        public string num_cotizacion { get; set; }
         public string orden_compra { get; set; }
         public string descripcion { get; set; }
-        public decimal monto_total { get; set; }
-        public int mes_cierre { get; set; }
-        public decimal probabilidad { get; set; }
-        public int cedula_vendedor { get; set; }
-        public int cedula_cliente { get; set; }
+        public string monto_total { get; set; }
+        public string mes_cierre { get; set; }
+        public string probabilidad { get; set; }
+        public string cedula_vendedor { get; set; }
+        public string cedula_cliente { get; set; }
         public string zona { get; set; }
         public string sector { get; set; }
         public string estado { get; set; }
         public string tipo { get; set; }
     }
 }
-
-
