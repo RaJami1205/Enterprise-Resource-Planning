@@ -16,7 +16,8 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
                 conexionBD.abrir(); // Abrimos la conexión
 
                 string sql = @"SELECT num_cotizacion, orden_compra, descripcion, monto_total, mes_cierre, probabilidad, 
-                                   nombre_vendedor, nombre_cliente, zona, sector, estado, tipo 
+                                   fecha_inicio, fecha_cierre, razon_negacion, cedula_vendedor, cedula_cliente, 
+                                   zona, sector, estado, tipo 
                                FROM VistaCotizacion"; // La vista que creaste
 
                 SqlCommand command = conexionBD.obtenerComando(sql); // Obtenemos el comando
@@ -33,12 +34,15 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
                             monto_total = reader.GetDecimal(3).ToString(),
                             mes_cierre = reader.GetInt32(4).ToString(),
                             probabilidad = reader.GetDecimal(5).ToString(),
-                            cedula_vendedor = reader.GetInt32(6).ToString(),
-                            cedula_cliente = reader.GetInt32(6).ToString(),
-                            zona = reader.GetString(8),
-                            sector = reader.GetString(9),
-                            estado = reader.GetString(10),
-                            tipo = reader.GetString(11)
+                            fecha_inicio = reader.GetDateTime(6).ToString("yyyy-MM-dd"),
+                            fecha_cierre = reader.GetDateTime(7).ToString("yyyy-MM-dd"),
+                            razon_negacion = !reader.IsDBNull(8) ? reader.GetString(8) : null,
+                            cedula_vendedor = reader.GetInt32(9).ToString(),
+                            cedula_cliente = reader.GetInt32(10).ToString(),
+                            zona = reader.GetString(11),
+                            sector = reader.GetString(12),
+                            estado = reader.GetString(13),
+                            tipo = reader.GetString(14)
                         };
 
                         listaCotizaciones.Add(cotizacion); // Añadimos cada cotización a la lista
@@ -55,5 +59,7 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
             }
         }
     }
+
 }
+
 

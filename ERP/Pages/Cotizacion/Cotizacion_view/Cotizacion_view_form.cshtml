@@ -44,6 +44,15 @@
             <!-- Probabilidad (1.00 - 100.00) -->
             <input class="controls" type="number" step="0.01" name="probabilidad" id="probabilidad" placeholder="Ingrese la probabilidad (1.00 - 100.00)" min="1" max="100" required value="@Model.Cotizacion.probabilidad">
 
+            <!-- Fecha de Inicio -->
+            <input class="controls" type="date" name="fecha_inicio" id="fecha_inicio" required value="@Model.Cotizacion.fecha_inicio">
+
+            <!-- Fecha de Cierre -->
+            <input class="controls" type="date" name="fecha_cierre" id="fecha_cierre" required value="@Model.Cotizacion.fecha_cierre">
+
+            <!-- Razón de Negación -->
+            <input class="controls" type="text" name="razon_negacion" id="razon_negacion" placeholder="Ingrese la razón de negación (si existe)" value="@Model.Cotizacion.razon_negacion">
+
             <!-- Cedula del Vendedor -->
             <select class="controls" name="empleado" id="empleado" required>
                 <option value="" disabled selected>Seleccione el vendedor</option>
@@ -55,7 +64,7 @@
 
             <!-- Cedula del Cliente -->
             <select class="controls" name="cliente" id="cliente" required>
-                <option value="" disabled selected>Seleccione el vendedor</option>
+                <option value="" disabled selected>Seleccione el cliente</option>
                 @foreach (var cliente in Model.Clientes)
                 {
                     <option value="@cliente">@cliente</option>

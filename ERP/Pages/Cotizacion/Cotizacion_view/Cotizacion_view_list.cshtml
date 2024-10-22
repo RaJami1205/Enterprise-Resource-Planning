@@ -30,6 +30,9 @@
                         <th>Monto Total</th>
                         <th>Mes de Cierre</th>
                         <th>Probabilidad</th>
+                        <th>Fecha de Inicio</th>
+                        <th>Fecha de Cierre</th>
+                        <th>Razón de Negación</th>
                         <th>Vendedor</th>
                         <th>Cliente</th>
                         <th>Zona</th>
@@ -40,27 +43,30 @@
                     </tr>
                 </thead>
                 <tbody>
-                @foreach (var cotizacion in Model.listaCotizaciones)
-                {
-                    <tr>
-                        <td>@cotizacion.num_cotizacion</td>
-                        <td>@cotizacion.orden_compra</td>
-                        <td>@cotizacion.descripcion</td>
-                        <td>@cotizacion.monto_total</td>
-                        <td>@cotizacion.mes_cierre</td>
-                        <td>@cotizacion.probabilidad %</td>
-                        <td>@cotizacion.cedula_vendedor</td>
-                        <td>@cotizacion.cedula_cliente</td>
-                        <td>@cotizacion.zona</td>
-                        <td>@cotizacion.sector</td>
-                        <td>@cotizacion.estado</td>
-                        <td>@cotizacion.tipo</td>
-                        <td>
-                            <a class="btn btn-primary btn-sm" href="/Cotizacion/Cotizacion_view/Cotizacion_view_edit/?num_cotizacion=@cotizacion.num_cotizacion">Editar</a>
-                            <a class="btn btn-danger btn-sm" href="/Cotizacion/CotizacionArticulo/DetalleCotizacion?num_cotizacion=@cotizacion.num_cotizacion">Eliminar</a>
-                        </td>
-                    </tr>
-                }
+                    @foreach (var cotizacion in Model.listaCotizaciones)
+                    {
+                        <tr>
+                            <td>@cotizacion.num_cotizacion</td>
+                            <td>@cotizacion.orden_compra</td>
+                            <td>@cotizacion.descripcion</td>
+                            <td>@cotizacion.monto_total</td>
+                            <td>@cotizacion.mes_cierre</td>
+                            <td>@cotizacion.probabilidad %</td>
+                            <td>@cotizacion.fecha_inicio</td>
+                            <td>@cotizacion.fecha_cierre</td>
+                            <td>@(string.IsNullOrEmpty(cotizacion.razon_negacion) ? "N/A" : cotizacion.razon_negacion)</td>
+                            <td>@cotizacion.cedula_vendedor</td>
+                            <td>@cotizacion.cedula_cliente</td>
+                            <td>@cotizacion.zona</td>
+                            <td>@cotizacion.sector</td>
+                            <td>@cotizacion.estado</td>
+                            <td>@cotizacion.tipo</td>
+                            <td>
+                                <a class="btn btn-primary btn-sm" href="/Cotizacion/Cotizacion_view/Cotizacion_view_edit/?num_cotizacion=@cotizacion.num_cotizacion">Editar</a>
+                                <a class="btn btn-danger btn-sm" href="/Cotizacion/CotizacionArticulo/DetalleCotizacion?num_cotizacion=@cotizacion.num_cotizacion">Eliminar</a>
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         }
