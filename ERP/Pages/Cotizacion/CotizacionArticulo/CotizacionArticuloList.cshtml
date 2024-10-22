@@ -1,0 +1,54 @@
+﻿@page
+@model ERP.Pages.Cotizacion.CotizacionArticulo.CotizacionArticuloModel
+@{
+}
+!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artículos en Cotizaciones</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4">Artículos en Cotizaciones</h2>
+        @if (Model.listaArticuloCotizacion.Count == 0)
+        {
+            <p>No hay artículos asociados a cotizaciones disponibles.</p>
+        }
+        else
+        {
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Código Artículo</th>
+                        <th>Nombre Artículo</th>
+                        <th>Descripción</th>
+                        <th>Cantidad en Inventario</th>
+                        <th>Precio Estándar</th>
+                        <th>Número Cotización</th>
+                        <th>Cantidad Cotizada</th>
+                        <th>Monto Cotización</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var articuloCotizacion in Model.listaArticuloCotizacion)
+                    {
+                        <tr>
+                            <td>@articuloCotizacion.codigo_articulo</td>
+                            <td>@articuloCotizacion.nombre_articulo</td>
+                            <td>@articuloCotizacion.descripcion_articulo</td>
+                            <td>@articuloCotizacion.cantidad_inventario</td>
+                            <td>@articuloCotizacion.precio_articulo</td>
+                            <td>@articuloCotizacion.numero_cotizacion</td>
+                            <td>@articuloCotizacion.cantidad_cotizada</td>
+                            <td>@articuloCotizacion.monto_cotizacion</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</body>
+</html>

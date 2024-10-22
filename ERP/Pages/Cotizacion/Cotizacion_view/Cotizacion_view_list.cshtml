@@ -3,21 +3,67 @@
 @{
 }
 
-<!-- Interfaz gráfica html de la listas de Clientes -->
-<br />
-<h2> Lista de Cotizaciones </h2>
-<a class="btn btn-primary btn-sm" href="/Cotizacion/Cotizacion_view/Cotizacion_view_form"> Nueva Cotizacion</a>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Numero</th>
-            <th>Vendedor</th>
-            <th>Tipo</th>
-            <th>Zona</th>
-            <th>Sector Industrial</th>
-            <th>estado</th>
-            <th>Producto</th>
-            <th>Cantidad</th>
-        </tr>
-    </thead>
-</table>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Cotizaciones</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<a class='btn btn-primary btn-sm' href="/Cotizacion/CotizacionArticulo/Cotizacion_Form"> Nueva Cotización</a>
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4">Lista de Cotizaciones</h2>
+        @if (Model.listaCotizaciones.Count == 0)
+        {
+            <p>No hay cotizaciones disponibles.</p>
+        }
+        else
+        {
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Número Cotización</th>
+                        <th>Orden de Compra</th>
+                        <th>Descripción</th>
+                        <th>Monto Total</th>
+                        <th>Mes de Cierre</th>
+                        <th>Probabilidad</th>
+                        <th>Vendedor</th>
+                        <th>Cliente</th>
+                        <th>Zona</th>
+                        <th>Sector</th>
+                        <th>Estado</th>
+                        <th>Tipo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var cotizacion in Model.listaCotizaciones)
+                {
+                    <tr>
+                        <td>@cotizacion.num_cotizacion</td>
+                        <td>@cotizacion.orden_compra</td>
+                        <td>@cotizacion.descripcion</td>
+                        <td>@cotizacion.monto_total</td>
+                        <td>@cotizacion.mes_cierre</td>
+                        <td>@cotizacion.probabilidad %</td>
+                        <td>@cotizacion.nombre_vendedor</td>
+                        <td>@cotizacion.nombre_cliente</td>
+                        <td>@cotizacion.zona</td>
+                        <td>@cotizacion.sector</td>
+                        <td>@cotizacion.estado</td>
+                        <td>@cotizacion.tipo</td>
+                        <td>
+                            <a class="btn btn-primary btn-sm" href="/Cotizacion/CotizacionArticulo/DetalleCotizacion?num_cotizacion=@cotizacion.num_cotizacion">Editar</a>
+                            <a class="btn btn-danger btn-sm" href="/Cotizacion/CotizacionArticulo/DetalleCotizacion?num_cotizacion=@cotizacion.num_cotizacion">Eliminar</a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        }
+    </div>
+</body>
+</html>

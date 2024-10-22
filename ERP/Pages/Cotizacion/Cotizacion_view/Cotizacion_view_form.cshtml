@@ -3,70 +3,91 @@
 @{
 }
 
-<!-- Interfaz gráfica html de formulario de Cotización -->
 <body>
     <section class="form-register">
-        <h1>Cotizacion</h1>
+        <h1>Registrar Cotización</h1>
+
+        <!-- Mensaje emergente de éxito luego de una inserción correcta -->
+        @if (Model.mensaje_exito.Length > 0)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>@Model.mensaje_exito</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        <!-- Mensaje emergente de error luego de una inserción fallida mostrando el problema ocurrido -->
+        @if (Model.mensaje_error.Length > 0)
+        {
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>@Model.mensaje_error</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
         <form method="post" autocomplete="off">
 
-            <input class="controls" type="text" name="numero" id="numero" placeholder="Ingrese el numero" required>
+            <!-- Número de Cotización -->
+            <input class="controls" type="number" name="num_cotizacion" id="num_cotizacion" placeholder="Ingrese el número de cotización" required value="@Model.Cotizacion.num_cotizacion">
 
-            <!-- Agregar el combobox para seleccionar la cedula del cliente -->
-            <select class="controls" name="cedula_cliente" id="cedula_cliente" required>
-                <option value="cliente">Seleccione un cliente</option>
-                <option value="cliente">Lista de clientes</option>
+            <!-- Orden de Compra -->
+            <input class="controls" type="text" name="orden_compra" id="orden_compra" placeholder="Ingrese la orden de compra" required value="@Model.Cotizacion.orden_compra">
+
+            <!-- Descripción -->
+            <input class="controls" type="text" name="descripcion" id="descripcion" placeholder="Ingrese la descripción" required value="@Model.Cotizacion.descripcion">
+
+            <!-- Monto Total -->
+            <input class="controls" type="number" step="0.01" name="monto_total" id="monto_total" placeholder="Ingrese el monto total" required value="@Model.Cotizacion.monto_total">
+
+            <!-- Mes de Cierre (1-12) -->
+            <input class="controls" type="number" name="mes_cierre" id="mes_cierre" placeholder="Ingrese el mes de cierre (1-12)" min="1" max="12" required value="@Model.Cotizacion.mes_cierre">
+
+            <!-- Probabilidad (1.00 - 100.00) -->
+            <input class="controls" type="number" step="0.01" name="probabilidad" id="probabilidad" placeholder="Ingrese la probabilidad (1.00 - 100.00)" min="1" max="100" required value="@Model.Cotizacion.probabilidad">
+
+            <!-- Nombre del Vendedor -->
+            <input class="controls" type="text" name="nombre_vendedor" id="nombre_vendedor" placeholder="Ingrese el nombre del vendedor" required value="@Model.Cotizacion.nombre_vendedor">
+
+            <!-- Nombre del Cliente -->
+            <input class="controls" type="text" name="nombre_cliente" id="nombre_cliente" placeholder="Ingrese el nombre del cliente" required value="@Model.Cotizacion.nombre_cliente">
+
+            <!-- Zona (ComboBox) -->
+            <select class="controls" name="zona" id="zona" required>
+                <option value="" disabled selected>Seleccione la zona</option>
+                @foreach (var zona in Model.Zonas)
+                {
+                    <option value="@zona">@zona</option>
+                }
             </select>
 
-            <input class="controls" type="date" name="fecha_inicio" id="fecha_inicio" required>
-
-            <input class="controls" type="text" name="mes_proyectado" id="mes_proyectado" placeholder="Ingrese el mes proyecto" required>
-
-            <!-- Agregar el combobox para seleccionar el vendedor -->
-            <select class="controls" name="vendedor" id="vendedor" required>
-                <option value="vendedor">Seleccione un vendedor</option>
-                <option value="vendedor">Lista de vendedores</option>
+            <!-- Sector (ComboBox) -->
+            <select class="controls" name="sector" id="sector" required>
+                <option value="" disabled selected>Seleccione el sector</option>
+                @foreach (var sector in Model.Sectores)
+                {
+                    <option value="@sector">@sector</option>
+                }
             </select>
 
-            <input class="controls" type="date" name="fecha_ciere" id="fecha_cierre" required>
-
-            <input class="controls" type="text" name="probabilidad" id="probabilidad" placeholder="Ingrese la probabilidad de compra" required>
-
-            <input class="controls" type="text" name="orden" id="orden" placeholder="Ingrese la orden de compra" required>
-
-            <input class="controls" type="text" name="tipo" id="tipo" placeholder="Ingrese el tipo" required>
-
-            <input class="controls" type="text" name="descripcion" id="descripcion" placeholder="Ingrese la descripcion" required>
-
-            <input class="controls" type="text" name="zona" id="zona" placeholder="Ingrese la zona" required>
-
-            <input class="controls" type="text" name="sector" id="sector" placeholder="Ingrese el sector industrial" required>
-
-            <!-- Agregar el combobox para seleccionar el estado -->
+            <!-- Estado de Cotización (ComboBox) -->
             <select class="controls" name="estado" id="estado" required>
-                <option value="estado">Seleccione un estado</option>
-                <option value="estado">abierta</option>
-                <option value="estado">aprobada</option>
-                <option value="estado">denegada</option>
+                <option value="" disabled selected>Seleccione el estado de la cotización</option>
+                @foreach (var estado in Model.EstadosCotizacion)
+                {
+                    <option value="@estado">@estado</option>
+                }
             </select>
 
-            <!-- Agregar el combobox para seleccionar el articulo -->
-            <select class="controls" name="articulo" id="articulo" required>
-                <option value="articulo">Seleccione un articulo</option>
-                <option value="articulo">Lista de Articulos</option>
+            <!-- Tipo de Cotización (ComboBox) -->
+            <select class="controls" name="tipo" id="tipo" required>
+                <option value="" disabled selected>Seleccione el tipo de cotización</option>
+                @foreach (var tipo in Model.TiposCotizacion)
+                {
+                    <option value="@tipo">@tipo</option>
+                }
             </select>
 
-            <input class="controls" type="text" name="cantidad" id="cantidad" placeholder="Ingrese la cantidad de articulos" required>
-
-            <input class="controls" type="text" name="monto" id="monto" placeholder="Ingrese el monto total" required>
-
-            <input class="controls" type="text" name="razon_denegacion" id="razon_denegacion" placeholder="Ingrese la razón de denegación">
-
-            <!-- Agregar el combobox para seleccionar el cliente rechazado -->
-            <select class="controls" name="cliente_rechazado" id="cliente_rechazado">
-                <option value="cliente_rechazado">Seleccione un cliente</option>
-                <option value="cliente_rechazado">Lista de Clientes</option>
-            </select>
-            <button type="submit" asp-page-handler="" class="buttoms">Cotizar</button>
+            <!-- Botón de Registro -->
+            <button type="submit" asp-page-handler="" class="buttoms">Registrar</button>
 
         </form>
     </section>
@@ -74,52 +95,47 @@
 
 <!-- Estilos CSS para la página -->
 <style>
-    /* Resetea márgenes y rellenos, y aplica box-sizing border-box para todos los elementos */
     * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
     }
 
-    /* Estilo para el fondo del cuerpo de la página */
     body {
         background: linear-gradient(130deg, blue, skyblue);
     }
 
-    /* Estilo para la sección del formulario de registro */
     .form-register {
-        width: 400px; /* Ancho del formulario */
-        background: #24303c; /* Color de fondo del formulario */
-        padding: 30px; /* Relleno interno del formulario */
-        margin: auto; /* Centra el formulario horizontalmente */
-        margin-top: 100px; /* Margen superior para separación de la parte superior de la página */
-        border-radius: 4px; /* Bordes redondeados del formulario */
-        font-family: Calibri; /* Fuente del texto en el formulario */
-        color: white; /* Color del texto en el formulario */
-        box-shadow: 7px 13px 37px #000; /* Sombra del formulario para un efecto elevado */
+        width: 400px;
+        background: #24303c;
+        padding: 30px;
+        margin: auto;
+        margin-top: 100px;
+        border-radius: 4px;
+        font-family: Calibri;
+        color: white;
+        box-shadow: 7px 13px 37px #000;
     }
 
-    /* Estilo para los campos de entrada del formulario */
     .controls {
-        width: 100%; /* Ancho completo del campo de entrada */
-        background: #24303c; /* Color de fondo del campo de entrada */
-        padding: 10px; /* Relleno interno del campo de entrada */
-        border-radius: 4px; /* Bordes redondeados del campo de entrada */
-        margin-bottom: 16px; /* Margen inferior entre los campos de entrada */
-        border: 1px solid #1f53c5; /* Borde del campo de entrada */
-        font-family: Calibri; /* Fuente del texto en el campo de entrada */
-        font-size: 18px; /* Tamaño de la fuente en el campo de entrada */
-        color: white; /* Color del texto en el campo de entrada */
+        width: 100%;
+        background: #24303c;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 16px;
+        border: 1px solid #1f53c5;
+        font-family: Calibri;
+        font-size: 18px;
+        color: white;
     }
 
-    /* Estilo para el botón de enviar del formulario */
     .buttoms {
-        width: 100%; /* Ancho completo del botón */
-        background: #1f53c5; /* Color de fondo del botón */
-        border: none; /* Sin borde para el botón */
-        padding: 12px; /* Relleno interno del botón */
-        color: white; /* Color del texto en el botón */
-        margin: 16px 0; /* Margen superior e inferior para el botón */
-        font-size: 18px; /* Tamaño de la fuente en el botón */
+        width: 100%;
+        background: #1f53c5;
+        border: none;
+        padding: 12px;
+        color: white;
+        margin: 16px 0;
+        font-size: 18px;
     }
 </style>
