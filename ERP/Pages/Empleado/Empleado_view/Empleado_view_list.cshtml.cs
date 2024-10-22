@@ -11,7 +11,7 @@ namespace ERP.Pages.Empleado.Empleado_view
 
         /// <summary>
         /// Método que se ejecuta cuando se accede a la página (GET request).
-        /// Objetivo: Recuperar la lista de empleados desde la base de datos y almacenarla en la listaEmpleados.
+        /// Objetivo: Recuperar la lista de empleados desde la base de datos y lo almacena en la listaEmpleados.
         /// Salidas: Una lista de objetos EmpleadoInfo que contienen información básica de los empleados.
         /// Restricciones: En caso de error, el programa manejará la excepción, cerrando la conexión y mostrando un mensaje.
         /// </summary>
