@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using static ERP.Pages.Inventario.Articulo.Articulo_listModel;
+using System.Data.SqlClient;
 
 namespace ERP.Pages.Empleado.Historico_Salario
 {
@@ -16,6 +18,37 @@ namespace ERP.Pages.Empleado.Historico_Salario
         /// </summary>
         public void OnGet()
         {
+            try
+            {
+                conexionBD.abrir();
+                String sql = "SELECT * FROM VistaHistorialEmpleados";
+                SqlCommand command = conexionBD.obtenerComando(sql);
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+
+                        HistoricoSalarioInfo HistoricoSalario = new HistoricoSalarioInfo();
+                        HistoricoSalario.nombre = reader.GetString(0);
+                        HistoricoSalario.apellido1 = reader.GetString(1);
+                        HistoricoSalario.apellido2 = reader.GetString(2);
+                        HistoricoSalario.puesto = reader.GetString(3);
+                        HistoricoSalario.departamento = reader.GetString(4);
+                        HistoricoSalario.monto = reader.GetInt32(5).ToString();
+                        HistoricoSalario.fecha_inicio = reader.GetDateTime(6).ToString("yyyy-MM-dd");
+                        HistoricoSalario.fecha_final = reader.GetDateTime(7).ToString("yyyy-MM-dd");
+
+                        listaHistoricoSalarios.Add(HistoricoSalario);
+                    }
+                }
+                conexionBD.cerrar();
+            }
+            catch (Exception ex)
+            {
+                // Aquí se maneja el error
+                Console.WriteLine("Error: " + ex.Message);
+                conexionBD.cerrar();
+            }
         }
 
         // Clase que representa el modelo de vista para la lista de empleados
