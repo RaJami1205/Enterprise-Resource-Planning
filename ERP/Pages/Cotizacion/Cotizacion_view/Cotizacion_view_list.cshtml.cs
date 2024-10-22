@@ -27,14 +27,14 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
                     {
                         CotizacionInfo cotizacion = new CotizacionInfo
                         {
-                            num_cotizacion = reader.GetInt32(0),
+                            num_cotizacion = reader.GetInt32(0).ToString(),
                             orden_compra = reader.GetString(1),
                             descripcion = reader.GetString(2),
-                            monto_total = reader.GetDecimal(3),
-                            mes_cierre = reader.GetInt32(4),
-                            probabilidad = reader.GetDecimal(5),
-                            nombre_vendedor = reader.GetString(6),
-                            nombre_cliente = reader.GetString(7),
+                            monto_total = reader.GetDecimal(3).ToString(),
+                            mes_cierre = reader.GetInt32(4).ToString(),
+                            probabilidad = reader.GetDecimal(5).ToString(),
+                            cedula_vendedor = reader.GetInt32(6).ToString(),
+                            cedula_cliente = reader.GetInt32(6).ToString(),
                             zona = reader.GetString(8),
                             sector = reader.GetString(9),
                             estado = reader.GetString(10),
