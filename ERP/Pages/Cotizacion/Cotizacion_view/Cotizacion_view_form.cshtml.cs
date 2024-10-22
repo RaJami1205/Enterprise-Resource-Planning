@@ -146,16 +146,16 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
                 // Agregar parámetros al procedimiento almacenado
                 command.Parameters.AddWithValue("@num_cotizacion", Cotizacion.num_cotizacion);
                 command.Parameters.AddWithValue("@orden_compra", Cotizacion.orden_compra);
+                command.Parameters.AddWithValue("@tipo", Cotizacion.tipo);
                 command.Parameters.AddWithValue("@descripcion", Cotizacion.descripcion);
+                command.Parameters.AddWithValue("@zona", Cotizacion.zona);
+                command.Parameters.AddWithValue("@sector", Cotizacion.sector);
+                command.Parameters.AddWithValue("@estado", Cotizacion.estado);
                 command.Parameters.AddWithValue("@monto_total", Cotizacion.monto_total);
                 command.Parameters.AddWithValue("@mes_cierre", Cotizacion.mes_cierre);
                 command.Parameters.AddWithValue("@probabilidad", Cotizacion.probabilidad);
                 command.Parameters.AddWithValue("@cedula_vendedor", Cotizacion.cedula_vendedor);
                 command.Parameters.AddWithValue("@cedula_cliente", Cotizacion.cedula_cliente);
-                command.Parameters.AddWithValue("@zona", Cotizacion.zona);
-                command.Parameters.AddWithValue("@sector", Cotizacion.sector);
-                command.Parameters.AddWithValue("@estado", Cotizacion.estado);
-                command.Parameters.AddWithValue("@tipo", Cotizacion.tipo);
                 command.Parameters.Add(errorParameter);
 
                 // Ejecutar el procedimiento almacenado
@@ -178,9 +178,10 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
             {
                 mensaje_error = ex.Message;
                 conexionBD.cerrar();
+                OnGet();
             }
 
-            // Volver a cargar las listas en caso de error
+            // Volver a cargar las listas
             OnGet();
         }
     }
