@@ -176,5 +176,3 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
         public string tipo { get; set; }
     }
 }
-
-
