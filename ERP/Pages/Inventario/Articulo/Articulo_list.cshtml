@@ -12,10 +12,24 @@
         <tr>
             <th>Codigo</th>
             <th>Nombre</th>
-            <th>Familia</th>
-            <th>Costo</th>
-            <th>Precio Estándar</th>
-            <th>Activo</th>
+            <th>Descripción</th>
+            <th>Código Bodega</th>
+            <th>Ubicación</th>
+            <th>Cantidad en Bodega</th>
         </tr>
     </thead>
+    <tbody>
+        <!-- Ciclo que extrae los datos de la tabla de los artículos para mostrar toda información registrada -->
+        @foreach (var item in Model.listaArticulos)
+        {
+            <tr>
+                <td>@item.codigo_articulo</td>
+                <td>@item.nombre</td>
+                <td>@item.descripcion</td>
+                <td>@item.codigo_bodega</td>
+                <td>@item.ubicacion</td>
+                <td>@item.cantidad_bodega</td>
+            </tr>
+        }
+    </tbody>
 </table>
