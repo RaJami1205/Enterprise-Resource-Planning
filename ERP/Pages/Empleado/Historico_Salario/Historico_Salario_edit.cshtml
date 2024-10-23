@@ -3,7 +3,7 @@
 @{
 }
 
-<!-- Interfaz gráfica html de formulario de Histórico de Salario -->
+<!-- Interfaz gráfica html del formulario de Histórico de Salario -->
 <body>
     <section class="form-register">
         <h1>Historico de Salario</h1>
@@ -24,6 +24,8 @@
         }
 
         <form method="post" autocomplete="off">
+
+            <input class="controls" type="hidden" name="id" id="id" required value="@Model.HistoricoSalario.id">
 
             <input class="controls" type="date" name="fecha_inicio" id="fecha_inicio" required value="@Model.HistoricoSalario.fecha_inicio">
 
@@ -58,7 +60,7 @@
                 }
             </select>
 
-            <button type="submit" asp-page-handler="" class="buttoms">Registrar</button>
+            <button type="submit" asp-page-handler="" class="buttoms">Modificar</button>
 
         </form>
     </section>

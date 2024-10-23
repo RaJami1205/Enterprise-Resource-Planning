@@ -17,7 +17,7 @@ namespace ERP.Pages.Empleado.Historico_Salario
 
         /// <summary>
         /// Método que se ejecuta cuando se ingresa al formulario (GET request).
-        /// Objetivo: Extraer los datos de los ID de puesto y departamento y manejar errores.
+        /// Objetivo: Extraer los datos de los ID de puesto y departamento y las cedulas de los empleados.
         /// Entradas: Ninguna.
         /// Salidas: Mensaje de éxito o mensaje de error.
         /// </summary>
@@ -62,13 +62,14 @@ namespace ERP.Pages.Empleado.Historico_Salario
 
         /// <summary>
         /// Método que se ejecuta cuando se envía el formulario (POST request).
-        /// Objetivo: Recibir los datos del formulario de Históricos de salarios, insertarlos en la base de datos y manejar errores.
-        /// Entradas: Datos del formulario (fecha_inicio, fecha_cierre, monto, cedula, puesto y departamento).
+        /// Objetivo: Recibir los datos del formulario de Históricos de puestos, insertarlos en la base de datos y manejar errores.
+        /// Entradas: Datos del formulario (HistoricoSalario_id, fecha_inicio, fecha_cierre, monto, cedula, puesto y departamento).
         /// Salidas: Mensaje de éxito o mensaje de error.
         /// Restricciones: Todos los campos deben estar debidamente validados antes de enviarse.
         /// </summary>
         public void OnPost() 
         {
+            HistoricoSalario.id = Request.Form["id"];
             HistoricoSalario.fecha_inicio = Request.Form["fecha_inicio"];
             HistoricoSalario.fecha_final = Request.Form["fecha_final"];
             HistoricoSalario.monto = Request.Form["monto"];
@@ -87,6 +88,7 @@ namespace ERP.Pages.Empleado.Historico_Salario
                     Direction = ParameterDirection.Output
                 };
 
+                command.Parameters.AddWithValue("@id", HistoricoSalario.id);
                 command.Parameters.AddWithValue("@puesto", HistoricoSalario.puesto);
                 command.Parameters.AddWithValue("@fecha_inicio", HistoricoSalario.fecha_inicio);
                 command.Parameters.AddWithValue("@fecha_fin", HistoricoSalario.fecha_final);
@@ -101,6 +103,7 @@ namespace ERP.Pages.Empleado.Historico_Salario
                 conexionBD.cerrar();
 
                 // Limpieza del formulario
+                HistoricoSalario.id = "";
                 HistoricoSalario.cedula = "";
                 HistoricoSalario.fecha_inicio = "";
                 HistoricoSalario.fecha_final = "";
@@ -108,7 +111,7 @@ namespace ERP.Pages.Empleado.Historico_Salario
                 HistoricoSalario.puesto = "";
                 HistoricoSalario.departamento = "";
 
-                mensaje_exito = "Empleado registrado exitosamente";
+                mensaje_exito = "Histórico registrado exitosamente";
             }
             catch (Exception ex)
             {
@@ -121,6 +124,7 @@ namespace ERP.Pages.Empleado.Historico_Salario
         // Clase que representa el modelo de vista para la lista de históricos de salarios
         public class HistoricoSalarioInfo
         {
+            public string id { get; set; }
             public string fecha_inicio { get; set; }
             public string fecha_final { get; set; }
             public string monto { get; set; }

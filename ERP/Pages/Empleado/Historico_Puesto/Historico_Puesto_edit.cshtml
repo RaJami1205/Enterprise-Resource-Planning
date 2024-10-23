@@ -1,12 +1,12 @@
 ﻿@page
-@model ERP.Pages.Empleado.Historico_Salario.Historico_Salario_formModel
+@model ERP.Pages.Empleado.Historico_Puesto.Historico_Puesto_editModel
 @{
 }
 
-<!-- Interfaz gráfica html del formulario de Histórico de Salario -->
+<!-- Interfaz gráfica html de formulario de Histórico de Puesto -->
 <body>
     <section class="form-register">
-        <h1>Historico de Salario</h1>
+        <h1>Historico de Puesto</h1>
 
         @if (Model.mensaje_exito.Length > 0)
         {
@@ -25,16 +25,14 @@
 
         <form method="post" autocomplete="off">
 
-            <input class="controls" type="number" name="id" id="id" placeholder="Ingrese el ID" required value="@Model.HistoricoSalario.id">
+            <input class="controls" type="hidden" name="id" id="id" required value="@Model.HistoricoPuesto.id">
 
-            <input class="controls" type="date" name="fecha_inicio" id="fecha_inicio" required value="@Model.HistoricoSalario.fecha_inicio">
+            <input class="controls" type="date" name="fecha_inicio" id="fecha_inicio" required value="@Model.HistoricoPuesto.fecha_inicio">
 
-            <input class="controls" type="date" name="fecha_final" id="fecha_final" required value="@Model.HistoricoSalario.fecha_final">
-
-            <input class="controls" type="number" name="monto" id="monto" placeholder="Ingrese el monto del salario mensual" required value="@Model.HistoricoSalario.monto">
+            <input class="controls" type="date" name="fecha_final" id="fecha_final" required value="@Model.HistoricoPuesto.fecha_final">
 
             <!-- Agregar el combobox para seleccionar la cedula del empleado -->
-            <select class="controls" name="cedula" id="cedula" required value="@Model.HistoricoSalario.cedula">
+            <select class="controls" name="cedula" id="cedula" required value="@Model.HistoricoPuesto.cedula">
                 <option value="propietario">Seleccione la cédula del empleado </option>
                 @foreach (var empleado in Model.listaEmpleados)
                 {
@@ -43,16 +41,16 @@
             </select>
 
             <!-- Agregar el combobox para seleccionar el puesto -->
-            <select class="controls" name="puesto" id="puesto" required value="@Model.HistoricoSalario.puesto">
+            <select class="controls" name="puesto" id="puesto" required value="@Model.HistoricoPuesto.puesto">
                 <option value="propietario">Seleccione un puesto</option>
-                @foreach (var puesto in Model.listaPuestos) 
+                @foreach (var puesto in Model.listaPuestos)
                 {
                     <option value="@puesto">@puesto</option>
                 }
             </select>
 
             <!-- Agregar el combobox para seleccionar el departamento -->
-            <select class="controls" name="departamento" id="departamento" required value="@Model.HistoricoSalario.departamento">
+            <select class="controls" name="departamento" id="departamento" required value="@Model.HistoricoPuesto.departamento">
                 <option value="propietario">Seleccione un departamento</option>
                 @foreach (var departamento in Model.listaDepartamentos)
                 {

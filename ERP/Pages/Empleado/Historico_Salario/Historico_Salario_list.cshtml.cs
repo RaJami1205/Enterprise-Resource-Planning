@@ -13,7 +13,7 @@ namespace ERP.Pages.Empleado.Historico_Salario
         /// <summary>
         /// Método que se ejecuta cuando se accede a la página (GET request).
         /// Objetivo: Recuperar la lista de historicos de salarios desde la base de datos y lo almacena en la listaHistoricoSalarios.
-        /// Salidas: Una lis|ta de objetos HistoricoSalarioInfo que contienen información básica de los históricos de salarios.
+        /// Salidas: Una lista de objetos HistoricoSalarioVista que contienen información básica de los históricos de salarios.
         /// Restricciones: En caso de error, el programa manejará la excepción, cerrando la conexión y mostrando un mensaje.
         /// </summary>
         public void OnGet()
@@ -21,7 +21,7 @@ namespace ERP.Pages.Empleado.Historico_Salario
             try
             {
                 conexionBD.abrir();
-                String sql = "SELECT * FROM VistaHistorialEmpleados";
+                String sql = "SELECT ID_historico, Cedula,  Nombre, PrimerApellido, SegundoApellido, Puesto, Departamento, Monto, FechaInicio, FechaFin FROM VistaHistorialSalario";
                 SqlCommand command = conexionBD.obtenerComando(sql);
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
@@ -29,15 +29,16 @@ namespace ERP.Pages.Empleado.Historico_Salario
                     {
 
                         HistoricoSalarioVista HistoricoSalario = new HistoricoSalarioVista();
-                        HistoricoSalario.cedula = reader.GetInt32(0).ToString();
-                        HistoricoSalario.nombre = reader.GetString(1);
-                        HistoricoSalario.apellido1 = reader.GetString(2);
-                        HistoricoSalario.apellido2 = reader.GetString(3);
-                        HistoricoSalario.puesto = reader.GetString(4);
-                        HistoricoSalario.departamento = reader.GetString(5);
-                        HistoricoSalario.monto = reader.GetInt32(6).ToString();
-                        HistoricoSalario.fecha_inicio = reader.GetDateTime(7).ToString("yyyy-MM-dd");
-                        HistoricoSalario.fecha_final = reader.GetDateTime(8).ToString("yyyy-MM-dd");
+                        HistoricoSalario.id = reader.GetInt32(0).ToString();
+                        HistoricoSalario.cedula = reader.GetInt32(1).ToString();
+                        HistoricoSalario.nombre = reader.GetString(2);
+                        HistoricoSalario.apellido1 = reader.GetString(3);
+                        HistoricoSalario.apellido2 = reader.GetString(4);
+                        HistoricoSalario.puesto = reader.GetString(5);
+                        HistoricoSalario.departamento = reader.GetString(6);
+                        HistoricoSalario.monto = reader.GetInt32(7).ToString();
+                        HistoricoSalario.fecha_inicio = reader.GetDateTime(8).ToString("yyyy-MM-dd");
+                        HistoricoSalario.fecha_final = reader.GetDateTime(9).ToString("yyyy-MM-dd");
 
                         listaHistoricoSalarios.Add(HistoricoSalario);
                     }
@@ -55,6 +56,7 @@ namespace ERP.Pages.Empleado.Historico_Salario
         // Clase que representa el modelo de vista para la lista de históricos de salarios
         public class HistoricoSalarioVista
         {
+            public string id { get; set; }
             public string cedula { get; set; }
             public string nombre { get; set; }
             public string apellido1 { get; set; }

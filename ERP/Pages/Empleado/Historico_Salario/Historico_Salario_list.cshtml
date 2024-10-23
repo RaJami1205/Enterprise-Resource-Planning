@@ -10,7 +10,8 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Cédula</th>
+            <th>ID</th>
+            <th>Cedula</th>
             <th>Nombre</th>
             <th>Apellido</th>
             <th>Apellido</th>
@@ -27,6 +28,7 @@
         @foreach (var item in Model.listaHistoricoSalarios)
         {
             <tr>
+                <td>@item.id</td>
                 <td>@item.cedula</td>
                 <td>@item.nombre</td>
                 <td>@item.apellido1</td>
@@ -37,7 +39,7 @@
                 <td>@item.fecha_inicio</td>
                 <td>@item.fecha_final</td>
                 <td>
-                    <a class="btn btn-primary btn-sm" href="/Empleado/Historico_Salario/Historico_Salario_edit?cedula=@item.cedula">Editar</a>
+                    <a class="btn btn-primary btn-sm" href="/Empleado/Historico_Salario/Historico_Salario_edit?id=@item.id">Editar</a>
                 </td>
             </tr>
         }

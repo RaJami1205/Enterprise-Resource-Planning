@@ -5,7 +5,7 @@ using System.Data;
 
 namespace ERP.Pages.Empleado.Historico_Puesto
 {
-    public class Historico_Puesto_formModel : PageModel
+    public class Historico_Puesto_editModel : PageModel
     {
         public HistoricoPuestoInfo HistoricoPuesto { get; set; } = new HistoricoPuestoInfo(); // Lista que guarda toda la información de los requests
         public Conexion conexionBD = new Conexion(); // Instancia de la clase Conexion para manejar la conexión a la base de datos
@@ -17,12 +17,40 @@ namespace ERP.Pages.Empleado.Historico_Puesto
 
         /// <summary>
         /// Método que se ejecuta cuando se ingresa al formulario (GET request).
-        /// Objetivo: Extraer los datos de los ID de puesto y departamento y manejar errores.
+        /// Objetivo: Extraer los datos de los ID de puesto y departamento y manejar errores. Además extrae las cedulas de los empleados y los ID de los departamentos y los puestos
         /// Entradas: Ninguna.
         /// Salidas: Mensaje de éxito o mensaje de error.
         /// </summary>
         public void OnGet()
         {
+            string ID_hp = Request.Query["id"];
+
+            try
+            {
+                conexionBD.abrir();
+                String sql = "SELECT HistoricoPuesto_id, puesto, fecha_inicio, fecha_fin, departamento, cedula_empleado FROM HistoricoPuesto WHERE HistoricoPuesto_id = @ID_hp";
+                SqlCommand command = conexionBD.obtenerComando(sql);
+                command.Parameters.AddWithValue("@ID_hp", ID_hp);
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        HistoricoPuesto.id = reader.GetInt32(0).ToString();
+                        HistoricoPuesto.puesto = reader.GetInt32(1).ToString();
+                        HistoricoPuesto.fecha_inicio = reader.GetDateTime(2).ToString("yyyy-MM-dd");
+                        HistoricoPuesto.fecha_final = reader.GetDateTime(3).ToString("yyyy-MM-dd");
+                        HistoricoPuesto.departamento = reader.GetInt32(4).ToString();
+                        HistoricoPuesto.cedula = reader.GetInt32(5).ToString();
+                    }
+                }
+                conexionBD.cerrar();
+            }
+            catch (Exception ex)
+            {
+                mensaje_error = ex.Message;
+                conexionBD.cerrar();
+            }
+
             conexionBD.abrir();
             string sqlCedula = "SELECT cedula FROM Empleado";
             SqlCommand command_cedula = conexionBD.obtenerComando(sqlCedula);
@@ -62,8 +90,8 @@ namespace ERP.Pages.Empleado.Historico_Puesto
 
         /// <summary>
         /// Método que se ejecuta cuando se envía el formulario (POST request).
-        /// Objetivo: Recibir los datos del formulario de Históricos de salarios, insertarlos en la base de datos y manejar errores.
-        /// Entradas: Datos del formulario (HistoricoPuesto_id, fecha_inicio, fecha_cierre, monto, cedula, puesto y departamento).
+        /// Objetivo: Recibir los datos del formulario de Históricos de puestos, insertarlos en la base de datos y manejar errores.
+        /// Entradas: Datos del formulario (HistoricoPuesto_id, fecha_inicio, fecha_cierre, cedula, puesto y departamento).
         /// Salidas: Mensaje de éxito o mensaje de error.
         /// Restricciones: Todos los campos deben estar debidamente validados antes de enviarse.
         /// </summary>
@@ -79,8 +107,8 @@ namespace ERP.Pages.Empleado.Historico_Puesto
             try
             {
                 conexionBD.abrir();
-                string sqlHistoricoPuesto = "InsertarHistoricoPuesto";
-                SqlCommand command = conexionBD.obtenerComando(sqlHistoricoPuesto);
+                string sqlHistoricoSalario = "ModificarHistoricoPuesto";
+                SqlCommand command = conexionBD.obtenerComando(sqlHistoricoSalario);
                 command.CommandType = System.Data.CommandType.StoredProcedure;
                 SqlParameter errorParameter = new SqlParameter("@ErrorMsg", SqlDbType.VarChar, 255)
                 {
@@ -101,14 +129,13 @@ namespace ERP.Pages.Empleado.Historico_Puesto
                 conexionBD.cerrar();
 
                 // Limpieza del formulario
-                HistoricoPuesto.id = "";
                 HistoricoPuesto.cedula = "";
                 HistoricoPuesto.fecha_inicio = "";
                 HistoricoPuesto.fecha_final = "";
                 HistoricoPuesto.puesto = "";
                 HistoricoPuesto.departamento = "";
 
-                mensaje_exito = "Histórico registrado exitosamente";
+                mensaje_exito = "Histórico modificado exitosamente";
             }
             catch (Exception ex)
             {

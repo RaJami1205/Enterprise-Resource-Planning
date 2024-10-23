@@ -10,11 +10,36 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Empleado</th>
+            <th>ID</th>
+            <th>Cedula</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Apellido</th>
             <th>Puesto</th>
             <th>Departamento</th>
             <th>Fecha de Inicio</th>
             <th>Fecha Final</th>
+            <th>Acción</th>
         </tr>
     </thead>
+    <tbody>
+        <!-- Ciclo que extrae los datos de la tabla de los artículos para mostrar toda información registrada -->
+        @foreach (var item in Model.listaHistoricoPuestos)
+        {
+            <tr>
+                <td>@item.id</td>
+                <td>@item.cedula</td>
+                <td>@item.nombre</td>
+                <td>@item.apellido1</td>
+                <td>@item.apellido2</td>
+                <td>@item.puesto</td>
+                <td>@item.departamento</td>
+                <td>@item.fecha_inicio</td>
+                <td>@item.fecha_final</td>
+                <td>
+                    <a class="btn btn-primary btn-sm" href="/Empleado/Historico_Puesto/Historico_Puesto_edit?id=@item.id">Editar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>

@@ -20,7 +20,7 @@ namespace ERP.Pages.Empleado.Empleado_view
             try
             {
                 conexionBD.abrir();
-                String sql = "SELECT * FROM Vista_Empleado_Completa";
+                String sql = "SELECT Cedula, Nombre, Apellido_1, Apellido_2, Edad, Genero, Residencia, Fecha_Ingreso, Departamento, Vendedor, Telefono, Salario, Puesto FROM Vista_Empleado_Completa";
                 SqlCommand command = conexionBD.obtenerComando(sql);
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
