@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace ERP.Pages.Planilla.Planilla_view
 {
-    public class Menu_PlanillaModel : PageModel
+    public class PlanillaViewModel : PageModel
     {
         public void OnGet()
         {

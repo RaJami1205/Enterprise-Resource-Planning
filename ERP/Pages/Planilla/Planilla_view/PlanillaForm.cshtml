@@ -1,0 +1,104 @@
+﻿@page
+@model ERP.Pages.Planilla.Planilla_view.PlanillaFormModel
+@{
+}
+
+<body>
+    <section class="form-register">
+        <h1>Registrar Planilla Mensual</h1>
+
+        <!-- Mensaje emergente de éxito luego de una inserción correcta -->
+        @if (Model.mensaje_exito.Length > 0)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>@Model.mensaje_exito</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        <!-- Mensaje emergente de error luego de una inserción fallida mostrando el problema ocurrido -->
+        @if (Model.mensaje_error.Length > 0)
+        {
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>@Model.mensaje_error</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        <!-- Ingreso de información por cada empleado -->
+        <form method="post" autocomplete="off">
+            <input class="controls" type="number" name="anno" id="anno" placeholder="Ingrese el año de pago" required value="@Model.anno">
+            <input class="controls" type="number" name="mes" id="mes" placeholder="Ingrese el mes de pago (1-12)" min="1" max="12" required value="@Model.mes">
+
+            <!-- Generar un formulario para cada empleado -->
+            @foreach (var empleado in Model.Empleados)
+            {
+                <div class="employee-section">
+                    <h4>Empleado: @empleado.nombre (Cédula: @empleado.cedula)</h4>
+
+                    <!-- Cantidad de horas trabajadas -->
+                    <input class="controls" type="number" name="horas_@empleado.cedula" id="horas_@empleado.cedula" placeholder="Horas trabajadas" required>
+
+                    <!-- Monto del pago -->
+                    <input class="controls" type="number" step="0.01" name="pago_@empleado.cedula" id="pago_@empleado.cedula" placeholder="Monto del pago" required>
+                </div>
+            }
+
+            <!-- Botón de registro -->
+            <button type="submit" asp-page-handler="" class="buttoms">Registrar Planilla</button>
+        </form>
+    </section>
+</body>
+
+<!-- Estilos CSS para la página -->
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background: linear-gradient(130deg, blue, skyblue);
+    }
+
+    .form-register {
+        width: 500px;
+        background: #24303c;
+        padding: 30px;
+        margin: auto;
+        margin-top: 100px;
+        border-radius: 4px;
+        font-family: Calibri;
+        color: white;
+        box-shadow: 7px 13px 37px #000;
+    }
+
+    .controls {
+        width: 100%;
+        background: #24303c;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 16px;
+        border: 1px solid #1f53c5;
+        font-family: Calibri;
+        font-size: 18px;
+        color: white;
+    }
+
+    .employee-section {
+        background: #3a4750;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+    }
+
+    .buttoms {
+        width: 100%;
+        background: #1f53c5;
+        border: none;
+        padding: 12px;
+        color: white;
+        margin: 16px 0;
+        font-size: 18px;
+    }
+</style>
