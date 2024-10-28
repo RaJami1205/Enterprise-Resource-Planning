@@ -18,7 +18,7 @@ namespace ERP.Pages.Inventario.Entrada
 
         /// <summary>
         /// Método que se ejecuta cuando se ingresa al formulario (GET request).
-        /// Objetivo: Extraer los datos de los ID de puesto y departamento y manejar errores.
+        /// Objetivo: Extraer los datos de los códigos de bodegas y artículos y la cédulas de los empleados y manejar errores.
         /// Entradas: Ninguna.
         /// Salidas: Mensaje de éxito o mensaje de error.
         /// </summary>

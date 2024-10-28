@@ -9,33 +9,47 @@
         <h1>Movimiento</h1>
         <form method="post" autocomplete="off">
 
-            <input class="controls" type="date" name="fecha_hora" id="fecha_hora" required>
+            <input class="controls" type="number" name="id" id="id" required value="@Model.Movimiento.id">
+
+            <input class="controls" type="datetime-local" name="fecha_hora" id="fecha_hora" required value="@Model.Movimiento.fecha_hora">
 
             <!-- Agregar el combobox para seleccionar la cedula del empleado -->
-            <select class="controls" name="cedula_empleado" id="cedula_empleado" required>
+            <select class="controls" name="cedula_empleado" id="cedula_empleado" required value="@Model.Movimiento.cedula_administrador">
                 <option value="cedula">Seleccione un empleado</option>
-                <option value="cedula">Lista de Cedulas de Empleados</option>
+                @foreach (var empleado in Model.listaEmpleados)
+                {
+                    <option value="@empleado">@empleado</option>
+                }
             </select>
 
             <!-- Agregar el combobox para seleccionar el código de la bodega origen -->
-            <select class="controls" name="bodega_origen" id="bodega_origen" required>
+            <select class="controls" name="bodega_origen" id="bodega_origen" required value="@Model.Movimiento.codigo_bodega_origen">
                 <option value="bodega_origen">Seleccione la bodega de origen</option>
-                <option value="bodega_origen">Bodegas</option>
+                @foreach (var bodega in Model.listaBodegas)
+                {
+                    <option value="@bodega">@bodega</option>
+                }
             </select>
 
             <!-- Agregar el combobox para seleccionar el código de la bodega destino -->
-            <select class="controls" name="bodega_destino" id="bodega_destino" required>
+            <select class="controls" name="bodega_destino" id="bodega_destino" required value="@Model.Movimiento.codigo_bodega_destino">
                 <option value="bodega_destino">Seleccione la bodega de destino</option>
-                <option value="bodega_destino">Bodegas</option>
+                @foreach (var bodega in Model.listaBodegas)
+                {
+                    <option value="@bodega">@bodega</option>
+                }
             </select>
 
             <!-- Agregar el combobox para seleccionar el código del artículo -->
-            <select class="controls" name="codigo_articulo" id="codigo_articulo" required>
+            <select class="controls" name="codigo_articulo" id="codigo_articulo" required value="@Model.Movimiento.codigo_articulo">
                 <option value="articulo">Seleccione el codigo de articulo</option>
-                <option value="articuo">articulos</option>
+                @foreach (var articulo in Model.listaArticulos)
+                {
+                    <option value="@articulo">@articulo</option>
+                }
             </select>
 
-            <input class="controls" type="text" name="cantidad" id="cantidad" placeholder="Ingrese la cantidad a movilizar" required>
+            <input class="controls" type="text" name="cantidad" id="cantidad" placeholder="Ingrese la cantidad a movilizar" required value="@Model.Movimiento.cantidad">
 
             <button type="submit" asp-page-handler="" class="buttoms">Registrar</button>
 
