@@ -2,7 +2,7 @@
 @model ERP.Pages.Cotizacion.CotizacionArticulo.VistaArticuloCotizacionModel
 @{
 }
-!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -31,6 +31,9 @@
                         <th>Número Cotización</th>
                         <th>Cantidad Cotizada</th>
                         <th>Monto Cotización</th>
+                        <th>Estado</th>
+                        <th>Peso</th>
+                        <th>Costo</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,6 +48,9 @@
                             <td>@articuloCotizacion.numero_cotizacion</td>
                             <td>@articuloCotizacion.cantidad_cotizada</td>
                             <td>@articuloCotizacion.monto_cotizacion</td>
+                            <td>@articuloCotizacion.estado_articulo</td>
+                            <td>@articuloCotizacion.peso_articulo</td>
+                            <td>@articuloCotizacion.costo_articulo</td>
                         </tr>
                     }
                 </tbody>

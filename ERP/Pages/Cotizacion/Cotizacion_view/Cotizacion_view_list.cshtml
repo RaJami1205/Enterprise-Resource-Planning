@@ -39,7 +39,8 @@
                         <th>Sector</th>
                         <th>Estado</th>
                         <th>Tipo</th>
-                        <th>Acciones</th>
+                        <th>Modificar</th>
+                        <th>Eliminar</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -63,7 +64,9 @@
                             <td>@cotizacion.tipo</td>
                             <td>
                                 <a class="btn btn-primary btn-sm" href="/Cotizacion/Cotizacion_view/Cotizacion_view_edit/?num_cotizacion=@cotizacion.num_cotizacion">Editar</a>
-                                <a class="btn btn-danger btn-sm" href="/Cotizacion/CotizacionArticulo/DetalleCotizacion?num_cotizacion=@cotizacion.num_cotizacion">Eliminar</a>
+                            </td>
+                            <td>
+                            <a class="btn btn-danger btn-sm" href="/Cotizacion/Cotizacion_view/Cotizacion_view_delete/?num_cotizacion=@cotizacion.num_cotizacion">Eliminar</a>
                             </td>
                         </tr>
                     }

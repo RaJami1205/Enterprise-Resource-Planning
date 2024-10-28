@@ -4,7 +4,7 @@ namespace ERP.Pages
 {
     public class Conexion
     {
-        string cadena = "Data source=" + Environment.MachineName + "; Initial Catalog=ERP; Integrated Security=True";
+        string cadena = "Data Source=LAPTOP-NHTRS4E4\\MYSQLSERVER;Initial Catalog=ERP;Persist Security Info=True;User ID=sa;Password=raspberry";
 
         public SqlConnection ConectarBD = new SqlConnection();
 

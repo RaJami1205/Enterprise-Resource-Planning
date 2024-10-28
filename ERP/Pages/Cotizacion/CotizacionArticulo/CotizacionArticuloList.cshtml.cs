@@ -17,10 +17,10 @@ namespace ERP.Pages.Cotizacion.CotizacionArticulo
             {
                 conexionBD.abrir(); // Abrimos la conexión
 
-                // Consulta a la vista VistaArticuloCotizacion
-                string sql = @"SELECT codigo_articulo, nombre_articulo, descripcion_articulo, cantidad_inventario, 
-                                   precio_articulo, numero_cotizacion, cantidad_cotizada, monto_cotizacion 
-                               FROM VistaArticuloCotizacion";
+                string sql = @"SELECT codigo_articulo, nombre_articulo, cantidad_inventario, estado_articulo, 
+                           descripcion_articulo, peso_articulo, costo_articulo, precio_articulo, 
+                           numero_cotizacion, cantidad_cotizada, monto_cotizacion 
+                       FROM VistaArticuloCotizacion";
 
                 SqlCommand command = conexionBD.obtenerComando(sql); // Obtenemos el comando
 
@@ -30,14 +30,17 @@ namespace ERP.Pages.Cotizacion.CotizacionArticulo
                     {
                         ArticuloCotizacionInfo articuloCotizacion = new ArticuloCotizacionInfo
                         {
-                            codigo_articulo = reader.GetInt32(0),
+                            codigo_articulo = reader.GetInt32(0).ToString(),
                             nombre_articulo = reader.GetString(1),
-                            descripcion_articulo = reader.GetString(2),
-                            cantidad_inventario = reader.GetInt32(3),
-                            precio_articulo = reader.GetDecimal(4),
-                            numero_cotizacion = reader.GetInt32(5),
-                            cantidad_cotizada = reader.GetInt32(6),
-                            monto_cotizacion = reader.GetDecimal(7)
+                            cantidad_inventario = reader.GetInt32(2).ToString(),
+                            estado_articulo = reader.GetString(3), // Convertimos a "Activo"/"Inactivo"
+                            descripcion_articulo = reader.GetString(4),
+                            peso_articulo = reader.GetDouble(5).ToString("F2"),
+                            costo_articulo = reader.GetDouble(6).ToString("F2"),
+                            precio_articulo = reader.GetDouble(7).ToString("F2"),
+                            numero_cotizacion = reader.GetInt32(8).ToString(),
+                            cantidad_cotizada = reader.GetInt32(9).ToString(),
+                            monto_cotizacion = reader.GetDouble(10).ToString("F2")
                         };
 
                         listaArticuloCotizacion.Add(articuloCotizacion); // Añadimos cada entrada a la lista
@@ -57,14 +60,17 @@ namespace ERP.Pages.Cotizacion.CotizacionArticulo
         // Clase para representar los datos de la vista VistaArticuloCotizacion
         public class ArticuloCotizacionInfo
         {
-            public int codigo_articulo { get; set; }
+            public string codigo_articulo { get; set; }
             public string nombre_articulo { get; set; }
             public string descripcion_articulo { get; set; }
-            public int cantidad_inventario { get; set; }
-            public decimal precio_articulo { get; set; }
-            public int numero_cotizacion { get; set; }
-            public int cantidad_cotizada { get; set; }
-            public decimal monto_cotizacion { get; set; }
+            public string cantidad_inventario { get; set; }
+            public string precio_articulo { get; set; }
+            public string numero_cotizacion { get; set; }
+            public string cantidad_cotizada { get; set; }
+            public string monto_cotizacion { get; set; }
+            public string estado_articulo { get; set; }
+            public string peso_articulo { get; set; }
+            public string costo_articulo {get ; set;}
         }
     }
 }

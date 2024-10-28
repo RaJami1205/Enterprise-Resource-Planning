@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace ERP.Pages.Planilla.Planilla_view
@@ -20,7 +21,7 @@ namespace ERP.Pages.Planilla.Planilla_view
             {
                 // Obtener la lista de empleados
                 conexionBD.abrir();
-                string query = "SELECT cedula, nombre FROM Empleado";
+                string query = "SELECT cedula, nombre, salario_actual FROM Empleado";
                 SqlCommand commandEmpleado = conexionBD.obtenerComando(query);
                 using (SqlDataReader reader = commandEmpleado.ExecuteReader())
                 {
@@ -29,7 +30,9 @@ namespace ERP.Pages.Planilla.Planilla_view
                         Empleados.Add(new EmpleadoInfo
                         {
                             cedula = reader.GetInt32(0).ToString(),
-                            nombre = reader.GetString(1)
+                            nombre = reader.GetString(1),
+                            salario_actual = reader.GetDouble(2).ToString(),
+                            horas = ""
                         });
                     }
                 }
@@ -44,26 +47,47 @@ namespace ERP.Pages.Planilla.Planilla_view
 
         public void OnPost()
         {
+            OnGet();
             anno = Request.Form["anno"];
             mes = Request.Form["mes"];
 
             foreach (var empleado in Empleados)
             {
-                string horasTrabajadas = Request.Form["horas_" + empleado.cedula];
-                string montoPago = Request.Form["pago_" + empleado.cedula];
+                // Almacena las horas trabajadas en la propiedad horas del objeto EmpleadoInfo
+                empleado.horas = Request.Form["horas_" + empleado.cedula];
 
                 try
                 {
                     conexionBD.abrir();
-                    string query = "INSERT INTO SalarioMensual (anno, mes, pago, cantidad_horas, cedula_empleado) VALUES (@anno, @mes, @pago, @horas, @cedula)";
+                    string query = "InsertarSalarioMensual";
                     SqlCommand command = conexionBD.obtenerComando(query);
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Parámetro de error de salida
+                    SqlParameter errorParameter = new SqlParameter("@ErrorMsg", SqlDbType.NVarChar, 255)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+
+                    // Agregar parámetros al procedimiento almacenado
                     command.Parameters.AddWithValue("@anno", anno);
                     command.Parameters.AddWithValue("@mes", mes);
-                    command.Parameters.AddWithValue("@pago", montoPago);
-                    command.Parameters.AddWithValue("@horas", horasTrabajadas);
-                    command.Parameters.AddWithValue("@cedula", empleado.cedula);
+                    command.Parameters.AddWithValue("@pago", "0.00"); // El pago se calculará en el SP
+                    command.Parameters.AddWithValue("@cantidad_horas", empleado.horas);
+                    command.Parameters.AddWithValue("@cedula_empleado", empleado.cedula);
+                    command.Parameters.Add(errorParameter);
 
+                    // Ejecutar el procedimiento almacenado
                     command.ExecuteNonQuery();
+
+                    // Capturar el mensaje de error, si existe
+                    string errorMsg = (string)command.Parameters["@ErrorMsg"].Value;
+
+                    if (string.IsNullOrEmpty(errorMsg))
+                    {
+                        mensaje_exito = "Planilla registrada exitosamente.";
+                    }
+
                     conexionBD.cerrar();
                 }
                 catch (Exception ex)
@@ -72,8 +96,6 @@ namespace ERP.Pages.Planilla.Planilla_view
                     conexionBD.cerrar();
                 }
             }
-
-            mensaje_exito = "Planilla registrada exitosamente.";
         }
     }
 
@@ -81,5 +103,7 @@ namespace ERP.Pages.Planilla.Planilla_view
     {
         public string cedula { get; set; }
         public string nombre { get; set; }
+        public string salario_actual { get; set; }
+        public string horas { get; set; } // Nueva propiedad para almacenar horas trabajadas
     }
 }

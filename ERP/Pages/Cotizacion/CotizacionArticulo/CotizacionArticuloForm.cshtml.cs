@@ -63,15 +63,15 @@ namespace ERP.Pages.Cotizacion.CotizacionArticulo
         /// </summary>
         public void OnPost()
         {
-            CotizacionArticulo.num_cotizacion = int.Parse(Request.Form["num_cotizacion"]);
-            CotizacionArticulo.codigo_articulo = int.Parse(Request.Form["codigo_articulo"]);
-            CotizacionArticulo.cantidad = int.Parse(Request.Form["cantidad"]);
-            CotizacionArticulo.monto = decimal.Parse(Request.Form["monto"]);
+            CotizacionArticulo.num_cotizacion = Request.Form["num_cotizacion"];
+            CotizacionArticulo.codigo_articulo = Request.Form["codigo_articulo"];
+            CotizacionArticulo.cantidad = Request.Form["cantidad"];
+            CotizacionArticulo.monto = Request.Form["monto"];
 
             try
             {
                 conexionBD.abrir();
-                string query = "InsertarCotizacionArticulo";
+                string query = "InsertarArticuloCotizacion";
                 SqlCommand command = conexionBD.obtenerComando(query);
                 command.CommandType = CommandType.StoredProcedure;
 
@@ -117,10 +117,10 @@ namespace ERP.Pages.Cotizacion.CotizacionArticulo
         // Clase que representa la estructura de CotizacionArticulo
         public class CotizacionArticuloInfo
         {
-            public int num_cotizacion { get; set; }
-            public int codigo_articulo { get; set; }
-            public int cantidad { get; set; }
-            public decimal monto { get; set; }
+            public string num_cotizacion { get; set; }
+            public string codigo_articulo { get; set; }
+            public string cantidad { get; set; }
+            public string monto { get; set; }
         }
     }
 }
