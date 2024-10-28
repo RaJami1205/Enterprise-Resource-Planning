@@ -3,20 +3,59 @@
 @{
 }
 
-<!-- Interfaz gráfica html de la lista de Facturas -->
-<br />
-<h2> Lista de Facturas </h2>
-<a class="btn btn-primary btn-sm" href="/Factura/Factura_view/Factura_view_form"> Nueva Factura</a>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Numero</th>
-            <th>Nombre del Local</th>
-            <th>Cliente</th>
-            <th>Cotizacion</th>
-            <th>Vendedor</th>
-            <th>Articulo</th>
-            <th>Cantidad</th>
-        </tr>
-    </thead>
-</table>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Facturas</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<a class='btn btn-primary btn-sm' href="/Factura/Factura_view/Factura_view_form"> Nueva Factura</a>
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4">Lista de Facturas</h2>
+        @if (Model.listaFacturas.Count == 0)
+        {
+            <p>No hay facturas disponibles.</p>
+        }
+        else
+        {
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Número Facturación</th>
+                        <th>Teléfono Local</th>
+                        <th>Cédula Jurídica</th>
+                        <th>Nombre Local</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                        <th>Vendedor</th>
+                        <th>Número Cotización</th>
+                        <th>Anular</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var factura in Model.listaFacturas)
+                    {
+                        <tr>
+                            <td>@factura.num_facturacion</td>
+                            <td>@factura.telefono_local</td>
+                            <td>@factura.cedula_juridica</td>
+                            <td>@factura.nombre_local</td>
+                            <td>@factura.fecha</td>
+                            <td>@factura.estado</td>
+                            <td>@factura.cedula_vendedor</td>
+                            <td>@factura.num_cotizacion</td>
+                            <td>
+                                <a class="btn btn-danger btn-sm" href="/Factura/Factura_view/FacturaDelete/?num_facturacion=@factura.num_facturacion">Anular</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</body>
+</html>

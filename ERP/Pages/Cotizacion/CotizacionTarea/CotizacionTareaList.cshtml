@@ -11,7 +11,7 @@
     <title>Lista de Tareas de Cotización</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
-<a class='btn btn-primary btn-sm' href="/TareaCotizacion/TareaCotizacion_form"> Nueva Tarea</a>
+<a class='btn btn-primary btn-sm' href="/Cotizacion/CotizacionTarea/CotizacionTareaForm"> Nueva Tarea</a>
 <body>
     <div class="container mt-5">
         <h2 class="mb-4">Lista de Tareas de Cotización</h2>
@@ -38,7 +38,7 @@
                             <td>@tarea.descripcion</td>
                             <td>@tarea.num_cotizacion</td>
                             <td>
-                                <a class="btn btn-danger btn-sm" href="/Cotizacion/CotizacionTareaDelete/?codigo_tarea=@tarea.codigo_tarea&num_cotizacion=@tarea.num_cotizacion">Eliminar</a>
+                                <a class="btn btn-danger btn-sm" href="/Cotizacion/CotizacionTarea/CotizacionTareaDelete/?codigo_tarea=@tarea.codigo_tarea&num_cotizacion=@tarea.num_cotizacion">Eliminar</a>
                             </td>
                         </tr>
                     }

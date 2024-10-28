@@ -348,7 +348,6 @@ CREATE TABLE Salida (
 	FOREIGN KEY (cedula_vendedor) REFERENCES Empleado(cedula), /* Llave foránea a Empleado */
     FOREIGN KEY (codigo_bodega) REFERENCES Bodega(codigo_bodega), /* Llave foránea a Bodega */
 	FOREIGN KEY (factura) REFERENCES Factura(num_facturacion) /* Llave foránea a Bodega */
-
 );
 
 /* Tabla para registrar los artículos que salen de una bodega en una salida específica */

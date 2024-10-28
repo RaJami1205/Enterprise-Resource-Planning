@@ -1,0 +1,102 @@
+﻿@page
+@model ERP.Pages.Factura.FacturaArticulo.FacturaArticuloFormModel
+@{
+}
+<body>
+    <section class="form-register">
+        <h1>Registrar Artículo en Factura</h1>
+
+        <!-- Mensaje emergente de éxito -->
+        @if (Model.mensaje_exito.Length > 0)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>@Model.mensaje_exito</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        <!-- Mensaje emergente de error -->
+        @if (Model.mensaje_error.Length > 0)
+        {
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>@Model.mensaje_error</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        <form method="post" autocomplete="off">
+            <!-- Número de Factura -->
+            <select class="controls" name="num_factura" id="num_factura" required>
+                <option value="" disabled selected>Seleccione el número de factura</option>
+                @foreach (var numFactura in Model.NumerosFactura)
+                {
+                    <option value="@numFactura">@numFactura</option>
+                }
+            </select>
+
+            <!-- Código de Artículo -->
+            <select class="controls" name="codigo_articulo" id="codigo_articulo" required>
+                <option value="" disabled selected>Seleccione el código de artículo</option>
+                @foreach (var codigoArticulo in Model.CodigosArticulo)
+                {
+                    <option value="@codigoArticulo">@codigoArticulo</option>
+                }
+            </select>
+
+            <!-- Cantidad -->
+            <input class="controls" type="number" name="cantidad" id="cantidad" placeholder="Ingrese la cantidad" min="1" required value="@Model.FacturaArticulo.cantidad">
+
+            <!-- Monto -->
+            <input class="controls" type="number" step="0.01" name="monto" id="monto" placeholder="Ingrese el monto" min="0.01" required value="@Model.FacturaArticulo.monto">
+
+            <!-- Botón de Registro -->
+            <button type="submit" asp-page-handler="" class="buttoms">Registrar</button>
+        </form>
+    </section>
+</body>
+
+<style>
+    /* Estilos similares a los usados en el formulario de cotización */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background: linear-gradient(130deg, blue, skyblue);
+    }
+
+    .form-register {
+        width: 400px;
+        background: #24303c;
+        padding: 30px;
+        margin: auto;
+        margin-top: 100px;
+        border-radius: 4px;
+        font-family: Calibri;
+        color: white;
+        box-shadow: 7px 13px 37px #000;
+    }
+
+    .controls {
+        width: 100%;
+        background: #24303c;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 16px;
+        border: 1px solid #1f53c5;
+        font-family: Calibri;
+        font-size: 18px;
+        color: white;
+    }
+
+    .buttoms {
+        width: 100%;
+        background: #1f53c5;
+        border: none;
+        padding: 12px;
+        color: white;
+        margin: 16px 0;
+        font-size: 18px;
+    }
+</style>

@@ -6,50 +6,87 @@
 <!-- Interfaz gráfica html de formulario de Factura -->
 <body>
     <section class="form-register">
-        <h1>Factura</h1>
+        <h1>Registrar Factura</h1>
+
+        <!-- Mensaje emergente de éxito luego de una inserción correcta -->
+        @if (Model.mensaje_exito.Length > 0)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>@Model.mensaje_exito</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        <!-- Mensaje emergente de error luego de una inserción fallida mostrando el problema ocurrido -->
+        @if (Model.mensaje_error.Length > 0)
+        {
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>@Model.mensaje_error</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
         <form method="post" autocomplete="off">
 
-            <input class="controls" type="text" name="numero" id="numero" placeholder="Ingrese el número" required>
+            <!-- Número de Facturación -->
+            <input class="controls" type="number" name="num_facturacion" id="num_facturacion" placeholder="Ingrese el número de facturación" required value="@Model.Factura.num_facturacion">
 
-            <input class="controls" type="text" name="nombre_local" id="nombre_local" placeholder="Ingrese el nombre del local" required>
+            <!-- Teléfono del Local -->
+            <input class="controls" type="number" name="telefono_local" id="telefono_local" placeholder="Ingrese el teléfono del local" required value="@Model.Factura.telefono_local">
 
-            <input class="controls" type="text" name="cedula_local" id="cedula_local" placeholder="Ingrese la cedula jurídica del local" required>
+            <!-- Nombre del Local -->
+            <input class="controls" type="text" name="nombre_local" id="nombre_local" placeholder="Ingrese el nombre del local" required value="@Model.Factura.nombre_local">
 
-            <input class="controls" type="text" name="telefono_local" id="telefono_local" placeholder="Ingrese el telefono del local" required>
+            <!-- Fecha de Emisión -->
+            <input class="controls date-placeholder" type="date" name="fecha" id="fecha" required value="@Model.Factura.fecha" data-placeholder="Fecha de emisión">
 
-            <!-- Agregar el combobox para seleccionar el cliente -->
-            <select class="controls" name="cliente" id="cliente" required>
-                <option value="cliente">Seleccione el cliente</option>
-                <option value="cliente">Lista de Clientes</option>
-            </select>
-
-            <!-- Agregar el combobox para seleccionar la cotización -->
-            <select class="controls" name="cotizacion" id="cotizacion" required>
-                <option value="cotizacion">Seleccione la cotizacion</option>
-                <option value="cotizacion">Lista de cotizaciones</option>
-            </select>
-
-            <!-- Agregar el combobox para seleccionar el vendedor -->
-            <select class="controls" name="vendedor" id="vendedor" required>
-                <option value="vendedor">Seleccione el vendedor</option>
-                <option value="vendedor">Lista de vendedores</option>
-            </select>
-
-            <input class="controls" type="date" name="fecha" id="fecha" required>
-
-            <!-- Agregar el combobox para seleccionar el estado -->
+            <!-- Estado de Factura -->
             <select class="controls" name="estado" id="estado" required>
-                <option value="estado">Seleccione el estado</option>
+                <option value="" disabled selected>Seleccione el estado</option>
+                @foreach (var estado in Model.EstadosFactura)
+                {
+                    <option value="@estado">@estado</option>
+                }
             </select>
 
-            <!-- Agregar el combobox para seleccionar el articulo -->
-            <select class="controls" name="articulo" id="articulo" required>
-                <option value="articulo">Seleccione el articulo</option>
+            <!-- Cédula del Vendedor -->
+            <select class="controls" name="cedula_vendedor" id="cedula_vendedor" required>
+                <option value="" disabled selected>Seleccione el vendedor</option>
+                @foreach (var vendedor in Model.Empleados)
+                {
+                    <option value="@vendedor">@vendedor</option>
+                }
             </select>
 
-            <input class="controls" type="text" name="cantidad" id="cantidad" placeholder="Ingrese la cantidad de articulos" required>
+            <!-- Cédula Jurídica del Cliente -->
+            <select class="controls" name="cedula_juridica" id="cedula_juridica" required>
+                <option value="" disabled selected>Seleccione el cliente</option>
+                @foreach (var cliente in Model.Clientes)
+                {
+                    <option value="@cliente">@cliente</option>
+                }
+            </select>
 
-            <button type="submit" asp-page-handler="" class="buttoms">Facturar</button>
+            <!-- Cotizacion -->
+            <select class="controls" name="num_cotizacion" id="num_cotizacion" value="">
+                <option value="" disabled selected>Seleccione la cotizacion</option>
+                @foreach (var cotizacion in Model.Cotizaciones)
+                {
+                    <option value="@cotizacion">@cotizacion</option>
+                }
+            </select>
+
+            </select>
+
+            <!-- Bodega -->
+            <select class="controls" name="bodega" id="bodega" value="">
+                <option value="" disabled selected>Seleccione la bodega</option>
+                @foreach (var bodega in Model.Bodegas)
+                {
+                    <option value="@bodega">@bodega</option>
+                }
+            </select>
+
+            <!-- Botón de Registro -->
+            <button type="submit" asp-page-handler="" class="buttoms">Registrar</button>
 
         </form>
     </section>

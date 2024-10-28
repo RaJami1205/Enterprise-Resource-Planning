@@ -1,22 +1,25 @@
 ﻿@page
 @using System.Data.SqlClient;
 @using System.Data;
+
 @{
     Conexion conexionBD = new Conexion();
-    string id = Request.Query["num_cotizacion"];
+    string numCotizacion = Request.Query["num_cotizacion"];
+    string codigoTarea = Request.Query["codigo_tarea"];
 
     try
     {
-        // Asegúrate de que el ID no esté vacío o nulo
-        if (!string.IsNullOrEmpty(id))
+        // Verificación de valores no nulos o vacíos para ambos parámetros
+        if (!string.IsNullOrEmpty(numCotizacion) && !string.IsNullOrEmpty(codigoTarea))
         {
             conexionBD.abrir();
-            string query = "EliminarCotizacion"; // Nombre del procedimiento almacenado
+            string query = "EliminarTareaCotizacion"; // Nombre del procedimiento almacenado
             SqlCommand command = conexionBD.obtenerComando(query);
             command.CommandType = CommandType.StoredProcedure;
 
-            // Parámetro de entrada
-            command.Parameters.AddWithValue("@num_cotizacion", id);
+            // Parámetros de entrada
+            command.Parameters.AddWithValue("@num_cotizacion", int.Parse(numCotizacion));
+            command.Parameters.AddWithValue("@codigo_tarea", int.Parse(codigoTarea));
 
             // Parámetro de error de salida
             SqlParameter errorParameter = new SqlParameter("@ErrorMsg", SqlDbType.NVarChar, 255)
@@ -33,27 +36,32 @@
 
             if (!string.IsNullOrEmpty(errorMsg))
             {
-                // Mostrar mensaje de error si es necesario
+                // Mostrar mensaje de error si existe
                 ViewData["ErrorMessage"] = errorMsg;
+            }
+            else
+            {
+                ViewData["SuccessMessage"] = "Tarea eliminada exitosamente de la cotización.";
             }
         }
         else
         {
-            // Manejo de error si el ID está vacío o nulo
-            ViewData["ErrorMessage"] = "Número de cotización no proporcionado.";
+            // Mensaje de error si los parámetros están vacíos o nulos
+            ViewData["ErrorMessage"] = "Número de cotización o código de tarea no proporcionados.";
         }
     }
     catch (Exception ex)
     {
-        // Loguear la excepción o manejar errores adicionales
+        // Manejo de excepciones
         ViewData["ErrorMessage"] = "Ocurrió un error: " + ex.Message;
     }
     finally
     {
-        // Asegurarse de cerrar la conexión siempre
+        // Asegurar el cierre de la conexión
         conexionBD.cerrar();
     }
 
-    // Redirigir de vuelta a la lista de cotizaciones
+    // Redirección a la lista de cotizaciones
     Response.Redirect("/Cotizacion/CotizacionTarea/CotizacionTareaList");
 }
+
