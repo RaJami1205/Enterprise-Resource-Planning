@@ -55,7 +55,7 @@ CREATE TABLE Empleado (
     departamento INT NOT NULL, /* Departamento al que pertenece el empleado */
     permiso_vendedor VARCHAR(20) NOT NULL, /* Permiso de vendedor (Con permiso, Sin permiso) */
     numero_telefono INT NOT NULL, /* Número de teléfono del empleado */
-    salario_actual FLOAT NOT NULL, /* Salario actual del empleado */
+    salario_actual DECIMAL(10,2) NOT NULL, /* Salario actual del empleado */
 	puesto INT NOT NULL, /* Puesto que ocupa el empleado */
 	CONSTRAINT chk_genero CHECK (genero IN ('Masculino', 'Femenino', 'Otro')), /* Restricción para validar el género */
 	CONSTRAINT chk_permisos_vendedor CHECK (permiso_vendedor IN ('Con permiso', 'Sin permiso')), /* Validación para permisos de vendedor */
@@ -64,15 +64,13 @@ CREATE TABLE Empleado (
 );
 
 /* Tabla para almacenar los usuarios del sistema */
-CREATE TABLE LogueoUsuario (
+CREATE TABLE Logueo_Usuario (
 	usuario VARCHAR(75) NOT NULL,
-	contrasenna VARCHAR(75) NOT NULL,
+	contrasenna VARBINARY(64) NOT NULL,
 	cedula_empleado INT NOT NULL,
 
-	PRIMARY KEY (usuario,contrasenna,cedula_empleado),
 	FOREIGN KEY (cedula_empleado) REFERENCES Empleado(cedula)
 );
-
 
 CREATE TABLE EmpleadoRol (
 	rol INT NOT NULL ,
@@ -83,25 +81,31 @@ CREATE TABLE EmpleadoRol (
 
 /* Tabla para registrar el historial de salarios de los empleados */
 CREATE TABLE HistoricoSalario (
-    nombre_puesto INT NOT NULL, /* Nombre del puesto en el historial */
+	HistoricoSalario_id INT NOT NULL,
+    puesto INT NOT NULL, /* Nombre del puesto en el historial */
     fecha_inicio DATE NOT NULL, /* Fecha de inicio del puesto */
     fecha_fin DATE NOT NULL, /* Fecha de fin del puesto */
-    departamento VARCHAR(25) NOT NULL, /* Departamento del empleado */
+    departamento INT NOT NULL, /* Departamento del empleado */
     monto INT NOT NULL, /* Salario en ese periodo */
     cedula_empleado INT NOT NULL, /* Cédula del empleado */
-    PRIMARY KEY (nombre_puesto,fecha_inicio,cedula_empleado), /* Llave primaria compuesta */
-    FOREIGN KEY (cedula_empleado) REFERENCES Empleado(cedula) /* Llave foránea a Empleado */
+    PRIMARY KEY (HistoricoSalario_id,puesto,fecha_inicio,cedula_empleado), /* Llave primaria compuesta */
+    FOREIGN KEY (cedula_empleado) REFERENCES Empleado(cedula), /* Llave foránea a Empleado */
+	FOREIGN KEY (puesto) REFERENCES Puesto(puesto_id), /* Llave foránea a Puesto */
+	FOREIGN KEY (departamento) REFERENCES Departamento(departamento_id) /* Llave foránea a Departamento */
 );
 
 /* Tabla para registrar el historial de puestos de los empleados */
 CREATE TABLE HistoricoPuesto (
-    nombre_puesto INT NOT NULL, /* Nombre del puesto en el historial */
+	HistoricoPuesto_id INT NOT NULL,
+    puesto INT NOT NULL, /* Nombre del puesto en el historial */
     fecha_inicio DATE NOT NULL, /* Fecha de inicio en el puesto */
     fecha_fin DATE NOT NULL, /* Fecha de fin en el puesto */
-    departamento VARCHAR(25) NOT NULL, /* Departamento del empleado */
+    departamento INT NOT NULL, /* Departamento del empleado */
     cedula_empleado INT NOT NULL, /* Cédula del empleado */
-	PRIMARY KEY (nombre_puesto,fecha_inicio,cedula_empleado), /* Llave primaria compuesta */
-    FOREIGN KEY (cedula_empleado) REFERENCES Empleado(cedula) /* Llave foránea a Empleado */
+	PRIMARY KEY (HistoricoPuesto_id,puesto,fecha_inicio,cedula_empleado), /* Llave primaria compuesta */
+    FOREIGN KEY (cedula_empleado) REFERENCES Empleado(cedula), /* Llave foránea a Empleado */
+	FOREIGN KEY (puesto) REFERENCES Puesto(puesto_id), /* Llave foránea a Puesto */
+	FOREIGN KEY (departamento) REFERENCES Departamento(departamento_id) /* Llave foránea a Departamento */
 );
 
 /* Tabla para almacenar los pagos de salarios mensuales de los empleados */
@@ -162,9 +166,9 @@ CREATE TABLE Articulo (
     cantidad INT NOT NULL, /* Cantidad en inventario */
 	activo VARCHAR(50) NOT NULL, /* Estado del artículo (Activo/Inactivo) */
     descripcion VARCHAR(255) NOT NULL, /* Descripción del artículo */
-    peso FLOAT NOT NULL, /* Peso del artículo */
-	costo FLOAT NOT NULL, /* Costo del artículo */
-    precio_estandar FLOAT NOT NULL, /* Precio estándar del artículo */
+    peso DECIMAL(10,2) NOT NULL, /* Peso del artículo */
+	costo DECIMAL(10,2) NOT NULL, /* Costo del artículo */
+    precio_estandar DECIMAL(10,2) NOT NULL, /* Precio estándar del artículo */
     codigo_familia INT NOT NULL, /* Código de la familia a la que pertenece el artículo */
     FOREIGN KEY (codigo_familia) REFERENCES Familia(codigo) /* Llave foránea a la tabla Familia */
 );
@@ -175,7 +179,7 @@ CREATE TABLE Bodega (
     numero INT NOT NULL, /* Número de identificación de la bodega */
     ubicacion VARCHAR(25) NOT NULL, /* Ubicación de la bodega */
     capacidad INT NOT NULL, /* Capacidad total de la bodega */
-	espacio_cubico FLOAT /* Espacio cúbico disponible en la bodega */
+	espacio_cubico DECIMAL(10,2) /* Espacio cúbico disponible en la bodega */
 );
 
 /* Tabla que asocia familias de productos a bodegas */
@@ -199,34 +203,33 @@ CREATE TABLE BodegaArticulo (
 
 /* Tabla para registrar las entradas de productos en una bodega */
 CREATE TABLE Entrada (
+	codigo_entrada INT PRIMARY KEY NOT NULL, /* Codigo de entrada llave primaria */
     fecha_hora DATETIME NOT NULL, /* Fecha y hora de la entrada */
     codigo_bodega INT NOT NULL, /* Código de la bodega donde ingresan los productos */
     cedula_administrador INT NOT NULL, /* Cédula del administrador responsable */
-	PRIMARY KEY(fecha_hora,cedula_administrador,codigo_bodega), /* Llave primaria compuesta */
     FOREIGN KEY (cedula_administrador) REFERENCES Empleado(cedula), /* Llave foránea a Empleado */
     FOREIGN KEY (codigo_bodega) REFERENCES Bodega(codigo_bodega) /* Llave foránea a Bodega */
 );
 
 /* Tabla para registrar los artículos que ingresan en una entrada específica */
 CREATE TABLE EntradaArticulo (
+	codigo_entrada INT NOT NULL, /* codigo de entrada */
     fecha_hora_entrada DATETIME NOT NULL, /* Fecha y hora de la entrada */
 	codigo_bodega INT NOT NULL, /* Código de la bodega */
     cedula_administrador INT NOT NULL, /* Cédula del administrador */
 	codigo_articulo INT NOT NULL, /* Código del artículo ingresado */
 	cantidad INT NOT NULL, /* Cantidad de productos ingresados */
-    precio FLOAT NOT NULL, /* Precio total de la entrada */
-	PRIMARY KEY(fecha_hora_entrada,cedula_administrador,codigo_bodega,codigo_articulo), /* Llave primaria compuesta */
-    FOREIGN KEY(fecha_hora_entrada,cedula_administrador,codigo_bodega) REFERENCES Entrada(fecha_hora,cedula_administrador,codigo_bodega), /* Llave foránea a Entrada */
+    FOREIGN KEY(codigo_entrada) REFERENCES Entrada(codigo_entrada), /* Llave foránea a Entrada */
 	FOREIGN KEY(codigo_articulo) REFERENCES Articulo(codigo) /* Llave foránea a Artículo */
 );
 
 /* Tabla para registrar movimientos de artículos entre bodegas */
 CREATE TABLE Movimiento (
+	codigo_movimiento INT PRIMARY KEY NOT NULL, /*Código de movimiento llave primaria*/
     fecha_hora DATETIME NOT NULL, /* Fecha y hora del movimiento */
     cedula_administrador INT NOT NULL, /* Cédula del administrador */
     codigo_bodega_origen INT NOT NULL, /* Bodega de origen */
     codigo_bodega_destino INT NOT NULL, /* Bodega de destino */
-	PRIMARY KEY(fecha_hora,cedula_administrador,codigo_bodega_origen, codigo_bodega_destino), /* Llave primaria compuesta */
     FOREIGN KEY (cedula_administrador) REFERENCES Empleado(cedula), /* Llave foránea a Empleado */
     FOREIGN KEY (codigo_bodega_origen) REFERENCES Bodega(codigo_bodega), /* Llave foránea a Bodega de origen */
     FOREIGN KEY (codigo_bodega_destino) REFERENCES Bodega(codigo_bodega) /* Llave foránea a Bodega de destino */
@@ -234,14 +237,14 @@ CREATE TABLE Movimiento (
 
 /* Tabla para registrar los artículos movidos entre bodegas en un movimiento específico */
 CREATE TABLE MovimientoArticulo (
+	codigo_movimiento INT NOT NULL, /*Código de movimiento llave primaria*/
     fecha_hora_movimiento DATETIME NOT NULL, /* Fecha y hora del movimiento */
     cedula_administrador INT NOT NULL, /* Cédula del administrador */
     codigo_bodega_origen INT NOT NULL, /* Bodega de origen */
     codigo_bodega_destino INT NOT NULL, /* Bodega de destino */
 	codigo_articulo INT NOT NULL, /* Código del artículo */
 	cantidad INT NOT NULL, /* Cantidad movida */
-	PRIMARY KEY(fecha_hora_movimiento,cedula_administrador,codigo_bodega_origen, codigo_bodega_destino,codigo_articulo), /* Llave primaria compuesta */
-    FOREIGN KEY (fecha_hora_movimiento,cedula_administrador,codigo_bodega_origen, codigo_bodega_destino) REFERENCES Movimiento(fecha_hora,cedula_administrador,codigo_bodega_origen, codigo_bodega_destino), /* Llave foránea a Movimiento */
+	FOREIGN KEY (codigo_movimiento) REFERENCES Movimiento(codigo_movimiento), /*Llave foránea a Movimiento*/
 	FOREIGN KEY (codigo_articulo) REFERENCES Articulo(codigo) /* Llave foránea a Artículo */
 );
 
