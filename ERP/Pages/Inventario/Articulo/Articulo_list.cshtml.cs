@@ -20,7 +20,7 @@ namespace ERP.Pages.Inventario.Articulo
             try
             {
                 conexionBD.abrir();
-                String sql = "SELECT * FROM ArticuloBodega";
+                String sql = "SELECT codigo_articulo, nombre_articulo, descripcion_articulo, codigo_bodega, ubicacion_bodega, cantidad_en_bodega FROM ArticuloBodega";
                 SqlCommand command = conexionBD.obtenerComando(sql);
                 using (SqlDataReader reader = command.ExecuteReader())
                 {

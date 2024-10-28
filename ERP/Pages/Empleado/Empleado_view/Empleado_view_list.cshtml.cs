@@ -20,7 +20,7 @@ namespace ERP.Pages.Empleado.Empleado_view
             try
             {
                 conexionBD.abrir();
-                String sql = "SELECT * FROM Vista_Empleado_Completa";
+                String sql = "SELECT Cedula, Nombre, Apellido_1, Apellido_2, Edad, Genero, Residencia, Fecha_Ingreso, Departamento, Vendedor, Telefono, Salario, Puesto FROM Vista_Empleado_Completa";
                 SqlCommand command = conexionBD.obtenerComando(sql);
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
@@ -54,22 +54,23 @@ namespace ERP.Pages.Empleado.Empleado_view
                 conexionBD.cerrar();
             }
         }
-    }
 
-    // Clase que representa el modelo de vista para la lista de empleados
-    public class EmpleadoInfo {
-        public string cedula { get; set; }
-        public string nombre { get; set; }
-        public string apellido1 { get; set; }
-        public string apellido2 { get; set; }
-        public string edad { get; set; }
-        public string genero { get; set; }
-        public string residencia { get; set; }
-        public string fecha_ingreso { get; set; }
-        public string departamento { get; set; }
-        public string puesto { get; set; }
-        public string vendedor { get; set; }
-        public string telefono { get; set; }
-        public string salario { get; set; }
+        // Clase que representa el modelo de vista para la lista de empleados
+        public class EmpleadoInfo
+        {
+            public string cedula { get; set; }
+            public string nombre { get; set; }
+            public string apellido1 { get; set; }
+            public string apellido2 { get; set; }
+            public string edad { get; set; }
+            public string genero { get; set; }
+            public string residencia { get; set; }
+            public string fecha_ingreso { get; set; }
+            public string departamento { get; set; }
+            public string puesto { get; set; }
+            public string vendedor { get; set; }
+            public string telefono { get; set; }
+            public string salario { get; set; }
+        }
     }
 }

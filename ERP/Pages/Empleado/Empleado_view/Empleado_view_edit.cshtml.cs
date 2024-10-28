@@ -145,7 +145,7 @@ namespace ERP.Pages.Empleado.Empleado_view
                 Empleado.salario_actual = "";
                 Empleado.puesto = "";
 
-                mensaje_exito = "Empleado registrado exitosamente";
+                mensaje_exito = "Empleado modificado exitosamente";
             }
             catch (Exception ex)
             {
