@@ -9,7 +9,6 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
     public class Cotizacion_view_editModel : PageModel
     {
         public Conexion conexionBD = new Conexion();
-        public List<CotizacionInfo> listaCotizaciones = new List<CotizacionInfo>();
         public string mensaje_error = "";
         public string mensaje_exito = "";
         public List<string> Zonas { get; set; } = new List<string>();
@@ -23,36 +22,10 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
         {
             try
             {
-                string id =Request.Query["num_cotizacion"];
-                conexionBD.abrir();
-                string query = "SELECT * FROM VistaCotizacion WHERE num_cotizacion=@id";
-                SqlCommand comando = conexionBD.obtenerComando(query);
-                using (SqlDataReader reader = comando.ExecuteReader()) // Ejecutamos el lector
-                {
-                    if(reader.Read())
-                    {
-                        Cotizacion.num_cotizacion = reader.GetInt32(0).ToString();
-                        Cotizacion.orden_compra = reader.GetString(1);
-                        Cotizacion.descripcion = reader.GetString(2);
-                        Cotizacion.monto_total = reader.GetDecimal(3).ToString();
-                        Cotizacion.mes_cierre = reader.GetInt32(4).ToString();
-                        Cotizacion.probabilidad = reader.GetDecimal(5).ToString();
-                        Cotizacion.fecha_inicio = reader.GetDateTime(6).ToString("yyyy-MM-dd");
-                        Cotizacion.fecha_cierre = reader.GetDateTime(7).ToString("yyyy-MM-dd");
-                        Cotizacion.razon_negacion = !reader.IsDBNull(8) ? reader.GetString(8) : null;
-                        Cotizacion.cedula_vendedor = reader.GetInt32(9).ToString();
-                        Cotizacion.cedula_cliente = reader.GetInt32(10).ToString();
-                        Cotizacion.zona = reader.GetString(11);
-                        Cotizacion.sector = reader.GetString(12);
-                        Cotizacion.estado = reader.GetString(13);
-                        Cotizacion.tipo = reader.GetString(14);
-                    }
-                }
-
                 // Obtener Zonas
                 conexionBD.abrir();
-                string query1 = "SELECT nombre FROM Zona";
-                SqlCommand commandZona = conexionBD.obtenerComando(query1);
+                string query = "SELECT nombre FROM Zona";
+                SqlCommand commandZona = conexionBD.obtenerComando(query);
                 using (SqlDataReader reader = commandZona.ExecuteReader())
                 {
                     while (reader.Read())
@@ -64,8 +37,8 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
 
                 // Obtener Sectores
                 conexionBD.abrir();
-                string query2 = "SELECT nombre FROM Sector";
-                SqlCommand commandSector = conexionBD.obtenerComando(query2);
+                string query1 = "SELECT nombre FROM Sector";
+                SqlCommand commandSector = conexionBD.obtenerComando(query1);
                 using (SqlDataReader reader = commandSector.ExecuteReader())
                 {
                     while (reader.Read())
@@ -77,8 +50,8 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
 
                 // Obtener Estados de Cotización
                 conexionBD.abrir();
-                string query3 = "SELECT nombre FROM EstadoCotizacion";
-                SqlCommand commandEstado = conexionBD.obtenerComando(query3);
+                string query2 = "SELECT nombre FROM EstadoCotizacion";
+                SqlCommand commandEstado = conexionBD.obtenerComando(query2);
                 using (SqlDataReader reader = commandEstado.ExecuteReader())
                 {
                     while (reader.Read())
@@ -90,8 +63,8 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
 
                 // Obtener Tipos de Cotización
                 conexionBD.abrir();
-                string query4 = "SELECT nombre FROM TipoCotizacion";
-                SqlCommand commandTipo = conexionBD.obtenerComando(query4);
+                string query3 = "SELECT nombre FROM TipoCotizacion";
+                SqlCommand commandTipo = conexionBD.obtenerComando(query3);
                 using (SqlDataReader reader = commandTipo.ExecuteReader())
                 {
                     while (reader.Read())
@@ -103,8 +76,8 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
 
                 // Obtener Empleados
                 conexionBD.abrir();
-                string query5 = "SELECT cedula FROM Empleado";
-                SqlCommand commandEmpleado = conexionBD.obtenerComando(query5);
+                string query4 = "SELECT cedula FROM Empleado";
+                SqlCommand commandEmpleado = conexionBD.obtenerComando(query4);
                 using (SqlDataReader reader = commandEmpleado.ExecuteReader())
                 {
                     while (reader.Read())
@@ -116,8 +89,8 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
 
                 // Obtener Clientes
                 conexionBD.abrir();
-                string query6 = "SELECT cedula_juridica FROM Cliente";
-                SqlCommand commandCliente = conexionBD.obtenerComando(query6);
+                string query5 = "SELECT cedula_juridica FROM Cliente";
+                SqlCommand commandCliente = conexionBD.obtenerComando(query5);
                 using (SqlDataReader reader = commandCliente.ExecuteReader())
                 {
                     while (reader.Read())
@@ -126,6 +99,40 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
                     }
                 }
                 conexionBD.cerrar();
+                string id = Request.Query["num_cotizacion"];
+                conexionBD.abrir();
+                string query6 = "SELECT * FROM VistaCotizacion WHERE num_cotizacion=@id";
+                SqlCommand comando = conexionBD.obtenerComando(query6);
+
+                // Agrega el parámetro @id
+                comando.Parameters.AddWithValue("@id", int.Parse(id)); // Asegúrate de que 'id' sea convertible a entero
+
+                using (SqlDataReader reader = comando.ExecuteReader()) // Ejecutamos el lector
+                {
+                    if (reader.Read())
+                    {
+                        Cotizacion.num_cotizacion = reader.GetInt32(0).ToString();
+                        Cotizacion.orden_compra = reader.GetString(1);
+                        Cotizacion.descripcion = reader.GetString(2);
+                        Cotizacion.monto_total = reader.GetDouble(3).ToString();
+                        Cotizacion.mes_cierre = reader.GetInt32(4).ToString();
+                        Cotizacion.probabilidad = reader.GetDouble(5).ToString();
+                        Cotizacion.fecha_inicio = reader.GetDateTime(6).ToString("yyyy-MM-dd");
+                        Cotizacion.fecha_cierre = reader.GetDateTime(7).ToString("yyyy-MM-dd");
+                        Cotizacion.razon_negacion = !reader.IsDBNull(8) ? reader.GetString(8) : "N/A";
+                        Cotizacion.cedula_vendedor = reader.GetInt32(9).ToString();
+                        Cotizacion.cedula_cliente = reader.GetInt32(10).ToString();
+                        Cotizacion.zona = reader.GetString(11);
+                        Cotizacion.sector = reader.GetString(12);
+                        Cotizacion.estado = reader.GetString(13);
+                        Cotizacion.tipo = reader.GetString(14);
+
+                    }
+                }
+
+                conexionBD.cerrar();
+
+
             }
             catch (Exception ex) {
                 Console.WriteLine($"SQL Server Error: {ex.Message}");
@@ -207,9 +214,6 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
                 mensaje_error = ex.Message;
                 conexionBD.cerrar();
             }
-
-            // Volver a cargar las listas en caso de error
-            OnGet();
         }
     }
 }

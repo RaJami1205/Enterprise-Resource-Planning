@@ -1,0 +1,57 @@
+﻿@page
+@model ERP.Pages.Factura.FacturaArticulo.FacturaArticuloListModel
+@{
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artículos en Facturas</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<a class='btn btn-primary btn-sm' href="/Factura/FacturaArticulo/FacturaArticuloForm">Asignar Artículo en Factura</a>
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4">Artículos en Facturas</h2>
+        @if (Model.listaFacturaArticulo.Count == 0)
+        {
+            <p>No hay artículos asociados a facturas disponibles.</p>
+        }
+        else
+        {
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Número de Factura</th>
+                        <th>Código Artículo</th>
+                        <th>Nombre Artículo</th>
+                        <th>Descripción</th>
+                        <th>Cantidad en Inventario</th>
+                        <th>Precio Estándar</th>
+                        <th>Cantidad Facturada</th>
+                        <th>Monto Factura</th>
+                        <th>Estado Artículo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var facturaArticulo in Model.listaFacturaArticulo)
+                    {
+                        <tr>
+                            <td>@facturaArticulo.numero_factura</td>
+                            <td>@facturaArticulo.codigo_articulo</td>
+                            <td>@facturaArticulo.nombre_articulo</td>
+                            <td>@facturaArticulo.descripcion_articulo</td>
+                            <td>@facturaArticulo.cantidad_facturada</td>
+                            <td>@facturaArticulo.precio_estandar</td>
+                            <td>@facturaArticulo.cantidad_facturada</td>
+                            <td>@facturaArticulo.monto_articulo</td>
+                            <td>@facturaArticulo.estado_factura</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</body>
+</html>

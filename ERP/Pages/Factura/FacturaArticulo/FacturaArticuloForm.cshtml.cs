@@ -3,41 +3,37 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Data.SqlClient;
 using System.Data;
 
-namespace ERP.Pages.Cotizacion.CotizacionArticulo
+namespace ERP.Pages.Factura.FacturaArticulo
 {
-    public class CotizacionArticuloFormModel : PageModel
+    public class FacturaArticuloFormModel : PageModel
     {
-        public CotizacionArticuloInfo CotizacionArticulo { get; set; } = new CotizacionArticuloInfo();
-        public List<int> NumerosCotizacion { get; set; } = new List<int>();
+        public FacturaArticuloInfo FacturaArticulo { get; set; } = new FacturaArticuloInfo();
+        public List<int> NumerosFactura { get; set; } = new List<int>();
         public List<int> CodigosArticulo { get; set; } = new List<int>();
 
         public string mensaje_error = "";
         public string mensaje_exito = "";
 
-        public Conexion conexionBD = new Conexion(); // Instancia para la conexión a la base de datos
+        public Conexion conexionBD = new Conexion();
 
-        /// <summary>
-        /// Método que se ejecuta cuando se accede a la página (GET request).
-        /// Cargar las listas de números de cotización y códigos de artículo.
-        /// </summary>
         public void OnGet()
         {
             try
             {
-                // Obtener Números de Cotización
+                // Obtener números de factura
                 conexionBD.abrir();
-                string queryCotizaciones = "SELECT num_cotizacion FROM Cotizacion";
-                SqlCommand commandCotizacion = conexionBD.obtenerComando(queryCotizaciones);
-                using (SqlDataReader reader = commandCotizacion.ExecuteReader())
+                string queryFacturas = "SELECT num_facturacion FROM Factura";
+                SqlCommand commandFactura = conexionBD.obtenerComando(queryFacturas);
+                using (SqlDataReader reader = commandFactura.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        NumerosCotizacion.Add(reader.GetInt32(0));
+                        NumerosFactura.Add(reader.GetInt32(0));
                     }
                 }
                 conexionBD.cerrar();
 
-                // Obtener Códigos de Artículo
+                // Obtener códigos de artículo
                 conexionBD.abrir();
                 string queryArticulos = "SELECT codigo FROM Articulo";
                 SqlCommand commandArticulo = conexionBD.obtenerComando(queryArticulos);
@@ -57,46 +53,40 @@ namespace ERP.Pages.Cotizacion.CotizacionArticulo
             }
         }
 
-        /// <summary>
-        /// Método que se ejecuta cuando se envía el formulario (POST request).
-        /// Insertar una nueva entrada en la tabla CotizacionArticulo utilizando el procedimiento almacenado.
-        /// </summary>
         public void OnPost()
         {
-            CotizacionArticulo.num_cotizacion = Request.Form["num_cotizacion"];
-            CotizacionArticulo.codigo_articulo = Request.Form["codigo_articulo"];
-            CotizacionArticulo.cantidad = Request.Form["cantidad"];
-            CotizacionArticulo.monto = Request.Form["monto"];
+            FacturaArticulo.num_factura = Request.Form["num_factura"];
+            FacturaArticulo.codigo_articulo = Request.Form["codigo_articulo"];
+            FacturaArticulo.cantidad = Request.Form["cantidad"];
+            FacturaArticulo.monto = Request.Form["monto"];
 
             try
             {
                 conexionBD.abrir();
-                string query = "InsertarArticuloCotizacion";
+                string query = "InsertarArticuloFactura"; // Procedimiento almacenado para insertar artículo en factura
                 SqlCommand command = conexionBD.obtenerComando(query);
                 command.CommandType = CommandType.StoredProcedure;
 
-                // Declarar parámetro de error para capturar un posible mensaje de error
+                // Parámetro de error para capturar posibles errores
                 SqlParameter errorParameter = new SqlParameter("@ErrorMsg", SqlDbType.VarChar, 255)
                 {
                     Direction = ParameterDirection.Output
                 };
 
                 // Agregar parámetros al procedimiento almacenado
-                command.Parameters.AddWithValue("@num_cotizacion", CotizacionArticulo.num_cotizacion);
-                command.Parameters.AddWithValue("@codigo_articulo", CotizacionArticulo.codigo_articulo);
-                command.Parameters.AddWithValue("@cantidad", CotizacionArticulo.cantidad);
-                command.Parameters.AddWithValue("@monto", CotizacionArticulo.monto);
+                command.Parameters.AddWithValue("@num_factura", FacturaArticulo.num_factura);
+                command.Parameters.AddWithValue("@codigo_articulo", FacturaArticulo.codigo_articulo);
+                command.Parameters.AddWithValue("@cantidad", FacturaArticulo.cantidad);
+                command.Parameters.AddWithValue("@monto", FacturaArticulo.monto);
                 command.Parameters.Add(errorParameter);
 
-                // Ejecutar el procedimiento almacenado
                 command.ExecuteNonQuery();
 
-                // Capturar el mensaje de error, si existe
                 string errorMsg = (string)command.Parameters["@ErrorMsg"].Value;
 
                 if (string.IsNullOrEmpty(errorMsg))
                 {
-                    mensaje_exito = "Artículo agregado a la cotización exitosamente.";
+                    mensaje_exito = "Artículo agregado a la factura exitosamente.";
                 }
                 else
                 {
@@ -110,14 +100,13 @@ namespace ERP.Pages.Cotizacion.CotizacionArticulo
                 conexionBD.cerrar();
             }
 
-            // Volver a cargar las listas en caso de error
             OnGet();
         }
 
-        // Clase que representa la estructura de CotizacionArticulo
-        public class CotizacionArticuloInfo
+        // Clase para representar los datos del artículo de factura
+        public class FacturaArticuloInfo
         {
-            public string num_cotizacion { get; set; }
+            public string num_factura { get; set; }
             public string codigo_articulo { get; set; }
             public string cantidad { get; set; }
             public string monto { get; set; }

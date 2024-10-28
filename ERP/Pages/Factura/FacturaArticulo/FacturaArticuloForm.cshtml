@@ -1,13 +1,12 @@
 ﻿@page
-@model ERP.Pages.Planilla.Planilla_view.PlanillaFormModel
+@model ERP.Pages.Factura.FacturaArticulo.FacturaArticuloFormModel
 @{
 }
-
 <body>
     <section class="form-register">
-        <h1>Registrar Planilla Mensual</h1>
+        <h1>Registrar Artículo en Factura</h1>
 
-        <!-- Mensaje emergente de éxito luego de una inserción correcta -->
+        <!-- Mensaje emergente de éxito -->
         @if (Model.mensaje_exito.Length > 0)
         {
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -15,7 +14,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         }
-        <!-- Mensaje emergente de error luego de una inserción fallida mostrando el problema ocurrido -->
+        <!-- Mensaje emergente de error -->
         @if (Model.mensaje_error.Length > 0)
         {
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -24,30 +23,39 @@
             </div>
         }
 
-        <!-- Ingreso de información por cada empleado -->
         <form method="post" autocomplete="off">
-            <input class="controls" type="number" name="anno" id="anno" placeholder="Ingrese el año de pago" required value="@Model.anno">
-            <input class="controls" type="number" name="mes" id="mes" placeholder="Ingrese el mes de pago (1-12)" min="1" max="12" required value="@Model.mes">
+            <!-- Número de Factura -->
+            <select class="controls" name="num_factura" id="num_factura" required>
+                <option value="" disabled selected>Seleccione el número de factura</option>
+                @foreach (var numFactura in Model.NumerosFactura)
+                {
+                    <option value="@numFactura">@numFactura</option>
+                }
+            </select>
 
-            <!-- Generar un formulario para cada empleado -->
-            @foreach (var empleado in Model.Empleados)
-            {
-                <div class="employee-section">
-                    <h4>Empleado: @empleado.nombre (Cédula: @empleado.cedula)</h4>
+            <!-- Código de Artículo -->
+            <select class="controls" name="codigo_articulo" id="codigo_articulo" required>
+                <option value="" disabled selected>Seleccione el código de artículo</option>
+                @foreach (var codigoArticulo in Model.CodigosArticulo)
+                {
+                    <option value="@codigoArticulo">@codigoArticulo</option>
+                }
+            </select>
 
-                    <!-- Cantidad de horas trabajadas -->
-                    <input class="controls" type="number" name="horas_@empleado.cedula" id="horas_@empleado.cedula" placeholder="Horas trabajadas" required>
-                </div>
-            }
+            <!-- Cantidad -->
+            <input class="controls" type="number" name="cantidad" id="cantidad" placeholder="Ingrese la cantidad" min="1" required value="@Model.FacturaArticulo.cantidad">
 
-            <!-- Botón de registro -->
-            <button type="submit" asp-page-handler="" class="buttoms">Registrar Planilla</button>
+            <!-- Monto -->
+            <input class="controls" type="number" step="0.01" name="monto" id="monto" placeholder="Ingrese el monto" min="0.01" required value="@Model.FacturaArticulo.monto">
+
+            <!-- Botón de Registro -->
+            <button type="submit" asp-page-handler="" class="buttoms">Registrar</button>
         </form>
     </section>
 </body>
 
-<!-- Estilos CSS para la página -->
 <style>
+    /* Estilos similares a los usados en el formulario de cotización */
     * {
         margin: 0;
         padding: 0;
@@ -59,7 +67,7 @@
     }
 
     .form-register {
-        width: 500px;
+        width: 400px;
         background: #24303c;
         padding: 30px;
         margin: auto;
@@ -80,13 +88,6 @@
         font-family: Calibri;
         font-size: 18px;
         color: white;
-    }
-
-    .employee-section {
-        background: #3a4750;
-        padding: 15px;
-        margin-bottom: 20px;
-        border-radius: 4px;
     }
 
     .buttoms {

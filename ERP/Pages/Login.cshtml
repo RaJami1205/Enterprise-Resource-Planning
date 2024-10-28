@@ -8,14 +8,7 @@
 <body>
     <section class="form-register">
         <h1>Inicio de Sesión</h1>
-        <!-- Mensaje emergente de éxito luego de una inserción correcta -->
-        @if (Model.Mensaje.Length > 0)
-        {
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <strong>@Model.Mensaje</strong>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        }
+
         <!-- Mensaje emergente de error luego de una inserción fallida mostrando el problema ocurrido -->
         @if (Model.Mensaje.Length > 0)
         {
