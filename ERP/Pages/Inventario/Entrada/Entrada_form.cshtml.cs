@@ -12,6 +12,7 @@ namespace ERP.Pages.Inventario.Entrada
         public List<string> listaBodegas { get; set; } = new List<string>();
         public List<string> listaEmpleados { get; set; } = new List<string>();
         public List<string> listaArticulos { get; set; } = new List<string>();
+        public List<string> listaArticulosEnBodega { get; set; } = new List<string>();
         public List<string> listaCodigosFamilias { get; set; } = new List<string>();
         public string mensaje_error = ""; // Variable para almacenar mensajes de error
         public string mensaje_exito = ""; // Variable para almacenar mensajes de éxito
@@ -80,6 +81,20 @@ namespace ERP.Pages.Inventario.Entrada
             int capacidad_bodega = 0;
             int cantidad_bodega = 0;
             bool check_codigo_familia = false;
+            bool validar_existencia_articulo = false;
+
+            conexionBD.abrir();
+            String sqlVerificacion0 = "SELECT codigo_articulo FROM BodegaArticulo WHERE codigo_bodega = @codigo_bodega";
+            SqlCommand command_0 = conexionBD.obtenerComando(sqlVerificacion0);
+            command_0.Parameters.AddWithValue("@codigo_bodega", Entrada.codigo_bodega);
+            using (SqlDataReader reader = command_0.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    listaCodigosFamilias.Add("" + reader.GetInt32(0));
+                }
+            }
+            conexionBD.cerrar();
 
             conexionBD.abrir();
             String sqlVerificacion1 = "SELECT codigo_familia FROM BodegaFamilia WHERE codigo_bodega = @codigo_bodega";
@@ -135,6 +150,7 @@ namespace ERP.Pages.Inventario.Entrada
             conexionBD.cerrar();
 
             check_codigo_familia = listaCodigosFamilias.Contains(codigo_familia_articulo);
+            validar_existencia_articulo = listaArticulos.Contains(Entrada.codigo_articulo);
 
             if (capacidad_bodega == 0)
             {
@@ -224,6 +240,39 @@ namespace ERP.Pages.Inventario.Entrada
                 string ErrorMesage_3 = (string)command_6.Parameters["@ErrorMsg"].Value;
                 conexionBD.cerrar();
 
+                if (!validar_existencia_articulo) 
+                {
+                    conexionBD.abrir();
+                    string query_8 = "InsertarBodegaArticulo";
+                    SqlCommand command_8 = conexionBD.obtenerComando(query_8);
+                    command_8.CommandType = System.Data.CommandType.StoredProcedure;
+                    SqlParameter errorParameter_8 = new SqlParameter("@ErrorMsg", SqlDbType.VarChar, 255)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+
+                    command_8.Parameters.AddWithValue("@codigo_articulo", Entrada.codigo_articulo);
+                    command_8.Parameters.AddWithValue("@codigo_bodega", Entrada.codigo_bodega);
+                    command_8.Parameters.AddWithValue("@cantidad", Entrada.cantidad);
+                    command_8.Parameters.Add(errorParameter_8);
+
+
+                    command_8.ExecuteNonQuery();
+                    string ErrorMesage_8 = (string)command_5.Parameters["@ErrorMsg"].Value;
+                    conexionBD.cerrar();
+
+                    // Limpieza del formulario
+                    Entrada.id = "";
+                    Entrada.fecha_hora = "";
+                    Entrada.cedula_administrador = "";
+                    Entrada.codigo_bodega = "";
+                    Entrada.codigo_articulo = "";
+                    Entrada.cantidad = "";
+
+                    mensaje_exito = "Entrada registrada exitosamente";
+                    return;
+                }
+
                 conexionBD.abrir();
                 string query_4 = "ModificarCantidadBodega";
                 SqlCommand command_7 = conexionBD.obtenerComando(query_4);
@@ -235,7 +284,7 @@ namespace ERP.Pages.Inventario.Entrada
 
                 command_7.Parameters.AddWithValue("@codigo_articulo", Entrada.codigo_articulo);
                 command_7.Parameters.AddWithValue("@codigo_bodega", Entrada.codigo_bodega);
-                command_7.Parameters.AddWithValue("@nueva_cantidad", nueva_cantidad);
+                command_7.Parameters.AddWithValue("@cantidad", nueva_cantidad);
                 command_7.Parameters.Add(errorParameter_4);
 
 
