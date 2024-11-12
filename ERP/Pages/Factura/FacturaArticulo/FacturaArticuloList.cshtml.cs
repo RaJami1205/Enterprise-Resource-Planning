@@ -33,7 +33,7 @@ namespace ERP.Pages.Factura.FacturaArticulo
                             descripcion_articulo = reader.GetString(3),
                             cantidad_facturada = reader.GetInt32(4).ToString(),
                             monto_articulo = reader.GetDouble(5).ToString("F2"),
-                            precio_estandar = reader.GetDouble(6).ToString("F2"),
+                            precio_estandar = reader.GetDecimal(6).ToString("F2"),
                             estado_factura = reader.GetString(7)
                         };
 

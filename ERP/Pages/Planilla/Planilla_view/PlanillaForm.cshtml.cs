@@ -72,7 +72,7 @@ namespace ERP.Pages.Planilla.Planilla_view
                     // Agregar parámetros al procedimiento almacenado
                     command.Parameters.AddWithValue("@anno", anno);
                     command.Parameters.AddWithValue("@mes", mes);
-                    command.Parameters.AddWithValue("@pago", "0.00"); // El pago se calculará en el SP
+                    command.Parameters.AddWithValue("@pago", empleado.salario_actual); // El pago se calculará en el SP
                     command.Parameters.AddWithValue("@cantidad_horas", empleado.horas);
                     command.Parameters.AddWithValue("@cedula_empleado", empleado.cedula);
                     command.Parameters.Add(errorParameter);

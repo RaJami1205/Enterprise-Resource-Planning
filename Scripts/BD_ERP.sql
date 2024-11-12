@@ -55,7 +55,7 @@ CREATE TABLE Empleado (
     departamento INT NOT NULL, /* Departamento al que pertenece el empleado */
     permiso_vendedor VARCHAR(20) NOT NULL, /* Permiso de vendedor (Con permiso, Sin permiso) */
     numero_telefono INT NOT NULL, /* Número de teléfono del empleado */
-    salario_actual DECIMAL(10,2) NOT NULL, /* Salario actual del empleado */
+    salario_actual FLOAT NOT NULL, /* Salario actual del empleado */
 	puesto INT NOT NULL, /* Puesto que ocupa el empleado */
 	CONSTRAINT chk_genero CHECK (genero IN ('Masculino', 'Femenino', 'Otro')), /* Restricción para validar el género */
 	CONSTRAINT chk_permisos_vendedor CHECK (permiso_vendedor IN ('Con permiso', 'Sin permiso')), /* Validación para permisos de vendedor */

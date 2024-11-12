@@ -43,17 +43,17 @@ namespace ERP.Pages.Empleado.Empleado_view
                         Empleado.residencia = reader.GetString(6);
                         Empleado.fecha_ingreso = reader.GetDateTime(7).ToString("yyyy-MM-dd");
                         Empleado.departamento = reader.GetInt32(8).ToString();
-                        Empleado.permiso_vendedor = reader.GetString(9); 
-                        Empleado.numero_telefono = reader.GetInt32(10).ToString(); 
-                        Empleado.salario_actual = reader.GetDecimal(11).ToString("F2"); 
+                        Empleado.permiso_vendedor = reader.GetString(9);
+                        Empleado.numero_telefono = reader.GetInt32(10).ToString();
+                        Empleado.salario_actual = reader.GetDecimal(11).ToString("F2");
                         Empleado.puesto = reader.GetInt32(12).ToString();
 
                     }
                 }
                 conexionBD.cerrar();
             }
-            catch (Exception ex) 
-            { 
+            catch (Exception ex)
+            {
                 mensaje_error = ex.Message;
                 conexionBD.cerrar();
             }
@@ -83,7 +83,7 @@ namespace ERP.Pages.Empleado.Empleado_view
             conexionBD.cerrar();
         }
 
-        public void OnPost() 
+        public void OnPost()
         {
             Empleado.cedula = Request.Form["cedula"];
             Empleado.nombre = Request.Form["nombre"];
