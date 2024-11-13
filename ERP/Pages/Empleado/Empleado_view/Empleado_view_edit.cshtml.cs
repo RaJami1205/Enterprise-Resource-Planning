@@ -45,7 +45,7 @@ namespace ERP.Pages.Empleado.Empleado_view
                         Empleado.departamento = reader.GetInt32(8).ToString();
                         Empleado.permiso_vendedor = reader.GetString(9);
                         Empleado.numero_telefono = reader.GetInt32(10).ToString();
-                        Empleado.salario_actual = reader.GetDecimal(11).ToString("F2");
+                        Empleado.salario_actual = reader.GetDouble(11).ToString("F2");
                         Empleado.puesto = reader.GetInt32(12).ToString();
 
                     }
