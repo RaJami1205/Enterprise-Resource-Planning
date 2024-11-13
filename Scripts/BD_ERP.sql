@@ -86,7 +86,7 @@ CREATE TABLE HistoricoSalario (
     fecha_inicio DATE NOT NULL, /* Fecha de inicio del puesto */
     fecha_fin DATE NOT NULL, /* Fecha de fin del puesto */
     departamento INT NOT NULL, /* Departamento del empleado */
-    monto INT NOT NULL, /* Salario en ese periodo */
+    monto FLOAT NOT NULL, /* Salario en ese periodo */
     cedula_empleado INT NOT NULL, /* Cédula del empleado */
     PRIMARY KEY (HistoricoSalario_id,puesto,fecha_inicio,cedula_empleado), /* Llave primaria compuesta */
     FOREIGN KEY (cedula_empleado) REFERENCES Empleado(cedula), /* Llave foránea a Empleado */
@@ -166,9 +166,9 @@ CREATE TABLE Articulo (
     cantidad INT NOT NULL, /* Cantidad en inventario */
 	activo VARCHAR(50) NOT NULL, /* Estado del artículo (Activo/Inactivo) */
     descripcion VARCHAR(255) NOT NULL, /* Descripción del artículo */
-    peso DECIMAL(10,2) NOT NULL, /* Peso del artículo */
-	costo DECIMAL(10,2) NOT NULL, /* Costo del artículo */
-    precio_estandar DECIMAL(10,2) NOT NULL, /* Precio estándar del artículo */
+    peso FLOAT NOT NULL, /* Peso del artículo */
+	costo FLOAT NOT NULL, /* Costo del artículo */
+    precio_estandar FLOAT NOT NULL, /* Precio estándar del artículo */
     codigo_familia INT NOT NULL, /* Código de la familia a la que pertenece el artículo */
     FOREIGN KEY (codigo_familia) REFERENCES Familia(codigo) /* Llave foránea a la tabla Familia */
 );
@@ -179,7 +179,7 @@ CREATE TABLE Bodega (
     numero INT NOT NULL, /* Número de identificación de la bodega */
     ubicacion VARCHAR(25) NOT NULL, /* Ubicación de la bodega */
     capacidad INT NOT NULL, /* Capacidad total de la bodega */
-	espacio_cubico DECIMAL(10,2) /* Espacio cúbico disponible en la bodega */
+	espacio_cubico FLOAT /* Espacio cúbico disponible en la bodega */
 );
 
 /* Tabla que asocia familias de productos a bodegas */
