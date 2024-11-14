@@ -7,21 +7,21 @@ namespace ERP.Pages.Inventario.Entrada
 {
     public class Entrada_formModel : PageModel
     {
-        public EntradaInfo Entrada { get; set; } = new EntradaInfo(); // Lista que guarda toda la información de los requests
-        public Conexion conexionBD = new Conexion(); // Instancia de la clase Conexion para manejar la conexión a la base de datos
+        public EntradaInfo Entrada { get; set; } = new EntradaInfo(); // Lista que guarda toda la informaciÃ³n de los requests
+        public Conexion conexionBD = new Conexion(); // Instancia de la clase Conexion para manejar la conexiÃ³n a la base de datos
         public List<string> listaBodegas { get; set; } = new List<string>();
         public List<string> listaEmpleados { get; set; } = new List<string>();
         public List<string> listaArticulos { get; set; } = new List<string>();
         public List<string> listaArticulosEnBodega { get; set; } = new List<string>();
         public List<string> listaCodigosFamilias { get; set; } = new List<string>();
         public string mensaje_error = ""; // Variable para almacenar mensajes de error
-        public string mensaje_exito = ""; // Variable para almacenar mensajes de éxito
+        public string mensaje_exito = ""; // Variable para almacenar mensajes de Ã©xito
 
         /// <summary>
-        /// Método que se ejecuta cuando se ingresa al formulario (GET request).
-        /// Objetivo: Extraer los datos de los códigos de bodegas y artículos y la cédulas de los empleados y manejar errores.
+        /// MÃ©todo que se ejecuta cuando se ingresa al formulario (GET request).
+        /// Objetivo: Extraer los datos de los cÃ³digos de bodegas y artÃ­culos y la cÃ©dulas de los empleados y manejar errores.
         /// Entradas: Ninguna.
-        /// Salidas: Mensaje de éxito o mensaje de error.
+        /// Salidas: Mensaje de Ã©xito o mensaje de error.
         /// </summary>
         public void OnGet()
         {
@@ -63,11 +63,11 @@ namespace ERP.Pages.Inventario.Entrada
         }
 
         /// <summary>
-        /// Método que se ejecuta cuando se envía el formulario (POST request).
+        /// MÃ©todo que se ejecuta cuando se envÃ­a el formulario (POST request).
         /// Objetivo: Recibir los datos del formulario de entrada, insertarlos en la base de datos y manejar errores.
         /// Entradas: Datos del formulario (fecha_hora, cedula_empleado, bodega_destino, codigo_articulo, cantidad).
-        /// Salidas: Mensaje de éxito o mensaje de error.
-        /// Restricciones: Todos los campos deben estar debidamente validados antes de enviarse y debe preservarse la integridad entre los artículos y las bodegas.
+        /// Salidas: Mensaje de Ã©xito o mensaje de error.
+        /// Restricciones: Todos los campos deben estar debidamente validados antes de enviarse y debe preservarse la integridad entre los artÃ­culos y las bodegas.
         /// </summary>
         public void OnPost()
         {
@@ -170,7 +170,7 @@ namespace ERP.Pages.Inventario.Entrada
 
             if (!check_codigo_familia)
             {
-                mensaje_error = "Error: El artículo no coincide con ninguna familia de la bodega";
+                mensaje_error = "Error: El artÃ­culo no coincide con ninguna familia de la bodega";
                 conexionBD.cerrar();
                 OnGet();
                 return;
@@ -240,7 +240,8 @@ namespace ERP.Pages.Inventario.Entrada
                 string ErrorMesage_3 = (string)command_6.Parameters["@ErrorMsg"].Value;
                 conexionBD.cerrar();
 
-                if (!validar_existencia_articulo)
+                if (!validar_existencia_articulo) 
+
                 {
                     conexionBD.abrir();
                     string query_8 = "InsertarBodegaArticulo";

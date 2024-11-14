@@ -89,7 +89,6 @@ namespace ERP.Pages.Inventario.Movimiento
             bool check_articulo_existente_origen = false;
             bool check_articulo_existente_destino = false;
 
-
             if (Movimiento.codigo_bodega_origen == Movimiento.codigo_bodega_destino)
             {
                 mensaje_error = "Error: La bodega de orígen y la bodega de destino no pueden ser la misma";
@@ -307,7 +306,7 @@ namespace ERP.Pages.Inventario.Movimiento
                 };
 
                 command_7.Parameters.AddWithValue("@codigo_bodega", Movimiento.codigo_bodega_destino);
-                command_7.Parameters.AddWithValue("@nueva_capacidad", Movimiento.codigo_articulo);
+                command_7.Parameters.AddWithValue("@nueva_capacidad", nueva_capacidad_destino);
                 command_7.Parameters.Add(errorParameter_4);
 
 
@@ -326,12 +325,26 @@ namespace ERP.Pages.Inventario.Movimiento
 
                 command_8.Parameters.AddWithValue("@codigo_articulo", Movimiento.codigo_articulo);
                 command_8.Parameters.AddWithValue("@codigo_bodega", Movimiento.codigo_bodega_origen);
-                command_8.Parameters.AddWithValue("@nueva_cantidad", Movimiento.cantidad);
+                command_8.Parameters.AddWithValue("@nueva_cantidad", nueva_cantidad_origen);
                 command_8.Parameters.Add(errorParameter_5);
 
+                conexionBD.abrir();
+                string query_11 = "ModificarCantidadBodega";
+                SqlCommand command_11 = conexionBD.obtenerComando(query_11);
+                command_11.CommandType = System.Data.CommandType.StoredProcedure;
+                SqlParameter errorParameter_11 = new SqlParameter("@ErrorMsg", SqlDbType.VarChar, 255)
+                {
+                    Direction = ParameterDirection.Output
+                };
 
-                command_8.ExecuteNonQuery();
-                string ErrorMesage_5 = (string)command_7.Parameters["@ErrorMsg"].Value;
+                command_11.Parameters.AddWithValue("@codigo_articulo", Movimiento.codigo_articulo);
+                command_11.Parameters.AddWithValue("@codigo_bodega", Movimiento.codigo_bodega_destino);
+                command_11.Parameters.AddWithValue("@nueva_cantidad", nueva_cantidad_destino);
+                command_11.Parameters.Add(errorParameter_11);
+
+
+                command_11.ExecuteNonQuery();
+                string ErrorMesage_11 = (string)command_11.Parameters["@ErrorMsg"].Value;
                 conexionBD.cerrar();
 
                 if (!check_articulo_existente_destino)
@@ -363,7 +376,7 @@ namespace ERP.Pages.Inventario.Movimiento
                     Movimiento.codigo_articulo = "";
                     Movimiento.cantidad = "";
 
-                    mensaje_exito = "Entrada registrada exitosamente";
+                    mensaje_exito = "Movimiento registrado exitosamente";
                     return;
                 }
 
@@ -394,7 +407,7 @@ namespace ERP.Pages.Inventario.Movimiento
                 Movimiento.codigo_articulo = "";
                 Movimiento.cantidad = "";
 
-                mensaje_exito = "Entrada registrada exitosamente";
+                mensaje_exito = "Movimiento registrado exitosamente";
             }
             catch (Exception ex)
             {
