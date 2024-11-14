@@ -1,69 +1,40 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
+using System.Collections.Generic;
+using System;
 
 namespace ERP.Pages.Planilla.ReportesPlanilla
 {
     public class ReporteDepartamentoMesModel : PageModel
     {
-        public class Departamento
-        {
-            public string Id { get; set; }
-            public string Nombre { get; set; }
-        }
-
-        public List<Departamento> Departamentos { get; set; } = new List<Departamento>();
-        public List<(string Departamento, double MontoTotal)> PlanillaDepartamentoData { get; set; } = new List<(string, double)>();
+        public List<DepartamentoMonto> DepartamentoMontoData { get; set; } = new List<DepartamentoMonto>();
         public string mensajeError = "";
-
-        public void OnGet()
-        {
-            // Obtener la lista de departamentos
-            var conexionBD = new Conexion();
-            conexionBD.abrir();
-            string sqlDepartamentos = "SELECT departamento_id, nombre FROM Departamento";
-            SqlCommand command = conexionBD.obtenerComando(sqlDepartamentos);
-            using (SqlDataReader reader = command.ExecuteReader())
-            {
-                while (reader.Read())
-                {
-                    Departamentos.Add(new Departamento
-                    {
-                        Id = reader.GetInt32(0).ToString(),
-                        Nombre = reader.GetString(1)
-                    });
-                }
-            }
-            conexionBD.cerrar();
-        }
+        public string Mes { get; set; }
+        public string Anno { get; set; }
 
         public void OnPost()
         {
-            string mes = Request.Form["Mes"];
-            string departamentoId = Request.Form["DepartamentoId"];
+            Mes = Request.Form["Mes"];
+            Anno = Request.Form["Anno"];
 
-            // Llamada a la función para obtener el monto por departamento y mes
-            var conexionBD = new Conexion();
-            conexionBD.abrir();
-            string query = "SELECT Departamento, MontoTotal FROM ObtenerMontosPorDepartamentoMes(@Mes, @Departamento)";
-            SqlCommand command = conexionBD.obtenerComando(query);
-            command.Parameters.AddWithValue("@Mes", mes);
-            command.Parameters.AddWithValue("@Departamento", departamentoId);
-
+            Conexion conexionBD = new Conexion();
             try
             {
-                using (SqlDataReader reader = command.ExecuteReader())
+                conexionBD.abrir();
+                string query = "SELECT Departamento, MontoTotal FROM ObtenerMontosPorDepartamentoMes(@Mes, @Anno)";
+                SqlCommand command = conexionBD.obtenerComando(query);
+                command.Parameters.AddWithValue("@Mes", Mes);
+                command.Parameters.AddWithValue("@Anno", Anno);
+
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
                 {
-                    while (reader.Read())
+                    DepartamentoMontoData.Add(new DepartamentoMonto
                     {
-                        PlanillaDepartamentoData.Add((
-                            reader.GetString(0),
-                            reader.GetDouble(1)
-                        ));
-                    }
+                        Departamento = reader.GetString(0),
+                        MontoTotal = reader.GetDouble(1).ToString()
+                    });
                 }
             }
             catch (Exception ex)
@@ -74,9 +45,12 @@ namespace ERP.Pages.Planilla.ReportesPlanilla
             {
                 conexionBD.cerrar();
             }
+        }
 
-            // Repopular la lista de departamentos
-            OnGet();
+        public class DepartamentoMonto
+        {
+            public string Departamento { get; set; }
+            public string MontoTotal { get; set; }
         }
     }
 }

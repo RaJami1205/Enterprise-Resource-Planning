@@ -1,23 +1,17 @@
 ﻿@page
 @model ERP.Pages.Planilla.ReportesPlanilla.ReporteDepartamentoMesModel
 @{
-    ViewData["Title"] = "Reporte de Monto Pagado por Departamento y Mes";
+    ViewData["Title"] = "Reporte de Monto Pagado por Departamento";
 }
 
-<h2>Reporte de Monto Pagado por Departamento y Mes</h2>
+<h2>Reporte de Monto Pagado por Departamento</h2>
 
 <form method="post">
     <label for="Mes">Mes:</label>
     <input type="number" id="Mes" name="Mes" min="1" max="12" required />
 
-    <label for="DepartamentoId">Departamento:</label>
-    <select id="DepartamentoId" name="DepartamentoId" required>
-        <option value="">Seleccione un departamento</option>
-        @foreach (var depto in Model.Departamentos)
-        {
-            <option value="@depto.Id">@depto.Nombre</option>
-        }
-    </select>
+    <label for="Anno">Año:</label>
+    <input type="number" id="Anno" name="Anno" min="2000" required />
 
     <button type="submit">Generar Reporte</button>
 </form>
@@ -27,24 +21,25 @@
     <div style="color: red">@Model.mensajeError</div>
 }
 
-<canvas id="planillaChart" width="400" height="200"></canvas>
+<canvas id="departamentoChart" width="400" height="200"></canvas>
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        var ctx = document.getElementById('planillaChart').getContext('2d');
+        var ctx = document.getElementById('departamentoChart').getContext('2d');
         var chartData = {
-            labels: @Html.Raw(Json.Serialize(Model.PlanillaDepartamentoData.Select(d => d.Departamento))),
+            labels: @Html.Raw(Json.Serialize(Model.DepartamentoMontoData.Select(d => d.Departamento))),
             datasets: [{
                 label: 'Monto Total por Departamento',
-                data: @Html.Raw(Json.Serialize(Model.PlanillaDepartamentoData.Select(d => d.MontoTotal))),
+                data: @Html.Raw(Json.Serialize(Model.DepartamentoMontoData.Select(d => d.MontoTotal))),
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
                     'rgba(54, 162, 235, 0.2)',
                     'rgba(255, 206, 86, 0.2)',
                     'rgba(75, 192, 192, 0.2)',
                     'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(99, 255, 132, 0.2)'
                 ],
                 borderColor: [
                     'rgba(255, 99, 132, 1)',
@@ -52,17 +47,27 @@
                     'rgba(255, 206, 86, 1)',
                     'rgba(75, 192, 192, 1)',
                     'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(99, 255, 132, 1)'
                 ],
                 borderWidth: 1
             }]
         };
-        var planillaChart = new Chart(ctx, {
+        var departamentoChart = new Chart(ctx, {
             type: 'pie',
             data: chartData,
             options: {
-                responsive: true
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        enabled: true
+                    }
+                }
             }
         });
     </script>
 }
+

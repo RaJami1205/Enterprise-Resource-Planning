@@ -108,6 +108,8 @@ namespace ERP.Pages.Factura.Factura_view
             {
                 conexionBD.abrir();
 
+
+
                 // Insertar Factura
                 string queryFactura = "InsertarFactura";
                 SqlCommand commandFactura = conexionBD.obtenerComando(queryFactura);
