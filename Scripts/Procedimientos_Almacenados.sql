@@ -13,26 +13,46 @@ CREATE PROCEDURE InsertarEmpleado
     @genero VARCHAR(50),
     @residencia VARCHAR(80),
     @fecha_ingreso DATE,
-    @departamento INT,
+    @departamento VARCHAR(200), -- Cambiado a VARCHAR para el nombre del departamento
     @permiso_vendedor VARCHAR(20),
     @numero_telefono INT,
-    @salario_actual DECIMAL(10,2),
-    @puesto INT,
-    @ErrorMsg NVARCHAR(255) OUTPUT -- Parámetro de salida para el mensaje de error
+    @salario_actual FLOAT,
+    @puesto VARCHAR(200), -- Cambiado a VARCHAR para el nombre del puesto
+    @ErrorMsg NVARCHAR(255) OUTPUT
 AS
 BEGIN
     BEGIN TRY
+        DECLARE @departamento_id INT;
+        DECLARE @puesto_id INT;
+
+        -- Buscar el ID del departamento
+        SELECT @departamento_id = departamento_id
+        FROM Departamento
+        WHERE nombre = @departamento;
+
+        -- Buscar el ID del puesto
+        SELECT @puesto_id = puesto_id
+        FROM Puesto
+        WHERE puesto = @puesto;
+
+        -- Verificar que ambos IDs existan
+        IF @departamento_id IS NULL OR @puesto_id IS NULL
+        BEGIN
+            SET @ErrorMsg = 'El puesto o departamento especificado no existe.';
+            RETURN;
+        END
+
         -- Iniciamos una transacción
         BEGIN TRANSACTION;
 
-        -- Insertamos el nuevo empleado en la tabla Empleado
+        -- Insertamos el nuevo empleado con los IDs obtenidos
         INSERT INTO Empleado (cedula, nombre, apellido1, apellido2, fecha_nacimiento, genero, residencia, fecha_ingreso, departamento, permiso_vendedor, numero_telefono, salario_actual, puesto)
-        VALUES (@cedula, @nombre, @apellido1, @apellido2, @fecha_nacimiento, @genero, @residencia, @fecha_ingreso, @departamento, @permiso_vendedor, @numero_telefono, @salario_actual, @puesto);
+        VALUES (@cedula, @nombre, @apellido1, @apellido2, @fecha_nacimiento, @genero, @residencia, @fecha_ingreso, @departamento_id, @permiso_vendedor, @numero_telefono, @salario_actual, @puesto_id);
 
-        -- Si la inserción fue exitosa, confirmamos la transacción
+        -- Confirmar la transacción
         COMMIT TRANSACTION;
 
-        -- Devolvemos un mensaje de éxito en el parámetro de salida
+        -- Mensaje de éxito
         SET @ErrorMsg = 'Empleado insertado exitosamente.';
     END TRY
     BEGIN CATCH
@@ -44,6 +64,9 @@ BEGIN
     END CATCH
 END;
 GO
+
+
+
 
 /*Procedimiento para Modificar Empleados*/
 CREATE PROCEDURE ModificarEmpleado
@@ -58,7 +81,7 @@ CREATE PROCEDURE ModificarEmpleado
     @departamento INT,
     @permiso_vendedor VARCHAR(20),
     @numero_telefono INT,
-    @salario_actual DECIMAL(10,2),
+    @salario_actual FLOAT,
     @puesto INT,
     @ErrorMsg NVARCHAR(255) OUTPUT -- Parámetro de salida para el mensaje de error
 AS
@@ -144,39 +167,60 @@ GO
 
 /*Procedimiento para Insertar Históricos de Salarios*/
 CREATE PROCEDURE InsertarHistoricoSalario
-	@id INT,
-    @puesto INT,
+    @id INT,
+    @puesto VARCHAR(200), -- Cambiado a VARCHAR para el nombre del puesto
     @fecha_inicio DATE,
     @fecha_fin DATE,
-    @departamento INT,
-    @monto INT,
+    @departamento VARCHAR(200), -- Cambiado a VARCHAR para el nombre del departamento
+    @monto FLOAT,
     @cedula_empleado INT,
-    @ErrorMsg NVARCHAR(255) OUTPUT -- Parámetro de salida para el mensaje de error
+    @ErrorMsg NVARCHAR(255) OUTPUT
 AS
 BEGIN
     BEGIN TRY
-        -- Iniciamos la transacción
+        DECLARE @departamento_id INT;
+        DECLARE @puesto_id INT;
+
+        -- Buscar el ID del departamento
+        SELECT @departamento_id = departamento_id
+        FROM Departamento
+        WHERE nombre = @departamento;
+
+        -- Buscar el ID del puesto
+        SELECT @puesto_id = puesto_id
+        FROM Puesto
+        WHERE puesto = @puesto;
+
+        -- Verificar que ambos IDs existan
+        IF @departamento_id IS NULL OR @puesto_id IS NULL
+        BEGIN
+            SET @ErrorMsg = 'El puesto o departamento especificado no existe.';
+            RETURN;
+        END
+
+        -- Iniciar la transacción
         BEGIN TRANSACTION;
 
-        -- Insertamos el histórico del salario
+        -- Insertar el histórico del salario con los IDs obtenidos
         INSERT INTO HistoricoSalario (HistoricoSalario_id, puesto, fecha_inicio, fecha_fin, departamento, monto, cedula_empleado)
-        VALUES (@id, @puesto, @fecha_inicio, @fecha_fin, @departamento, @monto, @cedula_empleado);
+        VALUES (@id, @puesto_id, @fecha_inicio, @fecha_fin, @departamento_id, @monto, @cedula_empleado);
 
-        -- Confirmamos la transacción
+        -- Confirmar la transacción
         COMMIT TRANSACTION;
 
         -- Mensaje de éxito
         SET @ErrorMsg = 'Histórico de salario insertado exitosamente.';
     END TRY
     BEGIN CATCH
-        -- Si ocurre un error, deshacemos la transacción
+        -- Si ocurre un error, deshacer la transacción
         ROLLBACK TRANSACTION;
 
-        -- Capturamos el error y lo retornamos en el parámetro de salida
+        -- Capturar el error y retornarlo en el parámetro de salida
         SET @ErrorMsg = ERROR_MESSAGE();
     END CATCH
 END;
 GO
+
 
 /*Procedimiento para Modificar Históricos de Salarios*/
 CREATE PROCEDURE ModificarHistoricoSalario
@@ -185,7 +229,7 @@ CREATE PROCEDURE ModificarHistoricoSalario
     @fecha_inicio DATE,
     @fecha_fin DATE,
     @departamento INT,
-    @monto DECIMAL(10, 2),
+    @monto FLOAT,
     @cedula_empleado INT,
     @ErrorMsg NVARCHAR(255) OUTPUT -- Parámetro de salida para el mensaje de error
 AS
@@ -258,38 +302,59 @@ GO
 
 /*Procedimiento para Insertar Históricos de Puestos*/
 CREATE PROCEDURE InsertarHistoricoPuesto
-	@id INT,
-    @puesto INT,
+    @id INT,
+    @puesto VARCHAR(200), -- Cambiado a VARCHAR para el nombre del puesto
     @fecha_inicio DATE,
     @fecha_fin DATE,
-    @departamento VARCHAR(25),
+    @departamento VARCHAR(200), -- Cambiado a VARCHAR para el nombre del departamento
     @cedula_empleado INT,
-    @ErrorMsg NVARCHAR(255) OUTPUT -- Parámetro de salida para el mensaje de error
+    @ErrorMsg NVARCHAR(255) OUTPUT
 AS
 BEGIN
     BEGIN TRY
-        -- Iniciamos la transacción
+        DECLARE @departamento_id INT;
+        DECLARE @puesto_id INT;
+
+        -- Buscar el ID del departamento
+        SELECT @departamento_id = departamento_id
+        FROM Departamento
+        WHERE nombre = @departamento;
+
+        -- Buscar el ID del puesto
+        SELECT @puesto_id = puesto_id
+        FROM Puesto
+        WHERE puesto = @puesto;
+
+        -- Verificar que ambos IDs existan
+        IF @departamento_id IS NULL OR @puesto_id IS NULL
+        BEGIN
+            SET @ErrorMsg = 'El puesto o departamento especificado no existe.';
+            RETURN;
+        END
+
+        -- Iniciar la transacción
         BEGIN TRANSACTION;
 
-        -- Insertamos el histórico de puesto
+        -- Insertar el histórico de puesto con los IDs obtenidos
         INSERT INTO HistoricoPuesto (HistoricoPuesto_id, puesto, fecha_inicio, fecha_fin, departamento, cedula_empleado)
-        VALUES (@id, @puesto, @fecha_inicio, @fecha_fin, @departamento, @cedula_empleado);
+        VALUES (@id, @puesto_id, @fecha_inicio, @fecha_fin, @departamento_id, @cedula_empleado);
 
-        -- Confirmamos la transacción si la inserción fue exitosa
+        -- Confirmar la transacción
         COMMIT TRANSACTION;
 
         -- Mensaje de éxito
         SET @ErrorMsg = 'Histórico de puesto insertado exitosamente.';
     END TRY
     BEGIN CATCH
-        -- Si ocurre un error, deshacemos la transacción
+        -- Si ocurre un error, deshacer la transacción
         ROLLBACK TRANSACTION;
 
-        -- Capturamos el error y lo retornamos en el parámetro de salida
+        -- Capturar el error y retornarlo en el parámetro de salida
         SET @ErrorMsg = ERROR_MESSAGE();
     END CATCH
 END;
 GO
+
 
 /*Procedimiento para Modificar Históricos de Puestos*/
 CREATE PROCEDURE ModificarHistoricoPuesto
@@ -993,7 +1058,7 @@ CREATE PROCEDURE InsertarArticuloCotizacion
     @codigo_articulo INT,
     @num_cotizacion INT,
     @cantidad INT,
-    @monto DECIMAL(10, 2),
+    @monto FLOAT,
     @ErrorMsg NVARCHAR(255) OUTPUT -- Parámetro de salida para el mensaje de error
 AS
 BEGIN
@@ -1267,7 +1332,7 @@ CREATE PROCEDURE InsertarArticuloFactura
     @num_factura INT,
     @codigo_articulo INT,
     @cantidad INT,
-    @monto DECIMAL(10, 2),
+    @monto FLOAT,
     @ErrorMsg NVARCHAR(255) OUTPUT
 AS
 BEGIN

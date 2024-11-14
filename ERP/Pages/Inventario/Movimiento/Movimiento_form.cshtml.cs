@@ -28,13 +28,13 @@ namespace ERP.Pages.Inventario.Movimiento
         public void OnGet()
         {
             conexionBD.abrir();
-            string sqlBodega = "SELECT codigo_bodega FROM Bodega";
+            string sqlBodega = "SELECT ubicacion FROM Bodega";
             SqlCommand command_bodega = conexionBD.obtenerComando(sqlBodega);
             using (SqlDataReader reader = command_bodega.ExecuteReader())
             {
                 while (reader.Read())
                 {
-                    listaBodegas.Add("" + reader.GetInt32(0));
+                    listaBodegas.Add("" + reader.GetString(0));
                 }
             }
             conexionBD.cerrar();
@@ -52,13 +52,13 @@ namespace ERP.Pages.Inventario.Movimiento
             conexionBD.cerrar();
 
             conexionBD.abrir();
-            string sqlArticulo = "SELECT codigo FROM Articulo";
+            string sqlArticulo = "SELECT nombre FROM Articulo";
             SqlCommand command_articulo = conexionBD.obtenerComando(sqlArticulo);
             using (SqlDataReader reader = command_articulo.ExecuteReader())
             {
                 while (reader.Read())
                 {
-                    listaArticulos.Add("" + reader.GetInt32(0));
+                    listaArticulos.Add("" + reader.GetString(0));
                 }
             }
             conexionBD.cerrar();
@@ -73,12 +73,52 @@ namespace ERP.Pages.Inventario.Movimiento
         /// </summary>
         public void OnPost()
         {
+            string ubicacion_bodega_origen = Request.Form["bodega_origen"];
+            string ubicacion_bodega_destino = Request.Form["bodega_destino"];
+            string nombre_articulo = Request.Form["codigo_articulo"];
+
+            conexionBD.abrir();
+            String sqlAsignarCodigoBodegaOrigen = "SELECT codigo_bodega FROM Bodega WHERE ubicacion = @ubicacion_bodega_origen";
+            SqlCommand command_bodega_origen = conexionBD.obtenerComando(sqlAsignarCodigoBodegaOrigen);
+            command_bodega_origen.Parameters.AddWithValue("@ubicacion_bodega_origen", ubicacion_bodega_origen);
+            using (SqlDataReader reader = command_bodega_origen.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    Movimiento.codigo_bodega_origen = reader.GetInt32(0).ToString();
+                }
+            }
+            conexionBD.cerrar();
+
+            conexionBD.abrir();
+            String sqlAsignarCodigoBodegaDestino = "SELECT codigo_bodega FROM Bodega WHERE ubicacion = @ubicacion_bodega_destino";
+            SqlCommand command_bodega_destino = conexionBD.obtenerComando(sqlAsignarCodigoBodegaDestino);
+            command_bodega_destino.Parameters.AddWithValue("@ubicacion_bodega_destino", ubicacion_bodega_destino);
+            using (SqlDataReader reader = command_bodega_destino.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    Movimiento.codigo_bodega_destino = reader.GetInt32(0).ToString();
+                }
+            }
+            conexionBD.cerrar();
+
+            conexionBD.abrir();
+            String sqlAsignarCodigoArticulo = "SELECT codigo FROM Articulo WHERE nombre = @nombre_articulo";
+            SqlCommand command_articulo = conexionBD.obtenerComando(sqlAsignarCodigoArticulo);
+            command_articulo.Parameters.AddWithValue("@nombre_articulo", nombre_articulo);
+            using (SqlDataReader reader = command_articulo.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    Movimiento.codigo_articulo = reader.GetInt32(0).ToString();
+                }
+            }
+            conexionBD.cerrar();
+
             Movimiento.id = Request.Form["id"];
             Movimiento.fecha_hora = Request.Form["fecha_hora"];
             Movimiento.cedula_administrador = Request.Form["cedula_empleado"];
-            Movimiento.codigo_bodega_origen = Request.Form["bodega_origen"];
-            Movimiento.codigo_bodega_destino = Request.Form["bodega_destino"];
-            Movimiento.codigo_articulo = Request.Form["codigo_articulo"];
             Movimiento.cantidad = Request.Form["cantidad"];
             string codigo_familia_articulo = "";
             int cantidad_bodega_origen = 0;
@@ -88,7 +128,6 @@ namespace ERP.Pages.Inventario.Movimiento
             bool check_codigo_familia = false;
             bool check_articulo_existente_origen = false;
             bool check_articulo_existente_destino = false;
-
 
             if (Movimiento.codigo_bodega_origen == Movimiento.codigo_bodega_destino)
             {
@@ -307,7 +346,7 @@ namespace ERP.Pages.Inventario.Movimiento
                 };
 
                 command_7.Parameters.AddWithValue("@codigo_bodega", Movimiento.codigo_bodega_destino);
-                command_7.Parameters.AddWithValue("@nueva_capacidad", Movimiento.codigo_articulo);
+                command_7.Parameters.AddWithValue("@nueva_capacidad", nueva_capacidad_destino);
                 command_7.Parameters.Add(errorParameter_4);
 
 
@@ -326,12 +365,26 @@ namespace ERP.Pages.Inventario.Movimiento
 
                 command_8.Parameters.AddWithValue("@codigo_articulo", Movimiento.codigo_articulo);
                 command_8.Parameters.AddWithValue("@codigo_bodega", Movimiento.codigo_bodega_origen);
-                command_8.Parameters.AddWithValue("@nueva_cantidad", Movimiento.cantidad);
+                command_8.Parameters.AddWithValue("@nueva_cantidad", nueva_cantidad_origen);
                 command_8.Parameters.Add(errorParameter_5);
 
+                conexionBD.abrir();
+                string query_11 = "ModificarCantidadBodega";
+                SqlCommand command_11 = conexionBD.obtenerComando(query_11);
+                command_11.CommandType = System.Data.CommandType.StoredProcedure;
+                SqlParameter errorParameter_11 = new SqlParameter("@ErrorMsg", SqlDbType.VarChar, 255)
+                {
+                    Direction = ParameterDirection.Output
+                };
 
-                command_8.ExecuteNonQuery();
-                string ErrorMesage_5 = (string)command_7.Parameters["@ErrorMsg"].Value;
+                command_11.Parameters.AddWithValue("@codigo_articulo", Movimiento.codigo_articulo);
+                command_11.Parameters.AddWithValue("@codigo_bodega", Movimiento.codigo_bodega_destino);
+                command_11.Parameters.AddWithValue("@nueva_cantidad", nueva_cantidad_destino);
+                command_11.Parameters.Add(errorParameter_11);
+
+
+                command_11.ExecuteNonQuery();
+                string ErrorMesage_11 = (string)command_11.Parameters["@ErrorMsg"].Value;
                 conexionBD.cerrar();
 
                 if (!check_articulo_existente_destino)
@@ -363,7 +416,7 @@ namespace ERP.Pages.Inventario.Movimiento
                     Movimiento.codigo_articulo = "";
                     Movimiento.cantidad = "";
 
-                    mensaje_exito = "Entrada registrada exitosamente";
+                    mensaje_exito = "Movimiento registrado exitosamente";
                     return;
                 }
 
@@ -394,7 +447,7 @@ namespace ERP.Pages.Inventario.Movimiento
                 Movimiento.codigo_articulo = "";
                 Movimiento.cantidad = "";
 
-                mensaje_exito = "Entrada registrada exitosamente";
+                mensaje_exito = "Movimiento registrado exitosamente";
             }
             catch (Exception ex)
             {
