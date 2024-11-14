@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Data.SqlClient;
 using System.Data;
+using System.Reflection.Metadata;
 
 namespace ERP.Pages.Inventario.Entrada
 {
@@ -26,13 +27,13 @@ namespace ERP.Pages.Inventario.Entrada
         public void OnGet()
         {
             conexionBD.abrir();
-            string sqlBodega = "SELECT codigo_bodega FROM Bodega";
+            string sqlBodega = "SELECT ubicacion FROM Bodega";
             SqlCommand command_bodega = conexionBD.obtenerComando(sqlBodega);
             using (SqlDataReader reader = command_bodega.ExecuteReader())
             {
                 while (reader.Read())
                 {
-                    listaBodegas.Add("" + reader.GetInt32(0));
+                    listaBodegas.Add("" + reader.GetString(0));
                 }
             }
             conexionBD.cerrar();
@@ -50,13 +51,13 @@ namespace ERP.Pages.Inventario.Entrada
             conexionBD.cerrar();
 
             conexionBD.abrir();
-            string sqlArticulo = "SELECT codigo FROM Articulo";
+            string sqlArticulo = "SELECT nombre FROM Articulo";
             SqlCommand command_articulo = conexionBD.obtenerComando(sqlArticulo);
             using (SqlDataReader reader = command_articulo.ExecuteReader())
             {
                 while (reader.Read())
                 {
-                    listaArticulos.Add("" + reader.GetInt32(0));
+                    listaArticulos.Add("" + reader.GetString(0));
                 }
             }
             conexionBD.cerrar();
@@ -71,11 +72,38 @@ namespace ERP.Pages.Inventario.Entrada
         /// </summary>
         public void OnPost()
         {
+            string ubicacion_bodega = Request.Form["bodega_destino"];
+            string nombre_articulo = Request.Form["codigo_articulo"];
+
+            conexionBD.abrir();
+            String sqlAsignarCodigoBodega = "SELECT codigo_bodega FROM Bodega WHERE ubicacion = @ubicacion_bodega";
+            SqlCommand command_bodega = conexionBD.obtenerComando(sqlAsignarCodigoBodega);
+            command_bodega.Parameters.AddWithValue("@ubicacion_bodega", ubicacion_bodega);
+            using (SqlDataReader reader = command_bodega.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    Entrada.codigo_bodega = reader.GetInt32(0).ToString();
+                }
+            }
+            conexionBD.cerrar();
+
+            conexionBD.abrir();
+            String sqlAsignarCodigoArticulo = "SELECT codigo FROM Articulo WHERE nombre = @nombre_articulo";
+            SqlCommand command_articulo = conexionBD.obtenerComando(sqlAsignarCodigoArticulo);
+            command_articulo.Parameters.AddWithValue("@nombre_articulo", nombre_articulo);
+            using (SqlDataReader reader = command_articulo.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    Entrada.codigo_articulo = reader.GetInt32(0).ToString();
+                }
+            }
+            conexionBD.cerrar();
+
             Entrada.id = Request.Form["id"];
             Entrada.fecha_hora = Request.Form["fecha_hora"];
             Entrada.cedula_administrador = Request.Form["cedula_empleado"];
-            Entrada.codigo_bodega = Request.Form["bodega_destino"];
-            Entrada.codigo_articulo = Request.Form["codigo_articulo"];
             Entrada.cantidad = Request.Form["cantidad"];
             string codigo_familia_articulo = "";
             int capacidad_bodega = 0;

@@ -64,25 +64,25 @@ namespace ERP.Pages.Empleado.Historico_Puesto
             conexionBD.cerrar();
 
             conexionBD.abrir();
-            string sqlPuesto = "SELECT puesto_id FROM Puesto";
+            string sqlPuesto = "SELECT puesto FROM Puesto";
             SqlCommand command_puesto = conexionBD.obtenerComando(sqlPuesto);
             using (SqlDataReader reader = command_puesto.ExecuteReader())
             {
                 while (reader.Read())
                 {
-                    listaPuestos.Add("" + reader.GetInt32(0));
+                    listaPuestos.Add("" + reader.GetString(0));
                 }
             }
             conexionBD.cerrar();
 
             conexionBD.abrir();
-            string sqlDepartamento = "SELECT departamento_id FROM Departamento";
+            string sqlDepartamento = "SELECT nombre FROM Departamento";
             SqlCommand command_Departamento = conexionBD.obtenerComando(sqlDepartamento);
             using (SqlDataReader reader = command_Departamento.ExecuteReader())
             {
                 while (reader.Read())
                 {
-                    listaDepartamentos.Add("" + reader.GetInt32(0));
+                    listaDepartamentos.Add("" + reader.GetString(0));
                 }
             }
             conexionBD.cerrar();
