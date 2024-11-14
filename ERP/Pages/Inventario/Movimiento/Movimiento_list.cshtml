@@ -13,10 +13,25 @@
             <th>Cedula</th>
             <th>Administrador</th>
             <th>Fecha</th>
-            <th>Bodega Origen</th>
-            <th>Bodega Destino</th>
             <th>Articulo</th>
             <th>Cantidad</th>
+            <th>Bodega Origen</th>
+            <th>Bodega Destino</th>
         </tr>
     </thead>
+    <tbody>
+        <!-- Ciclo que extrae los datos de la vista de Movimientos para mostrar toda información registrada -->
+        @foreach (var item in Model.listaMovimientos)
+        {
+            <tr>
+                <td>@item.cedula</td>
+                <td>@item.administrador</td>
+                <td>@item.fecha</td>
+                <td>@item.articulo</td>
+                <td>@item.cantidad</td>
+                <td>@item.ubicacion_bodega_origen</td>
+                <td>@item.ubicacion_bodega_destino</td>
+            </tr>
+        }
+    </tbody>
 </table>
