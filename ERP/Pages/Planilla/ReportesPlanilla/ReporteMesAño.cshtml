@@ -1,0 +1,51 @@
+﻿@page
+@model ERP.Pages.Planilla.ReportesPlanilla.ReporteMesAñoModel
+@{
+    ViewData["Title"] = "Reporte de Monto Pagado por Mes y Año";
+}
+<h2>Reporte de Monto Pagado por Mes y Año</h2>
+
+<form method="post">
+    <label for="FechaInicio">Fecha Inicio:</label>
+    <input type="date" id="FechaInicio" name="FechaInicio" required />
+
+    <label for="FechaFin">Fecha Fin:</label>
+    <input type="date" id="FechaFin" name="FechaFin" required />
+
+    <button type="submit">Generar Reporte</button>
+</form>
+
+@if (!string.IsNullOrEmpty(Model.mensajeError))
+{
+    <div style="color: red">@Model.mensajeError</div>
+}
+
+<canvas id="planillaChart" width="400" height="200"></canvas>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('planillaChart').getContext('2d');
+        var chartData = {
+            labels: @Html.Raw(Json.Serialize(Model.PlanillaMesAñoData.Select(d => d.AñoMes))),
+            datasets: [{
+                label: 'Monto Total por Mes',
+                data: @Html.Raw(Json.Serialize(Model.PlanillaMesAñoData.Select(d => d.MontoTotal))),
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        };
+        var planillaChart = new Chart(ctx, {
+            type: 'bar',
+            data: chartData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+}
