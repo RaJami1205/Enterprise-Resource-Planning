@@ -1,7 +1,6 @@
 ﻿@page
-@model ERP.Pages.Planilla.ReportesPlanilla.ReporteDepartamentoMesModel
+@model ERP.Pages.Factura.Reporte.VentasDepartamentoModel
 @{
-    ViewData["Title"] = "Reporte de Monto Pagado por Departamento";
 }
 
 <style>
@@ -43,15 +42,13 @@
         font-size: 18px;
     }
 
-    input[type="number"] {
-        padding: 8px;
+    input[type="date"] {
+        padding: 10px;
         font-size: 16px;
         border-radius: 4px;
         border: none;
-        background-color: #24303c;
-        color: white;
-        width: 60px;
-        text-align: center;
+        background-color: #ffffff;
+        color: #24303c;
     }
 
     button[type="submit"] {
@@ -65,9 +62,9 @@
         transition: background-color 0.3s ease;
     }
 
-    button[type="submit"]:hover {
-        background-color: #001f3f;
-    }
+        button[type="submit"]:hover {
+            background-color: #001f3f;
+        }
 
     .error-message {
         color: #ff6b6b;
@@ -87,14 +84,14 @@
 </style>
 
 <div class="container">
-    <h2>Reporte de Monto Pagado por Departamento</h2>
+    <h2>Reporte de Ventas por Departamento (Porcentual)</h2>
 
     <form method="post">
-        <label for="Mes">Mes:</label>
-        <input type="number" id="Mes" name="Mes" min="1" max="12" required />
+        <label for="FechaInicio">Fecha Inicio:</label>
+        <input type="date" id="FechaInicio" name="FechaInicio" required />
 
-        <label for="Anno">Año:</label>
-        <input type="number" id="Anno" name="Anno" min="2000" required />
+        <label for="FechaFin">Fecha Fin:</label>
+        <input type="date" id="FechaFin" name="FechaFin" required />
 
         <button type="submit">Generar Reporte</button>
     </form>
@@ -105,22 +102,20 @@
     }
 
     <div class="chart-container">
-        <canvas id="departamentoChart" width="400" height="200"></canvas>
+        <canvas id="ventasChart" width="400" height="400"></canvas>
     </div>
 </div>
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Verifica si hay suficientes datos para mostrar
-        console.log("Datos de los departamentos:", @Html.Raw(Json.Serialize(Model.DepartamentoMontoData)));
-
-        var ctx = document.getElementById('departamentoChart').getContext('2d');
+        var ctx = document.getElementById('ventasChart').getContext('2d');
+        var totalMonto = @Html.Raw(Json.Serialize(Model.VentasData.Sum(v => v.cantidadTotal)));
         var chartData = {
-            labels: @Html.Raw(Json.Serialize(Model.DepartamentoMontoData.Select(d => d.Departamento))),
+            labels: @Html.Raw(Json.Serialize(Model.VentasData.Select(v => v.Departamento))),
             datasets: [{
-                label: 'Monto Total por Departamento',
-                data: @Html.Raw(Json.Serialize(Model.DepartamentoMontoData.Select(d => d.MontoTotal))),
+                label: 'Porcentaje de ventas por departamento',
+                data: @Html.Raw(Json.Serialize(Model.VentasData.Select(v => Math.Round((v.cantidadTotal / @Model.TotalCantidad) * 100, 2)))),
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(255, 206, 86, 0.6)',
                     'rgba(75, 192, 192, 0.6)', 'rgba(153, 102, 255, 0.6)', 'rgba(255, 159, 64, 0.6)',
@@ -128,9 +123,7 @@
                     'rgba(128, 128, 0, 0.6)', 'rgba(255, 140, 0, 0.6)', 'rgba(0, 128, 128, 0.6)',
                     'rgba(128, 0, 128, 0.6)', 'rgba(75, 0, 130, 0.6)', 'rgba(139, 0, 139, 0.6)',
                     'rgba(255, 69, 0, 0.6)', 'rgba(255, 215, 0, 0.6)', 'rgba(0, 255, 127, 0.6)',
-                    'rgba(64, 224, 208, 0.6)', 'rgba(240, 128, 128, 0.6)', 'rgba(60, 179, 113, 0.6)',
-                    'rgba(176, 196, 222, 0.6)', 'rgba(123, 104, 238, 0.6)', 'rgba(0, 191, 255, 0.6)',
-                    'rgba(255, 20, 147, 0.6)'
+                    'rgba(64, 224, 208, 0.6)', 'rgba(240, 128, 128, 0.6)', 'rgba(60, 179, 113, 0.6)'
                 ],
                 borderColor: [
                     'rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)',
@@ -139,14 +132,12 @@
                     'rgba(128, 128, 0, 1)', 'rgba(255, 140, 0, 1)', 'rgba(0, 128, 128, 1)',
                     'rgba(128, 0, 128, 1)', 'rgba(75, 0, 130, 1)', 'rgba(139, 0, 139, 1)',
                     'rgba(255, 69, 0, 1)', 'rgba(255, 215, 0, 1)', 'rgba(0, 255, 127, 1)',
-                    'rgba(64, 224, 208, 1)', 'rgba(240, 128, 128, 1)', 'rgba(60, 179, 113, 1)',
-                    'rgba(176, 196, 222, 1)', 'rgba(123, 104, 238, 1)', 'rgba(0, 191, 255, 1)',
-                    'rgba(255, 20, 147, 1)'
+                    'rgba(64, 224, 208, 1)', 'rgba(240, 128, 128, 1)', 'rgba(60, 179, 113, 1)'
                 ],
                 borderWidth: 1
             }]
         };
-        var departamentoChart = new Chart(ctx, {
+        var ventasChart = new Chart(ctx, {
             type: 'pie',
             data: chartData,
             options: {

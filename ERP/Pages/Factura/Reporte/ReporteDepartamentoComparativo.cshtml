@@ -1,55 +1,42 @@
 ﻿@page
-@model ERP.Pages.Planilla.ReportesPlanilla.ReporteMesAñoModel
+@model ERP.Pages.Factura.Reporte.ReporteDepartamentoComparativoModel
 @{
-    ViewData["Title"] = "Reporte de Monto Pagado por Mes y Año";
+    ViewData["Title"] = "Comparativo de Cotizaciones y Ventas por Departamento";
 }
 
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
     body {
         background: linear-gradient(130deg, #0074D9, #001f3f);
         font-family: Calibri, sans-serif;
         color: white;
     }
 
-    .container {
-        width: 100%;
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-    }
-
     h2 {
+        text-align: center;
         font-size: 28px;
         margin-bottom: 20px;
-        text-align: center;
+        color: #ffffff;
     }
 
     form {
         display: flex;
         justify-content: center;
-        align-items: center;
-        gap: 20px;
-        margin-bottom: 40px;
+        gap: 15px;
+        margin-bottom: 30px;
     }
 
     label {
         font-size: 18px;
+        color: #ffffff;
     }
 
     input[type="date"] {
-        padding: 8px;
+        padding: 10px;
         font-size: 16px;
         border-radius: 4px;
         border: none;
-        background-color: #24303c;
-        color: white;
-        text-align: center;
+        background-color: #ffffff;
+        color: #24303c;
     }
 
     button[type="submit"] {
@@ -63,19 +50,19 @@
         transition: background-color 0.3s ease;
     }
 
-    button[type="submit"]:hover {
-        background-color: #001f3f;
-    }
+        button[type="submit"]:hover {
+            background-color: #001f3f;
+        }
 
     .error-message {
         color: #ff6b6b;
         text-align: center;
-        margin-top: 10px;
         font-size: 18px;
+        margin-top: 10px;
     }
 
     .chart-container {
-        max-width: 1000px;
+        max-width: 800px;
         margin: 0 auto;
         padding: 20px;
         background-color: #24303c;
@@ -85,7 +72,7 @@
 </style>
 
 <div class="container">
-    <h2>Reporte de Monto Pagado por Mes y Año</h2>
+    <h2>Reporte Comparativo de Ventas y Cotizaciones por Departamento</h2>
 
     <form method="post">
         <label for="FechaInicio">Fecha Inicio:</label>
@@ -103,25 +90,34 @@
     }
 
     <div class="chart-container">
-        <canvas id="planillaChart" width="800" height="400"></canvas>
+        <canvas id="comparativoChart" width="800" height="400"></canvas>
     </div>
 </div>
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        var ctx = document.getElementById('planillaChart').getContext('2d');
+        var ctx = document.getElementById('comparativoChart').getContext('2d');
         var chartData = {
-            labels: @Html.Raw(Json.Serialize(Model.PlanillaMesAñoData.Select(d => d.AñoMes))),
-            datasets: [{
-                label: 'Monto Total por Mes',
-                data: @Html.Raw(Json.Serialize(Model.PlanillaMesAñoData.Select(d => d.MontoTotal))),
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
-            }]
+            labels: @Html.Raw(Json.Serialize(Model.VentasData.Select(v => v.Departamento))),
+            datasets: [
+                {
+                    label: 'Cantidad de Ventas',
+                    data: @Html.Raw(Json.Serialize(Model.VentasData.Select(v => v.Cantidad))),
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Cantidad de Cotizaciones',
+                    data: @Html.Raw(Json.Serialize(Model.CotizacionesData.Select(c => c.Cantidad))),
+                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }
+            ]
         };
-        var planillaChart = new Chart(ctx, {
+        var comparativoChart = new Chart(ctx, {
             type: 'bar',
             data: chartData,
             options: {

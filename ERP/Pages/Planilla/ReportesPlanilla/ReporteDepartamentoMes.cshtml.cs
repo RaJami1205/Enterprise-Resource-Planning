@@ -33,7 +33,7 @@ namespace ERP.Pages.Planilla.ReportesPlanilla
                     DepartamentoMontoData.Add(new DepartamentoMonto
                     {
                         Departamento = reader.GetString(0),
-                        MontoTotal = reader.GetDouble(1).ToString()
+                        MontoTotal = reader.GetDouble(1)
                     });
                 }
             }
@@ -50,7 +50,7 @@ namespace ERP.Pages.Planilla.ReportesPlanilla
         public class DepartamentoMonto
         {
             public string Departamento { get; set; }
-            public string MontoTotal { get; set; }
+            public double MontoTotal { get; set; }
         }
     }
 }

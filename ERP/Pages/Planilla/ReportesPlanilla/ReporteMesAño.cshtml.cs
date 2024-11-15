@@ -1,4 +1,4 @@
-// Modelo: ReporteMesAñoModel.cs
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
@@ -34,7 +34,7 @@ namespace ERP.Pages.Planilla.ReportesPlanilla
                         PlanillaMesAñoData.Add(new PlanillaMesAñoData
                         {
                             AñoMes = reader.GetString(0),
-                            MontoTotal = reader.GetDouble(1).ToString()
+                            MontoTotal = reader.GetDouble(1)
                         });
                     }
                 }
@@ -50,6 +50,6 @@ namespace ERP.Pages.Planilla.ReportesPlanilla
     public class PlanillaMesAñoData
     {
         public string AñoMes { get; set; }
-        public string MontoTotal { get; set; }
+        public double MontoTotal { get; set; }
     }
 }
