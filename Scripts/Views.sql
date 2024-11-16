@@ -64,7 +64,7 @@ SELECT
 FROM 
     Factura f
 JOIN 
-    EstadoFactura ef ON f.estado = ef.estadofactura_id; -- Relaci髇 con la tabla EstadoFactura para obtener el nombre del estado
+    EstadoFactura ef ON f.estado = ef.estadofactura_id; -- Relaci贸n con la tabla EstadoFactura para obtener el nombre del estado
 go
 
 
@@ -117,7 +117,7 @@ INNER JOIN
     Puesto p ON e.puesto = p.puesto_id;
 GO
 
-/*Vista para el listado de Art韈ulos*/
+/*Vista para el listado de Art铆culos*/
 CREATE VIEW ArticuloBodega AS
 SELECT 
     A.codigo AS codigo_articulo,
@@ -134,7 +134,7 @@ JOIN
     Bodega B ON BA.codigo_bodega = B.codigo_bodega;
 GO
 
-/*Vista para el hist髍ico de salarios*/
+/*Vista para el hist贸rico de salarios*/
 CREATE VIEW VistaHistorialSalario AS
 SELECT
 	hs.HistoricoSalario_id as ID_historico,
@@ -157,7 +157,7 @@ JOIN
     Departamento d ON hs.departamento = d.departamento_id;
 GO
 
-/*Vista para el hist髍ico de puestos*/
+/*Vista para el hist贸rico de puestos*/
 CREATE VIEW VistaHistorialPuesto AS
 SELECT
 	hp.HistoricoPuesto_id as ID_historico,
@@ -183,7 +183,7 @@ GO
 CREATE VIEW VistaEntradas AS
 SELECT 
 	e.cedula AS Cedula,
-    CONCAT(e.nombre, ' ', e.apellido1, ' ', e.apellido2) AS administrador, -- Concatenaci髇 del nombre completo
+    CONCAT(e.nombre, ' ', e.apellido1, ' ', e.apellido2) AS administrador, -- Concatenaci贸n del nombre completo
     en.fecha_hora AS fecha,
     a.nombre AS articulo,
     ea.cantidad AS cantidad_ingresada,
@@ -200,9 +200,33 @@ JOIN
     Bodega b ON en.codigo_bodega = b.codigo_bodega;
 GO
 
+/* Vista para el listado de Movimientos */
+CREATE VIEW VistaMovimientos AS
+SELECT 
+    e.cedula AS Cedula,
+    CONCAT(e.nombre, ' ', e.apellido1, ' ', e.apellido2) AS administrador, -- Nombre completo del administrador
+    mo.fecha_hora AS fecha,
+    a.nombre AS articulo,
+    ma.cantidad AS cantidad_movida,
+    b_origen.ubicacion AS ubicacion_bodega_origen,    -- Ubicaci贸n de la bodega de origen
+    b_destino.ubicacion AS ubicacion_bodega_destino    -- Ubicaci贸n de la bodega de destino
+FROM 
+    Movimiento mo
+JOIN 
+    Empleado e ON mo.cedula_administrador = e.cedula
+JOIN 
+    MovimientoArticulo ma ON mo.codigo_movimiento = ma.codigo_movimiento
+JOIN 
+    Articulo a ON ma.codigo_articulo = a.codigo
+JOIN 
+    Bodega b_origen ON mo.codigo_bodega_origen = b_origen.codigo_bodega    -- Bodega de origen
+JOIN 
+    Bodega b_destino ON mo.codigo_bodega_destino = b_destino.codigo_bodega; -- Bodega de destino
+GO
+	
 CREATE VIEW VistaPlanillaMensual AS
 SELECT 
-    anno AS A駉,
+    anno AS A帽o,
     mes AS Mes,
     COUNT(DISTINCT cedula_empleado) AS Cantidad_Salarios,
     SUM(pago) AS Total_Pago
