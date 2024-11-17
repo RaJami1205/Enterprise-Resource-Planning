@@ -271,7 +271,7 @@ AS
 RETURN (
     SELECT 
         z.nombre AS Zona,
-        COUNT(DISTINCT c.cedula_juridica) AS CantidadClientes,
+        COUNT(c.cedula_juridica) AS CantidadClientes,
         SUM(fa.monto * fa.cantidad) AS MontoVentas
     FROM 
         Factura f
