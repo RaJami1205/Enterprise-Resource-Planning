@@ -365,7 +365,33 @@ VALUES
 (2006, 22228888, 101006, 'Empresa F', '2024-01-10', 2, 67890123), -- Factura para Caso 6
 (2007, 22229999, 101007, 'Empresa H', '2024-01-11', 3, 89012345), -- Factura para Caso 8
 (2008, 22221111, 101008, 'Empresa I', '2024-01-12', 1, 90123456), -- Factura para Caso 9
-(2009, 22222222, 101009, 'Empresa J', '2024-01-13', 4, 11223344); -- Factura para Caso 10
+(2009, 22222222, 101009, 'Empresa J', '2024-01-13', 4, 11223344), -- Factura para Caso 10
+(2010, 22230000, 101010, 'Empresa K', '2024-02-01', 1, 12345678),
+(2011, 22231111, 101011, 'Empresa L', '2024-02-05', 2, 23456789),
+(2012, 22232222, 101012, 'Empresa M', '2024-02-10', 1, 34567890),
+(2013, 22233333, 101013, 'Empresa N', '2024-02-15', 3, 45678901),
+(2014, 22234444, 101014, 'Empresa O', '2024-03-01', 1, 78901234);
+
+
+INSERT INTO FacturaArticulo (num_facturacion, codigo_articulo, cantidad, monto)
+VALUES
+(2001, 1, 5, 500.00), -- Artículo 1 en Factura 2001
+(2001, 2, 3, 450.00), -- Artículo 2 en Factura 2001
+(2002, 3, 8, 1200.00), -- Artículo 3 en Factura 2002
+(2003, 4, 10, 1500.00), -- Artículo 4 en Factura 2003
+(2003, 5, 2, 600.00), -- Artículo 5 en Factura 2003
+(2004, 6, 4, 600.00), -- Artículo 6 en Factura 2004
+(2005, 7, 7, 1575.00), -- Artículo 7 en Factura 2005
+(2006, 8, 6, 1500.00), -- Artículo 8 en Factura 2006
+(2007, 9, 2, 500.00), -- Artículo 9 en Factura 2007
+(2008, 10, 3, 750.00), -- Artículo 10 en Factura 2008
+(2010, 11, 5, 550.00), -- Artículo 11 en Factura 2010
+(2010, 12, 3, 450.00), -- Artículo 12 en Factura 2010
+(2011, 13, 8, 1200.00), -- Artículo 13 en Factura 2011
+(2012, 14, 10, 1600.00), -- Artículo 14 en Factura 2012
+(2013, 15, 2, 800.00), -- Artículo 15 en Factura 2013
+(2014, 16, 7, 1750.00), -- Artículo 16 en Factura 2014
+(2014, 17, 4, 800.00); -- Artículo 17 en Factura 2014
 
 
 -- Inserts en la tabla Cotizacion
@@ -375,9 +401,33 @@ VALUES
 (1002, 'OC-2345', 2, 'Reclamo de factura técnica', 2, 2, 2, 1500.00, 2, 23456789, '2024-02-01', '2024-02-28', 60.00, '', 101002), -- Cotización para Caso 2
 (1003, 'OC-3456', 3, 'Cotización de devolución de producto', 3, 3, 3, 3000.00, 3, 34567890, '2024-03-01', '2024-03-31', 90.00, '', 101003), -- Cotización para Caso 3
 (1004, 'OC-4567', 4, 'Reclamo de devolución', 4, 4, 4, 4500.00, 4, 45678901, '2024-04-01', '2024-04-30', 75.00, '', 101004), -- Cotización para Caso 4
-(1005, 'OC-5678', 5, 'Cotización de asesoría técnica', 5, 5, 1, 2500.00, 5, 90123456, '2024-05-01', '2024-05-31', 85.00, '', 101008); -- Cotización para Caso 9
+(1005, 'OC-5678', 5, 'Cotización de asesoría técnica', 5, 5, 1, 2500.00, 5, 90123456, '2024-05-01', '2024-05-31', 85.00, '', 101008), -- Cotización para Caso 9
+(1006, 'OC-6789', 6, 'Cotización para instalación de equipo', 1, 6, 2, 6000.00, 2, 12345678, '2024-02-01', '2024-02-28', 90.00, '', 101010),
+(1007, 'OC-7890', 7, 'Cotización para soporte extendido', 2, 7, 1, 4000.00, 3, 23456789, '2024-03-01', '2024-03-31', 85.00, '', 101011),
+(1008, 'OC-8901', 8, 'Cotización para asesoría técnica', 3, 8, 3, 5000.00, 4, 34567890, '2024-04-01', '2024-04-30', 70.00, '', 101012),
+(1009, 'OC-9012', 9, 'Cotización para revisión de servicios', 4, 9, 2, 3000.00, 5, 45678901, '2024-05-01', '2024-05-31', 75.00, '', 101013),
+(1010, 'OC-0123', 10, 'Cotización para optimización de procesos', 5, 10, 1, 7000.00, 6, 78901234, '2024-06-01', '2024-06-30', 95.00, '', 101014);
 
 
+INSERT INTO CotizacionArticulo (codigo_articulo, num_cotizacion, cantidad, monto)
+VALUES
+(1, 1001, 10, 1000.00), -- Artículo 1 en Cotización 1001
+(2, 1001, 5, 1500.00), -- Artículo 2 en Cotización 1001
+(3, 1002, 8, 1200.00), -- Artículo 3 en Cotización 1002
+(4, 1003, 12, 1800.00), -- Artículo 4 en Cotización 1003
+(5, 1003, 7, 2100.00), -- Artículo 5 en Cotización 1003
+(6, 1004, 15, 2250.00), -- Artículo 6 en Cotización 1004
+(7, 1004, 6, 2250.00), -- Artículo 7 en Cotización 1004
+(8, 1005, 3, 750.00), -- Artículo 8 en Cotización 1005
+(9, 1005, 4, 1000.00), -- Artículo 9 en Cotización 1005
+(10, 1005, 2, 750.00), -- Artículo 10 en Cotización 1005
+(11, 1006, 12, 3600.00), -- Artículo 11 en Cotización 1006
+(12, 1006, 8, 2400.00), -- Artículo 12 en Cotización 1006
+(13, 1007, 10, 4000.00), -- Artículo 13 en Cotización 1007
+(14, 1008, 6, 3000.00), -- Artículo 14 en Cotización 1008
+(15, 1008, 4, 2000.00), -- Artículo 15 en Cotización 1008
+(16, 1009, 5, 1500.00), -- Artículo 16 en Cotización 1009
+(17, 1010, 7, 4900.00); -- Artículo 17 en Cotización 1010
 
 -- Inserts en la tabla Logueo_Usuario
 INSERT INTO Logueo_Usuario (usuario, contrasenna, cedula_empleado)
@@ -420,3 +470,4 @@ VALUES
 (7, 8, '2024-01-28', 'Envío de información solicitada.', 89012345),
 (12, 9, '2024-01-30', 'Seguimiento del retraso en entrega.', 90123456),
 (10, 10, '2024-02-01', 'Investigación de términos incumplidos.', 11223344);
+

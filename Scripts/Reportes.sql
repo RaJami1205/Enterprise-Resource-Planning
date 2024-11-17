@@ -55,7 +55,7 @@ CREATE FUNCTION ObtenerTop10ProductosMasCotizados (
 RETURNS TABLE
 AS
 RETURN (
-    SELECT 
+    SELECT TOP 10
         p.nombre AS Producto,
         COUNT(c.num_cotizacion) AS CantidadCotizaciones
     FROM 
@@ -68,6 +68,7 @@ RETURN (
         c.fecha_inicio BETWEEN @FechaInicio AND @FechaFin
     GROUP BY 
         p.nombre
+	ORDER BY CantidadCotizaciones DESC
 );
 GO
 
@@ -257,6 +258,7 @@ RETURN (
         f.fecha BETWEEN @FechaInicio AND @FechaFin
     GROUP BY 
         c.nombre
+	ORDER BY MontoTotal DESC
 );
 GO
 
