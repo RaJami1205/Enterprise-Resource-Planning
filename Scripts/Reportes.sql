@@ -10,7 +10,7 @@ RETURNS TABLE
 AS
 RETURN (
     SELECT 
-        CONCAT(anno, '-', FORMAT(mes, '00')) AS A�oMes, -- Formato A�o-Mes
+        CONCAT(anno, '-', FORMAT(mes, '00')) AS AñoMes, -- Formato Año-Mes
         SUM(pago) AS MontoTotal
     FROM 
         SalarioMensual
@@ -203,3 +203,68 @@ RETURN (
 );
 GO
 
+-- Cantidad de movimientos por bodega
+
+CREATE FUNCTION PorcentajeMovimientosBodegas()
+RETURNS TABLE
+AS
+RETURN (
+    WITH Totales AS (
+        SELECT
+            COUNT(DISTINCT E.codigo_entrada) AS total_entradas, -- Total global de entradas
+            COUNT(DISTINCT S.fecha_hora) AS total_salidas,      -- Total global de salidas
+            COUNT(M.codigo_movimiento) AS total_movimientos -- Total global de movimientos
+        FROM
+            Bodega B
+        LEFT JOIN 
+            Entrada E ON B.codigo_bodega = E.codigo_bodega
+        LEFT JOIN 
+            Salida S ON B.codigo_bodega = S.codigo_bodega
+        LEFT JOIN 
+            Movimiento M ON B.codigo_bodega = M.codigo_bodega_origen
+                        OR B.codigo_bodega = M.codigo_bodega_destino
+    )
+    SELECT 
+        B.ubicacion,
+        ROUND(CAST(COUNT(DISTINCT S.fecha_hora) AS FLOAT) / T.total_salidas * 100, 2) AS porcentaje_salidas,
+        ROUND(CAST(COUNT(DISTINCT E.codigo_entrada) AS FLOAT) / T.total_entradas * 100, 2) AS porcentaje_entradas,
+        ROUND(CAST(COUNT(DISTINCT M.codigo_movimiento) AS FLOAT) / T.total_movimientos * 100, 2) AS porcentaje_movimientos
+    FROM
+        Bodega B
+    LEFT JOIN 
+        Entrada E ON B.codigo_bodega = E.codigo_bodega
+    LEFT JOIN 
+        Salida S ON B.codigo_bodega = S.codigo_bodega
+    LEFT JOIN 
+        Movimiento M ON B.codigo_bodega = M.codigo_bodega_origen
+                    OR B.codigo_bodega = M.codigo_bodega_destino
+    CROSS JOIN
+        Totales T -- Utilizamos los totales calculados en el CTE
+    GROUP BY
+        B.codigo_bodega, B.ubicacion, T.total_entradas, T.total_salidas, T.total_movimientos
+);
+GO
+
+-- Bodegas con artículos más Transados
+
+CREATE FUNCTION ObtenerTopBodegasTransados()
+RETURNS TABLE
+AS
+RETURN
+    SELECT 
+        B.ubicacion, 
+        COUNT(DISTINCT E.codigo_entrada) AS total_entradas, 
+        COUNT(DISTINCT S.fecha_hora) AS total_salidas, 
+        COUNT(M.codigo_movimiento) AS total_movimientos,
+        (COUNT(DISTINCT E.codigo_entrada) + COUNT(DISTINCT S.fecha_hora) + COUNT(M.codigo_movimiento)) AS total_eventos
+    FROM 
+        Bodega B
+    LEFT JOIN 
+        Entrada E ON B.codigo_bodega = E.codigo_bodega
+    LEFT JOIN 
+        Salida S ON B.codigo_bodega = S.codigo_bodega
+    LEFT JOIN 
+        Movimiento M ON B.codigo_bodega = M.codigo_bodega_origen OR B.codigo_bodega = M.codigo_bodega_destino
+    GROUP BY 
+        B.codigo_bodega, B.ubicacion
+GO
