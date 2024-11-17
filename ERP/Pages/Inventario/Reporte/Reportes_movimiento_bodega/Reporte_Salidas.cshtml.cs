@@ -17,7 +17,7 @@ namespace ERP.Pages.Inventario.Reporte.Reportes_movimiento_bodega
             try
             {
                 conexionBD.abrir();
-                string query = "SELECT ubicacion, porcentaje_salidas, porcentaje_entradas, porcentaje_movimientos FROM PorcentajeMovimientosBodegas();";
+                string query = "SELECT ubicacion, porcentaje_entradas, porcentaje_salidas, porcentaje_movimientos FROM PorcentajeMovimientosBodegas();";
                 SqlCommand command = conexionBD.obtenerComando(query);
 
                 SqlDataReader reader = command.ExecuteReader();
@@ -26,9 +26,9 @@ namespace ERP.Pages.Inventario.Reporte.Reportes_movimiento_bodega
                     listaMovimientos.Add(new InfoMovimiento
                     {
                         ubicacion_bodega = reader.GetString(0),
-                        cantidad_entrada = reader.GetInt32(1),
-                        cantidad_salida = reader.GetInt32(2),
-                        cantidad_movimiento = reader.GetInt32(3)
+                        cantidad_entrada = reader.GetDouble(1),
+                        cantidad_salida = reader.GetDouble(2),
+                        cantidad_movimiento = reader.GetDouble(3)
                     });
                 }
             }
@@ -45,9 +45,9 @@ namespace ERP.Pages.Inventario.Reporte.Reportes_movimiento_bodega
         public class InfoMovimiento
         {
             public string ubicacion_bodega { get; set; }
-            public int cantidad_entrada { get; set; }
-            public int cantidad_salida { get; set; }
-            public int cantidad_movimiento { get; set; }
+            public Double cantidad_entrada { get; set; }
+            public Double cantidad_salida { get; set; }
+            public Double cantidad_movimiento { get; set; }
         }
     }
 }
