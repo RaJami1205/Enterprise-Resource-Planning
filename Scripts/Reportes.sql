@@ -217,8 +217,6 @@ RETURN (
         Factura f
     GROUP BY 
         YEAR(f.fecha), MONTH(f.fecha)
-    ORDER BY 
-        YEAR(f.fecha), MONTH(f.fecha)
 );
 GO
 
@@ -233,8 +231,6 @@ RETURN (
     FROM 
         Cotizacion c
     GROUP BY 
-        YEAR(c.fecha_inicio), MONTH(c.fecha_inicio)
-    ORDER BY 
         YEAR(c.fecha_inicio), MONTH(c.fecha_inicio)
 );
 GO
@@ -261,8 +257,6 @@ RETURN (
         f.fecha BETWEEN @FechaInicio AND @FechaFin
     GROUP BY 
         c.nombre
-    ORDER BY 
-        MontoTotal DESC
 );
 GO
 
@@ -443,7 +437,6 @@ RETURN (
     WHERE 
         c.estado NOT IN (3, 5, 19) -- Estados cerrados o resueltos
         AND tc.fecha BETWEEN @FechaInicio AND @FechaFin
-    ORDER BY 
-        tc.fecha ASC
+
 );
 
