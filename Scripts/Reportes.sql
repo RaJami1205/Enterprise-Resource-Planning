@@ -239,6 +239,60 @@ RETURN (
 );
 GO
 
+-- Clientes
+
+CREATE FUNCTION ObtenerTopClientesVentas (
+    @FechaInicio DATE,
+    @FechaFin DATE
+)
+RETURNS TABLE
+AS
+RETURN (
+    SELECT TOP 10
+        c.nombre AS Cliente,
+        SUM(fa.monto * fa.cantidad) AS MontoTotal
+    FROM 
+        Factura f
+    INNER JOIN 
+        FacturaArticulo fa ON f.num_facturacion = fa.num_facturacion
+    INNER JOIN 
+        Cliente c ON f.cedula_juridica = c.cedula_juridica
+    WHERE 
+        f.fecha BETWEEN @FechaInicio AND @FechaFin
+    GROUP BY 
+        c.nombre
+    ORDER BY 
+        MontoTotal DESC
+);
+GO
+
+CREATE FUNCTION ObtenerClientesVentasPorZona (
+    @FechaInicio DATE,
+    @FechaFin DATE
+)
+RETURNS TABLE
+AS
+RETURN (
+    SELECT 
+        z.nombre AS Zona,
+        COUNT(DISTINCT c.cedula_juridica) AS CantidadClientes,
+        SUM(fa.monto * fa.cantidad) AS MontoVentas
+    FROM 
+        Factura f
+    INNER JOIN 
+        FacturaArticulo fa ON f.num_facturacion = fa.num_facturacion
+    INNER JOIN 
+        Cliente c ON f.cedula_juridica = c.cedula_juridica
+    INNER JOIN 
+        Zona z ON c.zona = z.zona_id
+    WHERE 
+        f.fecha BETWEEN @FechaInicio AND @FechaFin
+    GROUP BY 
+        z.nombre
+);
+GO
+
+
 
 -- Cantidad de movimientos por bodega
 
@@ -324,3 +378,72 @@ RETURN
     GROUP BY 
         F.codigo, F.nombre
 GO
+
+
+--Casos
+
+CREATE FUNCTION ObtenerCasosPorCotizacion (
+    @FechaInicio DATE,
+    @FechaFin DATE
+)
+RETURNS TABLE
+AS
+RETURN (
+    SELECT 
+        CONCAT(YEAR(c.fecha_inicio), '-', FORMAT(MONTH(c.fecha_inicio), '00')) AS AñoMes,
+        COUNT(*) AS CantidadCasos
+    FROM 
+        Caso ca
+	INNER JOIN Cotizacion c on ca.origen_cotizacion=c.num_cotizacion
+    WHERE 
+        ca.origen_cotizacion IS NOT NULL 
+        AND c.fecha_inicio BETWEEN @FechaInicio AND @FechaFin
+    GROUP BY 
+        YEAR(c.fecha_inicio), MONTH(c.fecha_inicio)
+)
+GO
+
+CREATE FUNCTION ObtenerCasosPorFactura (
+    @FechaInicio DATE,
+    @FechaFin DATE
+)
+RETURNS TABLE
+AS
+RETURN (
+    SELECT 
+        CONCAT(YEAR(f.fecha), '-', FORMAT(MONTH(f.fecha), '00')) AS AñoMes,
+        COUNT(c.codigo) AS CantidadCasos
+    FROM 
+        Caso c
+	INNER JOIN Factura f on f.num_facturacion=c.origen_factura
+    WHERE 
+        c.origen_factura IS NOT NULL 
+        AND f.fecha BETWEEN @FechaInicio AND @FechaFin
+    GROUP BY 
+        YEAR(f.fecha), MONTH(f.fecha)
+)
+GO
+
+CREATE FUNCTION ObtenerTareasSinCerrar (
+    @FechaInicio DATE,
+    @FechaFin DATE
+)
+RETURNS TABLE
+AS
+RETURN (
+    SELECT TOP 15
+        tc.codigo_tarea,
+        c.nombre_cuenta AS NombreCuenta,
+        tc.fecha AS FechaTarea,
+        c.estado AS EstadoCaso
+    FROM 
+        TareaCaso tc
+    INNER JOIN 
+        Caso c ON tc.codigo_caso = c.codigo
+    WHERE 
+        c.estado NOT IN (3, 5, 19) -- Estados cerrados o resueltos
+        AND tc.fecha BETWEEN @FechaInicio AND @FechaFin
+    ORDER BY 
+        tc.fecha ASC
+);
+

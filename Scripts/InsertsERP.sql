@@ -395,3 +395,28 @@ VALUES
 ('admin', HASHBYTES('SHA2_256', 'admin'), 12345678);
 
 
+INSERT INTO Caso (codigo, nombre_cuenta, nombre_contacto, asunto, direccion, descripcion, estado, tipo, prioridad, cedula_propietario, origen_cotizacion, origen_factura)
+VALUES
+(1, 'Cuenta A', 'Juan Pérez', 'Soporte Técnico requerido', 'Calle 1, San José', 'Problema con el servidor principal.', 1, 1, 3, 12345678, 1001, NULL),
+(2, 'Cuenta B', 'María Gómez', 'Reclamo de Factura', 'Avenida Central, Alajuela', 'Factura incorrecta en el monto total.', 2, 2, 2, 23456789, NULL, 2002),
+(3, 'Cuenta C', 'Carlos Ramírez', 'Devolución de Producto', 'Barrio El Carmen, Cartago', 'Producto defectuoso recibido.', 3, 4, 4, 34567890, 1003, NULL),
+(4, 'Cuenta D', 'Ana Fernández', 'Garantía solicitada', 'Urbanización La Paz, Heredia', 'Reclamo de garantía por falla técnica.', 4, 5, 1, 45678901, NULL, 2004),
+(5, 'Cuenta E', 'Jorge Valverde', 'Incidencia técnica', 'Zona Norte, Guanacaste', 'Problema con el sistema eléctrico.', 5, 6, 5, 56789012, NULL, 2005),
+(6, 'Cuenta F', 'Elena Rojas', 'Reembolso solicitado', 'Calle Principal, Limón', 'Reembolso por producto devuelto.', 6, 7, 3, 67890123, 1003, NULL),
+(7, 'Cuenta G', 'David Hernández', 'Asesoría Técnica', 'Calle Secundaria, Puntarenas', 'Asesoría técnica requerida.', 1, 9, 2, 78901234, 1001, NULL),
+(8, 'Cuenta H', 'Laura Mora', 'Solicitud de Información', 'Avenida Central, San Carlos', 'Consulta sobre nuevos productos.', 2, 8, 4, 89012345, NULL, 2007),
+(9, 'Cuenta I', 'José Vargas', 'Problema con Entrega', 'Zona Rural, Nicoya', 'Entrega retrasada de productos.', 3, 19, 1, 90123456, NULL, 2008),
+(10, 'Cuenta J', 'Patricia Quesada', 'Incumplimiento de Términos', 'Calle del Comercio, Santa Cruz', 'Condiciones no respetadas.', 4, 20, 5, 11223344, NULL, 2009);
+
+INSERT INTO TareaCaso (codigo_tarea, codigo_caso, fecha, descripcion, cedula_usuario)
+VALUES
+(2, 1, '2024-01-10', 'Diagnóstico inicial del problema.', 12345678),
+(1, 2, '2024-01-12', 'Revisión de la factura reclamada.', 23456789),
+(8, 3, '2024-01-15', 'Inspección del producto defectuoso.', 34567890),
+(5, 4, '2024-01-18', 'Confirmación de cobertura de garantía.', 45678901),
+(3, 5, '2024-01-20', 'Investigación de incidencia técnica.', 56789012),
+(11, 6, '2024-01-22', 'Procesamiento del reembolso solicitado.', 67890123),
+(9, 7, '2024-01-25', 'Preparación para la asesoría técnica.', 78901234),
+(7, 8, '2024-01-28', 'Envío de información solicitada.', 89012345),
+(12, 9, '2024-01-30', 'Seguimiento del retraso en entrega.', 90123456),
+(10, 10, '2024-02-01', 'Investigación de términos incumplidos.', 11223344);
