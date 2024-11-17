@@ -17,7 +17,7 @@ namespace ERP.Pages.Inventario.Reporte.Reportes_movimiento_bodega
             try
             {
                 conexionBD.abrir();
-                string query = "SELECT ubicacion, cantidad_entradas, cantidad_salidas, cantidad_movimientos FROM CantidadMovimientosGeneralesPorBodega();";
+                string query = "SELECT ubicacion, porcentaje_salidas, porcentaje_entradas, porcentaje_movimientos FROM PorcentajeMovimientosBodegas();";
                 SqlCommand command = conexionBD.obtenerComando(query);
 
                 SqlDataReader reader = command.ExecuteReader();

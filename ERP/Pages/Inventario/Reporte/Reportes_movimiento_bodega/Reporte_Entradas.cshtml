@@ -120,7 +120,7 @@
         var chartData_entrada = {
             labels: @Html.Raw(Json.Serialize(Model.listaMovimientos.Select(d => d.ubicacion_bodega))),
             datasets: [{
-                label: 'Cantidad de Entradas por Bodega',
+                label: 'Porcentaje de Entradas por Bodega',
                 data: @Html.Raw(Json.Serialize(Model.listaMovimientos.Select(d => d.cantidad_entrada))),
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(255, 206, 86, 0.6)',
