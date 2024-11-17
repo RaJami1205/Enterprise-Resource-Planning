@@ -1,7 +1,6 @@
 ﻿@page
-@model ERP.Pages.Factura.Reporte.ReporteDepartamentoComparativoModel
+@model ERP.Pages.Factura.Reporte.ReporteMesAnoModel
 @{
-    ViewData["Title"] = "Comparativo de Cotizaciones y Ventas por Departamento";
 }
 
 <style>
@@ -72,17 +71,7 @@
 </style>
 
 <div class="container">
-    <h2>Reporte Comparativo de Ventas y Cotizaciones por Departamento</h2>
-
-    <form method="post">
-        <label for="FechaInicio">Fecha Inicio:</label>
-        <input type="date" id="FechaInicio" name="FechaInicio" required />
-
-        <label for="FechaFin">Fecha Fin:</label>
-        <input type="date" id="FechaFin" name="FechaFin" required />
-
-        <button type="submit">Generar Reporte</button>
-    </form>
+    <h2>Reporte Ventas y Cotizaciones por Mes y Año</h2>
 
     @if (!string.IsNullOrEmpty(Model.mensajeError))
     {
@@ -99,18 +88,18 @@
     <script>
         var ctx = document.getElementById('comparativoChart').getContext('2d');
         var chartData = {
-            labels: @Html.Raw(Json.Serialize(Model.ComparativoData.Select(v => v.Departamento))),
+            labels: @Html.Raw(Json.Serialize(Model.CotizacionesVentasData.Select(d => d.Mes.ToString() + '-' + d.Año.ToString()))),
             datasets: [
                 {
-                    label: 'Cantidad de Ventas',
-                    data: @Html.Raw(Json.Serialize(Model.ComparativoData.Select(v => v.CantidadVentas))),
+                    label: 'Ventas',
+                    data: @Html.Raw(Json.Serialize(Model.CotizacionesVentasData.Select(d => d.CantidadVentas))),
                     backgroundColor: 'rgba(54, 162, 235, 0.6)',
                     borderColor: 'rgba(54, 162, 235, 1)',
                     borderWidth: 1
                 },
                 {
-                    label: 'Cantidad de Cotizaciones',
-                    data: @Html.Raw(Json.Serialize(Model.ComparativoData.Select(c => c.CantidadCotizaciones))),
+                    label: 'Cotizaciones',
+                    data: @Html.Raw(Json.Serialize(Model.CotizacionesVentasData.Select(d => d.CantidadCotizaciones))),
                     backgroundColor: 'rgba(255, 99, 132, 0.6)',
                     borderColor: 'rgba(255, 99, 132, 1)',
                     borderWidth: 1
@@ -125,24 +114,15 @@
                 scales: {
                     y: {
                         beginAtZero: true,
-                        ticks: {
-                            color: 'white'
-                        }
+                        ticks: { color: 'white' }
                     },
                     x: {
-                        ticks: {
-                            color: 'white'
-                        }
+                        ticks: { color: 'white' }
                     }
                 },
                 plugins: {
                     legend: {
-                        labels: {
-                            color: 'white'
-                        }
-                    },
-                    tooltip: {
-                        enabled: true
+                        labels: { color: 'white' }
                     }
                 }
             }

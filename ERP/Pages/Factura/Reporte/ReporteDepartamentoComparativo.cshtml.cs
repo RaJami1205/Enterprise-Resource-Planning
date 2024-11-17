@@ -2,14 +2,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Data.SqlClient;
 using System.Collections.Generic;
+using System.Linq;
 using System;
 
 namespace ERP.Pages.Factura.Reporte
 {
     public class ReporteDepartamentoComparativoModel : PageModel
     {
-        public List<DepartamentoReporte> VentasData { get; set; } = new List<DepartamentoReporte>();
-        public List<DepartamentoReporte> CotizacionesData { get; set; } = new List<DepartamentoReporte>();
+        public List<DepartamentoReporte> ComparativoData { get; set; } = new List<DepartamentoReporte>();
         public string mensajeError = "";
         public DateTime FechaInicio { get; set; }
         public DateTime FechaFin { get; set; }
@@ -27,6 +27,9 @@ namespace ERP.Pages.Factura.Reporte
                 {
                     conexionBD.abrir();
 
+                    var ventasData = new List<DepartamentoReporte>();
+                    var cotizacionesData = new List<DepartamentoReporte>();
+
                     // Obtener Ventas por Departamento
                     string queryVentas = "SELECT Departamento, CantidadVentas, MontoTotal FROM ObtenerVentasPorDepartamento(@FechaInicio, @FechaFin)";
                     SqlCommand commandVentas = conexionBD.obtenerComando(queryVentas);
@@ -36,11 +39,11 @@ namespace ERP.Pages.Factura.Reporte
                     SqlDataReader readerVentas = commandVentas.ExecuteReader();
                     while (readerVentas.Read())
                     {
-                        VentasData.Add(new DepartamentoReporte
+                        ventasData.Add(new DepartamentoReporte
                         {
                             Departamento = readerVentas.GetString(0),
-                            Cantidad = readerVentas.GetInt32(1),
-                            MontoTotal = readerVentas.GetDouble(2)
+                            CantidadVentas = readerVentas.GetInt32(1),
+                            MontoVentas = readerVentas.GetDouble(2)
                         });
                     }
                     readerVentas.Close();
@@ -54,14 +57,34 @@ namespace ERP.Pages.Factura.Reporte
                     SqlDataReader readerCotizaciones = commandCotizaciones.ExecuteReader();
                     while (readerCotizaciones.Read())
                     {
-                        CotizacionesData.Add(new DepartamentoReporte
+                        cotizacionesData.Add(new DepartamentoReporte
                         {
                             Departamento = readerCotizaciones.GetString(0),
-                            Cantidad = readerCotizaciones.GetInt32(1),
-                            MontoTotal = readerCotizaciones.GetDouble(2)
+                            CantidadCotizaciones = readerCotizaciones.GetInt32(1),
+                            MontoCotizaciones = readerCotizaciones.GetDouble(2)
                         });
                     }
                     readerCotizaciones.Close();
+
+                    // Unificar datos para incluir todos los departamentos
+                    var todosLosDepartamentos = ventasData.Select(v => v.Departamento)
+                                                          .Union(cotizacionesData.Select(c => c.Departamento))
+                                                          .Distinct();
+
+                    foreach (var departamento in todosLosDepartamentos)
+                    {
+                        var ventas = ventasData.FirstOrDefault(v => v.Departamento == departamento);
+                        var cotizaciones = cotizacionesData.FirstOrDefault(c => c.Departamento == departamento);
+
+                        ComparativoData.Add(new DepartamentoReporte
+                        {
+                            Departamento = departamento,
+                            CantidadVentas = ventas?.CantidadVentas ?? 0,
+                            MontoVentas = ventas?.MontoVentas ?? 0.0,
+                            CantidadCotizaciones = cotizaciones?.CantidadCotizaciones ?? 0,
+                            MontoCotizaciones = cotizaciones?.MontoCotizaciones ?? 0.0
+                        });
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -81,8 +104,10 @@ namespace ERP.Pages.Factura.Reporte
         public class DepartamentoReporte
         {
             public string Departamento { get; set; }
-            public int Cantidad { get; set; }
-            public double MontoTotal { get; set; }
+            public int CantidadVentas { get; set; }
+            public double MontoVentas { get; set; }
+            public int CantidadCotizaciones { get; set; }
+            public double MontoCotizaciones { get; set; }
         }
     }
 }
