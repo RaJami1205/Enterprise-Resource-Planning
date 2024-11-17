@@ -268,3 +268,22 @@ RETURN
     GROUP BY 
         B.codigo_bodega, B.ubicacion
 GO
+
+-- Monto total vendido por Familias de Artículos
+
+CREATE FUNCTION ObtenerMontoTotalVendidoPorFamilia()
+RETURNS TABLE
+AS
+RETURN
+    SELECT 
+        F.nombre AS familia, 
+        CAST(SUM(FA.monto) AS FLOAT) AS monto_total_vendido
+    FROM 
+        FacturaArticulo FA
+    JOIN 
+        Articulo A ON FA.codigo_articulo = A.codigo
+    JOIN 
+        Familia F ON A.codigo_familia = F.codigo
+    GROUP BY 
+        F.codigo, F.nombre
+GO
