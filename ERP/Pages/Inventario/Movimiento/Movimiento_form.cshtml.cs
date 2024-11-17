@@ -368,6 +368,10 @@ namespace ERP.Pages.Inventario.Movimiento
                 command_8.Parameters.AddWithValue("@nueva_cantidad", nueva_cantidad_origen);
                 command_8.Parameters.Add(errorParameter_5);
 
+                command_8.ExecuteNonQuery();
+                string ErrorMesage_5 = (string)command_8.Parameters["@ErrorMsg"].Value;
+                conexionBD.cerrar();
+
                 conexionBD.abrir();
                 string query_11 = "ModificarCantidadBodega";
                 SqlCommand command_11 = conexionBD.obtenerComando(query_11);
@@ -400,7 +404,7 @@ namespace ERP.Pages.Inventario.Movimiento
 
                     command_9.Parameters.AddWithValue("@codigo_articulo", Movimiento.codigo_articulo);
                     command_9.Parameters.AddWithValue("@codigo_bodega", Movimiento.codigo_bodega_destino);
-                    command_9.Parameters.AddWithValue("@nueva_cantidad", Movimiento.cantidad);
+                    command_9.Parameters.AddWithValue("@cantidad", Movimiento.cantidad);
                     command_9.Parameters.Add(errorParameter_6);
 
                     command_9.ExecuteNonQuery();

@@ -1,7 +1,6 @@
 ﻿@page
-@model ERP.Pages.Cotizacion.Reporte.ReporteTop10Model
+@model ERP.Pages.Inventario.Reporte.Top_Bodegas_Transadas.Bodegas_TransadasModel
 @{
-    ViewData["Title"] = "Reporte de Top 10 Productos Más Cotizados";
 }
 
 <style>
@@ -73,15 +72,9 @@
 </style>
 
 <div class="container">
-    <h2>Reporte de Top 10 Productos Más Cotizados</h2>
+    <h2>Top Bodegas Con Artículos Más Transados</h2>
 
     <form method="post">
-        <label for="FechaInicio">Fecha Inicio:</label>
-        <input type="date" id="FechaInicio" name="FechaInicio" required />
-
-        <label for="FechaFin">Fecha Fin:</label>
-        <input type="date" id="FechaFin" name="FechaFin" required />
-
         <button type="submit">Generar Reporte</button>
     </form>
 
@@ -90,21 +83,27 @@
         <div class="error-message">@Model.mensajeError</div>
     }
 
-    @if (Model.ProductosCotizados.Count > 0)
+    @if (Model.TopBodegas.Count > 0)
     {
         <table>
             <thead>
                 <tr>
-                    <th>Producto</th>
-                    <th>Cantidad de Cotizaciones</th>
+                    <th>Bodega</th>
+                    <th>Cantidad de Entradas</th>
+                    <th>Cantidad de Salidas</th>
+                    <th>Cantidad de Movimientos</th>
+                    <th>Total de Transacciones</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var producto in Model.ProductosCotizados)
+                @foreach (var producto in Model.TopBodegas)
                 {
                     <tr>
-                        <td>@producto.Producto</td>
-                        <td>@producto.CantidadCotizaciones</td>
+                        <td>@producto.ubicacion_bodega</td>
+                        <td>@producto.cantidad_entrada</td>
+                        <td>@producto.cantidad_salida</td>
+                        <td>@producto.cantidad_movimiento</td>
+                        <td>@producto.total_movimientos</td>
                     </tr>
                 }
             </tbody>
