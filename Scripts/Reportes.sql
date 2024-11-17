@@ -124,7 +124,9 @@ RETURN (
 );
 GO
 
--- Cotizacion y Ventas por Departamento
+
+
+-- Cotizacion y Ventas
 
 CREATE FUNCTION ObtenerCotizacionesPorDepartamento (
     @FechaInicio DATE,
@@ -202,6 +204,41 @@ RETURN (
         d.nombre
 );
 GO
+
+CREATE FUNCTION ObtenerVentasPorMesAno ()
+RETURNS TABLE
+AS
+RETURN (
+    SELECT 
+        YEAR(f.fecha) AS Anio,
+        MONTH(f.fecha) AS Mes,
+        COUNT(f.num_facturacion) AS CantidadVentas
+    FROM 
+        Factura f
+    GROUP BY 
+        YEAR(f.fecha), MONTH(f.fecha)
+    ORDER BY 
+        YEAR(f.fecha), MONTH(f.fecha)
+);
+GO
+
+CREATE FUNCTION ObtenerCotizacionesPorMesAno ()
+RETURNS TABLE
+AS
+RETURN (
+    SELECT 
+        YEAR(c.fecha_inicio) AS Anio,
+        MONTH(c.fecha_inicio) AS Mes,
+        COUNT(c.num_cotizacion) AS CantidadCotizaciones
+    FROM 
+        Cotizacion c
+    GROUP BY 
+        YEAR(c.fecha_inicio), MONTH(c.fecha_inicio)
+    ORDER BY 
+        YEAR(c.fecha_inicio), MONTH(c.fecha_inicio)
+);
+GO
+
 
 -- Cantidad de movimientos por bodega
 
