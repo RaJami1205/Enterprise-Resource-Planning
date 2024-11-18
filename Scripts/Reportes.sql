@@ -286,7 +286,9 @@ RETURN (
 );
 GO
 
--- Cantidad en Porcentaje de Movimientos por Bodega
+
+
+-- Cantidad de movimientos por bodega
 
 CREATE FUNCTION PorcentajeMovimientosBodegas(
 	@FechaInicio DATE,
@@ -394,9 +396,9 @@ RETURN
     WHERE 
         FT.fecha BETWEEN @FechaInicio AND @FechaFin -- Filtrar por las fechas proporcionadas
     GROUP BY 
+        F.codigo, F.nombre
         F.codigo, F.nombre;
 GO
-
 
 --Casos
 
