@@ -9,6 +9,8 @@ namespace ERP.Pages.Inventario.Reporte.Reportes_movimiento_bodega
         public List<InfoMovimiento> listaMovimientos { get; set; } = new List<InfoMovimiento>();
         public string mensajeError = "";
         public string tipoMovimiento { get; set; }
+        public string FechaInicio { get; set; }
+        public string FechaFin { get; set; }
 
         public void OnPost()
         {
@@ -16,9 +18,14 @@ namespace ERP.Pages.Inventario.Reporte.Reportes_movimiento_bodega
             Conexion conexionBD = new Conexion();
             try
             {
+                FechaInicio = Request.Form["fecha_inicio"];
+                FechaFin = Request.Form["fecha_final"];
+
                 conexionBD.abrir();
-                string query = "SELECT ubicacion, porcentaje_entradas, porcentaje_salidas, porcentaje_movimientos FROM PorcentajeMovimientosBodegas();";
+                string query = "SELECT ubicacion, porcentaje_entradas, porcentaje_salidas, porcentaje_movimientos FROM PorcentajeMovimientosBodegas(@FechaInicio, @FechaFin);";
                 SqlCommand command = conexionBD.obtenerComando(query);
+                command.Parameters.AddWithValue("@FechaInicio", FechaInicio);
+                command.Parameters.AddWithValue("@FechaFin", FechaFin);
 
                 SqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())

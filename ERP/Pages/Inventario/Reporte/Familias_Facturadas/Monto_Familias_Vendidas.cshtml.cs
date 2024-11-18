@@ -9,16 +9,22 @@ namespace ERP.Pages.Inventario.Reporte.Familias_Facturadas
     {
         public List<InfoFamiliaFacturada> listaFamilias { get; set; } = new List<InfoFamiliaFacturada>();
         public string mensajeError = "";
+        public string FechaInicio { get; set; }
+        public string FechaFin { get; set; }
 
         public void OnPost()
         {
+            FechaInicio = Request.Form["fecha_inicio"];
+            FechaFin = Request.Form["fecha_final"];
 
             Conexion conexionBD = new Conexion();
             try
             {
                 conexionBD.abrir();
-                string query = "SELECT familia, monto_total_vendido FROM ObtenerMontoTotalVendidoPorFamilia();";
+                string query = "SELECT familia, monto_total_vendido FROM ObtenerMontoTotalVendidoPorFamilia(@FechaInicio, @FechaFin);";
                 SqlCommand command = conexionBD.obtenerComando(query);
+                command.Parameters.AddWithValue("@FechaInicio", FechaInicio);
+                command.Parameters.AddWithValue("@FechaFin", FechaFin);
 
                 SqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
