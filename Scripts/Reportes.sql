@@ -288,11 +288,12 @@ RETURN (
 );
 GO
 
+-- Cantidad en Porcentaje de Movimientos por Bodega
 
-
--- Cantidad de movimientos por bodega
-
-CREATE FUNCTION PorcentajeMovimientosBodegas()
+CREATE FUNCTION PorcentajeMovimientosBodegas(
+	@FechaInicio DATE,
+    @FechaFin DATE
+)
 RETURNS TABLE
 AS
 RETURN (
@@ -327,14 +328,23 @@ RETURN (
                     OR B.codigo_bodega = M.codigo_bodega_destino
     CROSS JOIN
         Totales T -- Utilizamos los totales calculados en el CTE
+
+	WHERE 
+    (@FechaInicio IS NULL OR E.fecha_hora >= @FechaInicio OR S.fecha_hora >= @FechaInicio OR M.fecha_hora >= @FechaInicio) AND
+    (@FechaFin IS NULL OR E.fecha_hora <= @FechaFin OR S.fecha_hora <= @FechaFin OR M.fecha_hora <= @FechaFin) 
+
     GROUP BY
         B.codigo_bodega, B.ubicacion, T.total_entradas, T.total_salidas, T.total_movimientos
 );
 GO
 
+
 -- Bodegas con artículos más Transados
 
-CREATE FUNCTION ObtenerTopBodegasTransados()
+CREATE FUNCTION ObtenerTopBodegasTransados(
+	@FechaInicio DATE,
+    @FechaFin DATE
+)
 RETURNS TABLE
 AS
 RETURN
@@ -352,13 +362,23 @@ RETURN
         Salida S ON B.codigo_bodega = S.codigo_bodega
     LEFT JOIN 
         Movimiento M ON B.codigo_bodega = M.codigo_bodega_origen OR B.codigo_bodega = M.codigo_bodega_destino
+
+	WHERE 
+    (@FechaInicio IS NULL OR E.fecha_hora >= @FechaInicio OR S.fecha_hora >= @FechaInicio OR M.fecha_hora >= @FechaInicio) AND
+    (@FechaFin IS NULL OR E.fecha_hora <= @FechaFin OR S.fecha_hora <= @FechaFin OR M.fecha_hora <= @FechaFin) 
+
     GROUP BY 
         B.codigo_bodega, B.ubicacion
 GO
+SELECT * FROM Factura
 
+	
 -- Monto total vendido por Familias de Artículos
 
-CREATE FUNCTION ObtenerMontoTotalVendidoPorFamilia()
+CREATE FUNCTION ObtenerMontoTotalVendidoPorFamilia(
+	@FechaInicio DATE,
+    @FechaFin DATE
+)
 RETURNS TABLE
 AS
 RETURN
@@ -368,11 +388,15 @@ RETURN
     FROM 
         FacturaArticulo FA
     JOIN 
+        Factura FT ON FA.num_facturacion = FT.num_facturacion -- Vincular Factura para obtener las fechas
+    JOIN 
         Articulo A ON FA.codigo_articulo = A.codigo
     JOIN 
         Familia F ON A.codigo_familia = F.codigo
+    WHERE 
+        FT.fecha BETWEEN @FechaInicio AND @FechaFin -- Filtrar por las fechas proporcionadas
     GROUP BY 
-        F.codigo, F.nombre
+        F.codigo, F.nombre;
 GO
 
 
