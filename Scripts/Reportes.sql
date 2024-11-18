@@ -55,7 +55,7 @@ CREATE FUNCTION ObtenerTop10ProductosMasCotizados (
 RETURNS TABLE
 AS
 RETURN (
-    SELECT 
+    SELECT TOP 10
         p.nombre AS Producto,
         COUNT(c.num_cotizacion) AS CantidadCotizaciones
     FROM 
@@ -68,6 +68,7 @@ RETURN (
         c.fecha_inicio BETWEEN @FechaInicio AND @FechaFin
     GROUP BY 
         p.nombre
+	ORDER BY CantidadCotizaciones DESC
 );
 GO
 
@@ -124,7 +125,9 @@ RETURN (
 );
 GO
 
--- Cotizacion y Ventas por Departamento
+
+
+-- Cotizacion y Ventas
 
 CREATE FUNCTION ObtenerCotizacionesPorDepartamento (
     @FechaInicio DATE,
@@ -203,9 +206,92 @@ RETURN (
 );
 GO
 
--- Cantidad de movimientos por bodega
+CREATE VIEW ObtenerVentasPorMesAno
+AS
+(
+    SELECT 
+        YEAR(f.fecha) AS Anio,
+        MONTH(f.fecha) AS Mes,
+        COUNT(f.num_facturacion) AS CantidadVentas
+    FROM 
+        Factura f
+    GROUP BY 
+        YEAR(f.fecha), MONTH(f.fecha)
+);
+GO
 
-CREATE FUNCTION PorcentajeMovimientosBodegas()
+CREATE VIEW ObtenerCotizacionesPorMesAno
+AS
+(
+    SELECT 
+        YEAR(c.fecha_inicio) AS Anio,
+        MONTH(c.fecha_inicio) AS Mes,
+        COUNT(c.num_cotizacion) AS CantidadCotizaciones
+    FROM 
+        Cotizacion c
+    GROUP BY 
+        YEAR(c.fecha_inicio), MONTH(c.fecha_inicio)
+);
+GO
+
+-- Clientes
+
+CREATE FUNCTION ObtenerTopClientesVentas (
+    @FechaInicio DATE,
+    @FechaFin DATE
+)
+RETURNS TABLE
+AS
+RETURN (
+    SELECT TOP 10
+        c.nombre AS Cliente,
+        SUM(fa.monto * fa.cantidad) AS MontoTotal
+    FROM 
+        Factura f
+    INNER JOIN 
+        FacturaArticulo fa ON f.num_facturacion = fa.num_facturacion
+    INNER JOIN 
+        Cliente c ON f.cedula_juridica = c.cedula_juridica
+    WHERE 
+        f.fecha BETWEEN @FechaInicio AND @FechaFin
+    GROUP BY 
+        c.nombre
+	ORDER BY MontoTotal DESC
+);
+GO
+
+CREATE FUNCTION ObtenerClientesVentasPorZona (
+    @FechaInicio DATE,
+    @FechaFin DATE
+)
+RETURNS TABLE
+AS
+RETURN (
+    SELECT 
+        z.nombre AS Zona,
+        COUNT(c.cedula_juridica) AS CantidadClientes,
+        SUM(fa.monto * fa.cantidad) AS MontoVentas
+    FROM 
+        Factura f
+    INNER JOIN 
+        FacturaArticulo fa ON f.num_facturacion = fa.num_facturacion
+    INNER JOIN 
+        Cliente c ON f.cedula_juridica = c.cedula_juridica
+    INNER JOIN 
+        Zona z ON c.zona = z.zona_id
+    WHERE 
+        f.fecha BETWEEN @FechaInicio AND @FechaFin
+    GROUP BY 
+        z.nombre
+);
+GO
+
+-- Cantidad en Porcentaje de Movimientos por Bodega
+
+CREATE FUNCTION PorcentajeMovimientosBodegas(
+	@FechaInicio DATE,
+    @FechaFin DATE
+)
 RETURNS TABLE
 AS
 RETURN (
@@ -240,14 +326,23 @@ RETURN (
                     OR B.codigo_bodega = M.codigo_bodega_destino
     CROSS JOIN
         Totales T -- Utilizamos los totales calculados en el CTE
+
+	WHERE 
+    (@FechaInicio IS NULL OR E.fecha_hora >= @FechaInicio OR S.fecha_hora >= @FechaInicio OR M.fecha_hora >= @FechaInicio) AND
+    (@FechaFin IS NULL OR E.fecha_hora <= @FechaFin OR S.fecha_hora <= @FechaFin OR M.fecha_hora <= @FechaFin) 
+
     GROUP BY
         B.codigo_bodega, B.ubicacion, T.total_entradas, T.total_salidas, T.total_movimientos
 );
 GO
 
+
 -- Bodegas con artículos más Transados
 
-CREATE FUNCTION ObtenerTopBodegasTransados()
+CREATE FUNCTION ObtenerTopBodegasTransados(
+	@FechaInicio DATE,
+    @FechaFin DATE
+)
 RETURNS TABLE
 AS
 RETURN
@@ -265,13 +360,23 @@ RETURN
         Salida S ON B.codigo_bodega = S.codigo_bodega
     LEFT JOIN 
         Movimiento M ON B.codigo_bodega = M.codigo_bodega_origen OR B.codigo_bodega = M.codigo_bodega_destino
+
+	WHERE 
+    (@FechaInicio IS NULL OR E.fecha_hora >= @FechaInicio OR S.fecha_hora >= @FechaInicio OR M.fecha_hora >= @FechaInicio) AND
+    (@FechaFin IS NULL OR E.fecha_hora <= @FechaFin OR S.fecha_hora <= @FechaFin OR M.fecha_hora <= @FechaFin) 
+
     GROUP BY 
         B.codigo_bodega, B.ubicacion
 GO
+SELECT * FROM Factura
 
+	
 -- Monto total vendido por Familias de Artículos
 
-CREATE FUNCTION ObtenerMontoTotalVendidoPorFamilia()
+CREATE FUNCTION ObtenerMontoTotalVendidoPorFamilia(
+	@FechaInicio DATE,
+    @FechaFin DATE
+)
 RETURNS TABLE
 AS
 RETURN
@@ -281,9 +386,81 @@ RETURN
     FROM 
         FacturaArticulo FA
     JOIN 
+        Factura FT ON FA.num_facturacion = FT.num_facturacion -- Vincular Factura para obtener las fechas
+    JOIN 
         Articulo A ON FA.codigo_articulo = A.codigo
     JOIN 
         Familia F ON A.codigo_familia = F.codigo
+    WHERE 
+        FT.fecha BETWEEN @FechaInicio AND @FechaFin -- Filtrar por las fechas proporcionadas
     GROUP BY 
-        F.codigo, F.nombre
+        F.codigo, F.nombre;
 GO
+
+
+--Casos
+
+CREATE FUNCTION ObtenerCasosPorCotizacion (
+    @FechaInicio DATE,
+    @FechaFin DATE
+)
+RETURNS TABLE
+AS
+RETURN (
+    SELECT 
+        CONCAT(YEAR(c.fecha_inicio), '-', FORMAT(MONTH(c.fecha_inicio), '00')) AS AñoMes,
+        COUNT(*) AS CantidadCasos
+    FROM 
+        Caso ca
+	INNER JOIN Cotizacion c on ca.origen_cotizacion=c.num_cotizacion
+    WHERE 
+        ca.origen_cotizacion IS NOT NULL 
+        AND c.fecha_inicio BETWEEN @FechaInicio AND @FechaFin
+    GROUP BY 
+        YEAR(c.fecha_inicio), MONTH(c.fecha_inicio)
+)
+GO
+
+CREATE FUNCTION ObtenerCasosPorFactura (
+    @FechaInicio DATE,
+    @FechaFin DATE
+)
+RETURNS TABLE
+AS
+RETURN (
+    SELECT 
+        CONCAT(YEAR(f.fecha), '-', FORMAT(MONTH(f.fecha), '00')) AS AñoMes,
+        COUNT(c.codigo) AS CantidadCasos
+    FROM 
+        Caso c
+	INNER JOIN Factura f on f.num_facturacion=c.origen_factura
+    WHERE 
+        c.origen_factura IS NOT NULL 
+        AND f.fecha BETWEEN @FechaInicio AND @FechaFin
+    GROUP BY 
+        YEAR(f.fecha), MONTH(f.fecha)
+)
+GO
+
+CREATE FUNCTION ObtenerTareasSinCerrar (
+    @FechaInicio DATE,
+    @FechaFin DATE
+)
+RETURNS TABLE
+AS
+RETURN (
+    SELECT TOP 15
+        tc.codigo_tarea,
+        c.nombre_cuenta AS NombreCuenta,
+        tc.fecha AS FechaTarea,
+        c.estado AS EstadoCaso
+    FROM 
+        TareaCaso tc
+    INNER JOIN 
+        Caso c ON tc.codigo_caso = c.codigo
+    WHERE 
+        c.estado NOT IN (3, 5, 19) -- Estados cerrados o resueltos
+        AND tc.fecha BETWEEN @FechaInicio AND @FechaFin
+
+);
+
