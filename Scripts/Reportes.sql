@@ -286,7 +286,9 @@ RETURN (
 );
 GO
 
--- Cantidad en Porcentaje de Movimientos por Bodega
+
+
+-- Cantidad de movimientos por bodega
 
 CREATE FUNCTION PorcentajeMovimientosBodegas(
 	@FechaInicio DATE,
@@ -368,9 +370,7 @@ RETURN
     GROUP BY 
         B.codigo_bodega, B.ubicacion
 GO
-SELECT * FROM Factura
 
-	
 -- Monto total vendido por Familias de Artículos
 
 CREATE FUNCTION ObtenerMontoTotalVendidoPorFamilia(
@@ -396,7 +396,6 @@ RETURN
     GROUP BY 
         F.codigo, F.nombre;
 GO
-
 
 --Casos
 
