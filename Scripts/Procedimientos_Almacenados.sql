@@ -1022,13 +1022,13 @@ BEGIN
         -- Iniciar la transacción
         BEGIN TRANSACTION;
 
-        -- Verificar si la cotización existe antes de eliminarla
-        IF NOT EXISTS (SELECT 1 FROM Cotizacion WHERE num_cotizacion = @num_cotizacion)
-        BEGIN
-            SET @ErrorMsg = 'No se encontró una cotización con el número proporcionado.';
-            ROLLBACK TRANSACTION;
-            RETURN;
-        END
+		-- Eliminar las tareas asociadas a la cotización
+        DELETE FROM TareaCotizacion
+        WHERE num_cotizacion = @num_cotizacion;
+
+		-- Eliminar los artículos asociados a la cotización
+        DELETE FROM CotizacionArticulo 
+        WHERE num_cotizacion = @num_cotizacion;
 
         -- Eliminar la cotización
         DELETE FROM Cotizacion 
