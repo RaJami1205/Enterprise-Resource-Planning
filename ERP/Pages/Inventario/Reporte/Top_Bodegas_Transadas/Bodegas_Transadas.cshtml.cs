@@ -8,6 +8,8 @@ namespace ERP.Pages.Inventario.Reporte.Top_Bodegas_Transadas
     {
         public List<InfoTopBodegas> TopBodegas { get; set; } = new List<InfoTopBodegas>();
         public string mensajeError = "";
+        public string FechaInicio { get; set; }
+        public string FechaFin { get; set; }
 
         public void OnPost()
         {
@@ -15,9 +17,14 @@ namespace ERP.Pages.Inventario.Reporte.Top_Bodegas_Transadas
             Conexion conexionBD = new Conexion();
             try
             {
+                FechaInicio = Request.Form["fecha_inicio"];
+                FechaFin = Request.Form["fecha_final"];
+
                 conexionBD.abrir();
-                string query = "SELECT ubicacion, total_entradas, total_salidas, total_movimientos, total_eventos FROM ObtenerTopBodegasTransados() ORDER BY total_eventos DESC;";
+                string query = "SELECT ubicacion, total_entradas, total_salidas, total_movimientos, total_eventos FROM ObtenerTopBodegasTransados(@FechaInicio, @FechaFin) ORDER BY total_eventos DESC;";
                 SqlCommand command = conexionBD.obtenerComando(query);
+                command.Parameters.AddWithValue("@FechaInicio", FechaInicio);
+                command.Parameters.AddWithValue("@FechaFin", FechaFin);
 
                 SqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
