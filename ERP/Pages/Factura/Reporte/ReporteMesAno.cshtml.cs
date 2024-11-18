@@ -19,7 +19,7 @@ namespace ERP.Pages.Factura.Reporte
                 conexionBD.abrir();
 
                 // Obtener Ventas por Mes y Año
-                string queryVentas = "SELECT Anio, Mes, CantidadVentas FROM ObtenerVentasPorMesAno()";
+                string queryVentas = "SELECT Anio, Mes, CantidadVentas FROM ObtenerVentasPorMesAno";
                 SqlCommand commandVentas = conexionBD.obtenerComando(queryVentas);
                 SqlDataReader readerVentas = commandVentas.ExecuteReader();
                 while (readerVentas.Read())
@@ -34,7 +34,7 @@ namespace ERP.Pages.Factura.Reporte
                 readerVentas.Close();
 
                 // Obtener Cotizaciones por Mes y Año
-                string queryCotizaciones = "SELECT Anio, Mes, CantidadCotizaciones FROM ObtenerCotizacionesPorMesAno()";
+                string queryCotizaciones = "SELECT Anio, Mes, CantidadCotizaciones FROM ObtenerCotizacionesPorMesAno";
                 SqlCommand commandCotizaciones = conexionBD.obtenerComando(queryCotizaciones);
                 SqlDataReader readerCotizaciones = commandCotizaciones.ExecuteReader();
                 while (readerCotizaciones.Read())
