@@ -370,9 +370,7 @@ RETURN
     GROUP BY 
         B.codigo_bodega, B.ubicacion
 GO
-SELECT * FROM Factura
 
-	
 -- Monto total vendido por Familias de Artículos
 
 CREATE FUNCTION ObtenerMontoTotalVendidoPorFamilia(
@@ -396,7 +394,6 @@ RETURN
     WHERE 
         FT.fecha BETWEEN @FechaInicio AND @FechaFin -- Filtrar por las fechas proporcionadas
     GROUP BY 
-        F.codigo, F.nombre
         F.codigo, F.nombre;
 GO
 
