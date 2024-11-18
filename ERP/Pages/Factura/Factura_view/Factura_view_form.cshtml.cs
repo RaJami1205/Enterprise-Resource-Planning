@@ -83,8 +83,6 @@ namespace ERP.Pages.Factura.Factura_view
                         Bodegas.Add(reader.GetInt32(0).ToString());
                     }
                 }
-                mensaje_exito = "Cotización registrada exitosamente.";
-
                 conexionBD.cerrar();
             }
             catch (Exception ex)
@@ -153,14 +151,8 @@ namespace ERP.Pages.Factura.Factura_view
                 commandSalida.ExecuteNonQuery();
                 string salidaErrorMsg = (string)commandSalida.Parameters["@ErrorMsg"].Value;
 
-                if (string.IsNullOrEmpty(salidaErrorMsg))
-                {
-                    mensaje_exito = "Factura y salida registradas exitosamente.";
-                }
-                else
-                {
-                    mensaje_error = $"Factura registrada, pero ocurrió un error al registrar la salida: {salidaErrorMsg}";
-                }
+                mensaje_exito = "Factura y salida registradas exitosamente.";
+                
 
                 conexionBD.cerrar();
             }
