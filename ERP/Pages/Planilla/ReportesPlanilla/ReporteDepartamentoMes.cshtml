@@ -105,48 +105,39 @@
     }
 
     <div class="chart-container">
-        <canvas id="departamentoChart" width="400" height="200"></canvas>
+        <canvas id="montoChart" width="400" height="200"></canvas>
     </div>
 </div>
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Verifica si hay suficientes datos para mostrar
+        // Datos del modelo, adaptados para montos ganados
         console.log("Datos de los departamentos:", @Html.Raw(Json.Serialize(Model.DepartamentoMontoData)));
 
-        var ctx = document.getElementById('departamentoChart').getContext('2d');
+        var ctx = document.getElementById('montoChart').getContext('2d');
         var chartData = {
-            labels: @Html.Raw(Json.Serialize(Model.DepartamentoMontoData.Select(d => d.Departamento))),
+            labels: @Html.Raw(Json.Serialize(Model.DepartamentoMontoData.Select(d => d.Departamento))), // Etiquetas: Nombres de departamentos
             datasets: [{
-                label: 'Monto Total por Departamento',
-                data: @Html.Raw(Json.Serialize(Model.DepartamentoMontoData.Select(d => d.MontoTotal))),
+                label: 'Monto Total Ganado',
+                data: @Html.Raw(Json.Serialize(Model.DepartamentoMontoData.Select(d => d.MontoTotal))), // Valores: Montos ganados
                 backgroundColor: [
-                    'rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(255, 206, 86, 0.6)',
+                    'rgba(54, 162, 235, 0.6)', 'rgba(255, 99, 132, 0.6)', 'rgba(255, 206, 86, 0.6)',
                     'rgba(75, 192, 192, 0.6)', 'rgba(153, 102, 255, 0.6)', 'rgba(255, 159, 64, 0.6)',
                     'rgba(99, 255, 132, 0.6)', 'rgba(255, 0, 255, 0.6)', 'rgba(0, 255, 255, 0.6)',
-                    'rgba(128, 128, 0, 0.6)', 'rgba(255, 140, 0, 0.6)', 'rgba(0, 128, 128, 0.6)',
-                    'rgba(128, 0, 128, 0.6)', 'rgba(75, 0, 130, 0.6)', 'rgba(139, 0, 139, 0.6)',
-                    'rgba(255, 69, 0, 0.6)', 'rgba(255, 215, 0, 0.6)', 'rgba(0, 255, 127, 0.6)',
-                    'rgba(64, 224, 208, 0.6)', 'rgba(240, 128, 128, 0.6)', 'rgba(60, 179, 113, 0.6)',
-                    'rgba(176, 196, 222, 0.6)', 'rgba(123, 104, 238, 0.6)', 'rgba(0, 191, 255, 0.6)',
-                    'rgba(255, 20, 147, 0.6)'
+                    'rgba(128, 128, 0, 0.6)', 'rgba(255, 140, 0, 0.6)', 'rgba(0, 128, 128, 0.6)'
                 ],
                 borderColor: [
-                    'rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)',
+                    'rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)', 'rgba(255, 206, 86, 1)',
                     'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)', 'rgba(255, 159, 64, 1)',
                     'rgba(99, 255, 132, 1)', 'rgba(255, 0, 255, 1)', 'rgba(0, 255, 255, 1)',
-                    'rgba(128, 128, 0, 1)', 'rgba(255, 140, 0, 1)', 'rgba(0, 128, 128, 1)',
-                    'rgba(128, 0, 128, 1)', 'rgba(75, 0, 130, 1)', 'rgba(139, 0, 139, 1)',
-                    'rgba(255, 69, 0, 1)', 'rgba(255, 215, 0, 1)', 'rgba(0, 255, 127, 1)',
-                    'rgba(64, 224, 208, 1)', 'rgba(240, 128, 128, 1)', 'rgba(60, 179, 113, 1)',
-                    'rgba(176, 196, 222, 1)', 'rgba(123, 104, 238, 1)', 'rgba(0, 191, 255, 1)',
-                    'rgba(255, 20, 147, 1)'
+                    'rgba(128, 128, 0, 1)', 'rgba(255, 140, 0, 1)', 'rgba(0, 128, 128, 1)'
                 ],
                 borderWidth: 1
             }]
         };
-        var departamentoChart = new Chart(ctx, {
+
+        var montoChart = new Chart(ctx, {
             type: 'pie',
             data: chartData,
             options: {

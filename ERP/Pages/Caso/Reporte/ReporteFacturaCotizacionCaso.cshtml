@@ -1,7 +1,7 @@
 ﻿@page
-@model ERP.Pages.Factura.Reporte.ReporteDepartamentoComparativoModel
+@model ERP.Pages.Caso.Reporte.ReporteFacturaCotizacionCasoModel
 @{
-    ViewData["Title"] = "Comparativo de Cotizaciones y Ventas por Departamento";
+    ViewData["Title"] = "Comparativo de Casos por Cotización y Factura";
 }
 
 <style>
@@ -72,7 +72,7 @@
 </style>
 
 <div class="container">
-    <h2>Reporte Comparativo de Ventas y Cotizaciones por Departamento</h2>
+    <h2>Comparativo de Casos por Cotización y Factura</h2>
 
     <form method="post">
         <label for="FechaInicio">Fecha Inicio:</label>
@@ -99,18 +99,18 @@
     <script>
         var ctx = document.getElementById('comparativoChart').getContext('2d');
         var chartData = {
-            labels: @Html.Raw(Json.Serialize(Model.ComparativoData.Select(v => v.Departamento))),
+            labels: @Html.Raw(Json.Serialize(Model.CasosComparativoData.Select(d => d.AñoMes))),
             datasets: [
                 {
-                    label: 'Cantidad de Ventas',
-                    data: @Html.Raw(Json.Serialize(Model.ComparativoData.Select(v => v.CantidadVentas))),
+                    label: 'Casos por Cotización',
+                    data: @Html.Raw(Json.Serialize(Model.CasosComparativoData.Select(d => d.CantidadCasosCotizacion))),
                     backgroundColor: 'rgba(54, 162, 235, 0.6)',
                     borderColor: 'rgba(54, 162, 235, 1)',
                     borderWidth: 1
                 },
                 {
-                    label: 'Cantidad de Cotizaciones',
-                    data: @Html.Raw(Json.Serialize(Model.ComparativoData.Select(c => c.CantidadCotizaciones))),
+                    label: 'Casos por Factura',
+                    data: @Html.Raw(Json.Serialize(Model.CasosComparativoData.Select(d => d.CantidadCasosFactura))),
                     backgroundColor: 'rgba(255, 99, 132, 0.6)',
                     borderColor: 'rgba(255, 99, 132, 1)',
                     borderWidth: 1
