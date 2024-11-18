@@ -82,20 +82,19 @@ namespace ERP.Pages.Planilla.Planilla_view
 
                     // Capturar el mensaje de error, si existe
                     string errorMsg = (string)command.Parameters["@ErrorMsg"].Value;
-
-                    if (string.IsNullOrEmpty(errorMsg))
-                    {
-                        mensaje_exito = "Planilla registrada exitosamente.";
-                    }
-
-                    conexionBD.cerrar();
                 }
                 catch (Exception ex)
                 {
-                    mensaje_error = ex.Message;
+                    mensaje_error = $"Error al registrar la planilla";
                     conexionBD.cerrar();
                 }
+
             }
+            mensaje_exito = "Planilla registrada exitosamente.";
+
+            conexionBD.cerrar();
+            
+            OnGet();
         }
     }
 

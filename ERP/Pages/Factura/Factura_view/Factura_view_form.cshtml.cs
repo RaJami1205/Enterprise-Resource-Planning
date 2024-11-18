@@ -83,11 +83,13 @@ namespace ERP.Pages.Factura.Factura_view
                         Bodegas.Add(reader.GetInt32(0).ToString());
                     }
                 }
+                mensaje_exito = "Cotización registrada exitosamente.";
+
                 conexionBD.cerrar();
             }
             catch (Exception ex)
             {
-                mensaje_error = ex.Message;
+                mensaje_error = $"Error al registrar la factura";
                 conexionBD.cerrar();
             }
         }
