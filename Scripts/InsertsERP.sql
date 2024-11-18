@@ -420,14 +420,15 @@ VALUES
 (7, 1004, 6, 2250.00), -- Artículo 7 en Cotización 1004
 (8, 1005, 3, 750.00), -- Artículo 8 en Cotización 1005
 (9, 1005, 4, 1000.00), -- Artículo 9 en Cotización 1005
-(10, 1005, 2, 750.00), -- Artículo 10 en Cotización 1005
+(1, 1005, 2, 750.00), -- Artículo 10 en Cotización 1005
 (11, 1006, 12, 3600.00), -- Artículo 11 en Cotización 1006
-(12, 1006, 8, 2400.00), -- Artículo 12 en Cotización 1006
+(2, 1006, 8, 2400.00), -- Artículo 12 en Cotización 1006
 (13, 1007, 10, 4000.00), -- Artículo 13 en Cotización 1007
-(14, 1008, 6, 3000.00), -- Artículo 14 en Cotización 1008
-(15, 1008, 4, 2000.00), -- Artículo 15 en Cotización 1008
-(16, 1009, 5, 1500.00), -- Artículo 16 en Cotización 1009
-(17, 1010, 7, 4900.00); -- Artículo 17 en Cotización 1010
+(4, 1008, 6, 3000.00), -- Artículo 14 en Cotización 1008
+(1, 1008, 4, 2000.00), -- Artículo 15 en Cotización 1008
+(2, 1009, 5, 1500.00), -- Artículo 16 en Cotización 1009
+(7, 1010, 7, 4900.00); -- Artículo 17 en Cotización 1010
+
 
 -- Inserts en la tabla Logueo_Usuario
 INSERT INTO Logueo_Usuario (usuario, contrasenna, cedula_empleado)

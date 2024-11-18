@@ -206,10 +206,9 @@ RETURN (
 );
 GO
 
-CREATE FUNCTION ObtenerVentasPorMesAno ()
-RETURNS TABLE
+CREATE VIEW ObtenerVentasPorMesAno
 AS
-RETURN (
+(
     SELECT 
         YEAR(f.fecha) AS Anio,
         MONTH(f.fecha) AS Mes,
@@ -221,10 +220,9 @@ RETURN (
 );
 GO
 
-CREATE FUNCTION ObtenerCotizacionesPorMesAno ()
-RETURNS TABLE
+CREATE VIEW ObtenerCotizacionesPorMesAno
 AS
-RETURN (
+(
     SELECT 
         YEAR(c.fecha_inicio) AS Anio,
         MONTH(c.fecha_inicio) AS Mes,
