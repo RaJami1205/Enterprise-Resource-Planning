@@ -87,7 +87,7 @@ namespace ERP.Pages.Factura.Factura_view
             }
             catch (Exception ex)
             {
-                mensaje_error = ex.Message;
+                mensaje_error = $"Error al registrar la factura";
                 conexionBD.cerrar();
             }
         }
@@ -107,6 +107,8 @@ namespace ERP.Pages.Factura.Factura_view
             try
             {
                 conexionBD.abrir();
+
+
 
                 // Insertar Factura
                 string queryFactura = "InsertarFactura";
@@ -149,14 +151,8 @@ namespace ERP.Pages.Factura.Factura_view
                 commandSalida.ExecuteNonQuery();
                 string salidaErrorMsg = (string)commandSalida.Parameters["@ErrorMsg"].Value;
 
-                if (string.IsNullOrEmpty(salidaErrorMsg))
-                {
-                    mensaje_exito = "Factura y salida registradas exitosamente.";
-                }
-                else
-                {
-                    mensaje_error = $"Factura registrada, pero ocurrió un error al registrar la salida: {salidaErrorMsg}";
-                }
+                mensaje_exito = "Factura y salida registradas exitosamente.";
+                
 
                 conexionBD.cerrar();
             }

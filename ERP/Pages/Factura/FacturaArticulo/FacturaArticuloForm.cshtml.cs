@@ -84,14 +84,8 @@ namespace ERP.Pages.Factura.FacturaArticulo
 
                 string errorMsg = (string)command.Parameters["@ErrorMsg"].Value;
 
-                if (string.IsNullOrEmpty(errorMsg))
-                {
-                    mensaje_exito = "Artículo agregado a la factura exitosamente.";
-                }
-                else
-                {
-                    mensaje_error = $"Error al agregar el artículo: {errorMsg}";
-                }
+                mensaje_exito = "Artículo agregado a la factura exitosamente.";
+
                 conexionBD.cerrar();
             }
             catch (Exception ex)

@@ -36,7 +36,7 @@ namespace ERP.Pages.Empleado.Historico_Salario
                         HistoricoSalario.apellido2 = reader.GetString(4);
                         HistoricoSalario.puesto = reader.GetString(5);
                         HistoricoSalario.departamento = reader.GetString(6);
-                        HistoricoSalario.monto = reader.GetInt32(7).ToString();
+                        HistoricoSalario.monto = reader.GetDouble(7).ToString();
                         HistoricoSalario.fecha_inicio = reader.GetDateTime(8).ToString("yyyy-MM-dd");
                         HistoricoSalario.fecha_final = reader.GetDateTime(9).ToString("yyyy-MM-dd");
 

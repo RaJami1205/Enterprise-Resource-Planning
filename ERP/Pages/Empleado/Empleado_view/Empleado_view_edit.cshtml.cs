@@ -43,47 +43,47 @@ namespace ERP.Pages.Empleado.Empleado_view
                         Empleado.residencia = reader.GetString(6);
                         Empleado.fecha_ingreso = reader.GetDateTime(7).ToString("yyyy-MM-dd");
                         Empleado.departamento = reader.GetInt32(8).ToString();
-                        Empleado.permiso_vendedor = reader.GetString(9); 
-                        Empleado.numero_telefono = reader.GetInt32(10).ToString(); 
-                        Empleado.salario_actual = reader.GetDecimal(11).ToString("F2"); 
+                        Empleado.permiso_vendedor = reader.GetString(9);
+                        Empleado.numero_telefono = reader.GetInt32(10).ToString();
+                        Empleado.salario_actual = reader.GetDouble(11).ToString("F2");
                         Empleado.puesto = reader.GetInt32(12).ToString();
-
                     }
                 }
                 conexionBD.cerrar();
+
             }
-            catch (Exception ex) 
-            { 
+            catch (Exception ex)
+            {
                 mensaje_error = ex.Message;
                 conexionBD.cerrar();
             }
 
             conexionBD.abrir();
-            string sqlPuesto = "SELECT puesto_id FROM Puesto";
+            string sqlPuesto = "SELECT puesto FROM Puesto";
             SqlCommand command_puesto = conexionBD.obtenerComando(sqlPuesto);
             using (SqlDataReader reader = command_puesto.ExecuteReader())
             {
                 while (reader.Read())
                 {
-                    listaPuestos.Add("" + reader.GetInt32(0));
+                    listaPuestos.Add("" + reader.GetString(0));
                 }
             }
             conexionBD.cerrar();
 
             conexionBD.abrir();
-            string sqlDepartamento = "SELECT departamento_id FROM Departamento";
+            string sqlDepartamento = "SELECT nombre FROM Departamento";
             SqlCommand command_Departamento = conexionBD.obtenerComando(sqlDepartamento);
             using (SqlDataReader reader = command_Departamento.ExecuteReader())
             {
                 while (reader.Read())
                 {
-                    listaDepartamentos.Add("" + reader.GetInt32(0));
+                    listaDepartamentos.Add("" + reader.GetString(0));
                 }
             }
             conexionBD.cerrar();
         }
 
-        public void OnPost() 
+        public void OnPost()
         {
             Empleado.cedula = Request.Form["cedula"];
             Empleado.nombre = Request.Form["nombre"];

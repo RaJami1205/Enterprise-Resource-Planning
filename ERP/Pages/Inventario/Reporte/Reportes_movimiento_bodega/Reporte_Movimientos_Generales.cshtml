@@ -1,0 +1,287 @@
+﻿@page
+@model ERP.Pages.Inventario.Reporte.Reportes_movimiento_bodega.Reporte_Movimientos_GeneralesModel
+@{
+}
+
+<style>
+    /* Estilos permanecen iguales */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background: linear-gradient(130deg, #0074D9, #001f3f);
+        font-family: Calibri, sans-serif;
+        color: white;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    h2 {
+        font-size: 28px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+
+    label {
+        font-size: 18px;
+    }
+
+    input[type="number"] {
+        padding: 8px;
+        font-size: 16px;
+        border-radius: 4px;
+        border: none;
+        background-color: #24303c;
+        color: white;
+        width: 60px;
+        text-align: center;
+    }
+
+    button[type="submit"] {
+        padding: 10px 20px;
+        font-size: 16px;
+        color: white;
+        background-color: #0074D9;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        button[type="submit"]:hover {
+            background-color: #001f3f;
+        }
+
+    .error-message {
+        color: #ff6b6b;
+        text-align: center;
+        margin-top: 10px;
+        font-size: 18px;
+    }
+
+    .chart-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #24303c;
+        border-radius: 8px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+</style>
+
+<div class="container">
+    <h2>Reporte de Movimientos por Bodega</h2>
+
+    <form method="post">
+        <label for="Anno">Fecha Inicio:</label>
+        <input type="date" id="fecha_inicio" name="fecha_inicio" required  />
+
+        <label for="Anno">Fecha Fin:</label>
+        <input type="date" id="fecha_final" name="fecha_final" required />
+
+        <label for="filtro_movimiento">Seleccione el tipo de movimiento</label>
+        <a class="btn btn-primary btn-lg" href="/Inventario/Reporte/Reportes_movimiento_bodega/Reporte_Movimientos_Generales">General</a>
+        <a class="btn btn-primary btn-lg" href="/Inventario/Reporte/Reportes_movimiento_bodega/Reporte_Entradas">Entrada</a>
+        <a class="btn btn-primary btn-lg" href="/Inventario/Reporte/Reportes_movimiento_bodega/Reporte_Salidas">Salida</a>
+        <a class="btn btn-primary btn-lg" href="/Inventario/Reporte/Reportes_movimiento_bodega/Reporte_Movimientos">Movimiento</a>
+
+        <button type="submit">Generar Reporte</button>
+    </form>
+
+    @if (!string.IsNullOrEmpty(Model.mensajeError))
+    {
+        <div class="error-message">@Model.mensajeError</div>
+    }
+
+    <div class="chart-container">
+        <label for="filtro_movimiento">Cantidad de Entradas por Bodega</label>
+        <canvas id="EntradaChart" width="400" height="200"></canvas>
+    </div>
+
+    <div class="chart-container">
+        <label for="filtro_movimiento">Cantidad de Salidas por Bodega</label>
+        <canvas id="SalidaChart" width="400" height="200"></canvas>
+    </div>
+
+    <div class="chart-container">
+        <label for="filtro_movimiento">Cantidad de Movimientos por Bodega</label>
+        <canvas id="MovimientoChart" width="400" height="200"></canvas>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Verifica si hay suficientes datos para mostrar
+        console.log("Datos de los movimientos:", @Html.Raw(Json.Serialize(Model.listaMovimientos)));
+
+        var ctx_entrada = document.getElementById('EntradaChart').getContext('2d');
+        var chartData_entrada = {
+            labels: @Html.Raw(Json.Serialize(Model.listaMovimientos.Select(d => d.ubicacion_bodega))),
+            datasets: [{
+                label: 'Porcentaje de Entradas por Bodega',
+                data: @Html.Raw(Json.Serialize(Model.listaMovimientos.Select(d => d.cantidad_entrada))),
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(255, 206, 86, 0.6)',
+                    'rgba(75, 192, 192, 0.6)', 'rgba(153, 102, 255, 0.6)', 'rgba(255, 159, 64, 0.6)',
+                    'rgba(99, 255, 132, 0.6)', 'rgba(255, 0, 255, 0.6)', 'rgba(0, 255, 255, 0.6)',
+                    'rgba(128, 128, 0, 0.6)', 'rgba(255, 140, 0, 0.6)', 'rgba(0, 128, 128, 0.6)',
+                    'rgba(128, 0, 128, 0.6)', 'rgba(75, 0, 130, 0.6)', 'rgba(139, 0, 139, 0.6)',
+                    'rgba(255, 69, 0, 0.6)', 'rgba(255, 215, 0, 0.6)', 'rgba(0, 255, 127, 0.6)',
+                    'rgba(64, 224, 208, 0.6)', 'rgba(240, 128, 128, 0.6)', 'rgba(60, 179, 113, 0.6)',
+                    'rgba(176, 196, 222, 0.6)', 'rgba(123, 104, 238, 0.6)', 'rgba(0, 191, 255, 0.6)',
+                    'rgba(255, 20, 147, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)', 'rgba(255, 159, 64, 1)',
+                    'rgba(99, 255, 132, 1)', 'rgba(255, 0, 255, 1)', 'rgba(0, 255, 255, 1)',
+                    'rgba(128, 128, 0, 1)', 'rgba(255, 140, 0, 1)', 'rgba(0, 128, 128, 1)',
+                    'rgba(128, 0, 128, 1)', 'rgba(75, 0, 130, 1)', 'rgba(139, 0, 139, 1)',
+                    'rgba(255, 69, 0, 1)', 'rgba(255, 215, 0, 1)', 'rgba(0, 255, 127, 1)',
+                    'rgba(64, 224, 208, 1)', 'rgba(240, 128, 128, 1)', 'rgba(60, 179, 113, 1)',
+                    'rgba(176, 196, 222, 1)', 'rgba(123, 104, 238, 1)', 'rgba(0, 191, 255, 1)',
+                    'rgba(255, 20, 147, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        var ctx_salida = document.getElementById('SalidaChart').getContext('2d');
+        var chartData_salida = {
+            labels: @Html.Raw(Json.Serialize(Model.listaMovimientos.Select(d => d.ubicacion_bodega))),
+            datasets: [{
+                label: 'Porcentaje de Salidas por Bodega',
+                data: @Html.Raw(Json.Serialize(Model.listaMovimientos.Select(d => d.cantidad_salida))),
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(255, 206, 86, 0.6)',
+                    'rgba(75, 192, 192, 0.6)', 'rgba(153, 102, 255, 0.6)', 'rgba(255, 159, 64, 0.6)',
+                    'rgba(99, 255, 132, 0.6)', 'rgba(255, 0, 255, 0.6)', 'rgba(0, 255, 255, 0.6)',
+                    'rgba(128, 128, 0, 0.6)', 'rgba(255, 140, 0, 0.6)', 'rgba(0, 128, 128, 0.6)',
+                    'rgba(128, 0, 128, 0.6)', 'rgba(75, 0, 130, 0.6)', 'rgba(139, 0, 139, 0.6)',
+                    'rgba(255, 69, 0, 0.6)', 'rgba(255, 215, 0, 0.6)', 'rgba(0, 255, 127, 0.6)',
+                    'rgba(64, 224, 208, 0.6)', 'rgba(240, 128, 128, 0.6)', 'rgba(60, 179, 113, 0.6)',
+                    'rgba(176, 196, 222, 0.6)', 'rgba(123, 104, 238, 0.6)', 'rgba(0, 191, 255, 0.6)',
+                    'rgba(255, 20, 147, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)', 'rgba(255, 159, 64, 1)',
+                    'rgba(99, 255, 132, 1)', 'rgba(255, 0, 255, 1)', 'rgba(0, 255, 255, 1)',
+                    'rgba(128, 128, 0, 1)', 'rgba(255, 140, 0, 1)', 'rgba(0, 128, 128, 1)',
+                    'rgba(128, 0, 128, 1)', 'rgba(75, 0, 130, 1)', 'rgba(139, 0, 139, 1)',
+                    'rgba(255, 69, 0, 1)', 'rgba(255, 215, 0, 1)', 'rgba(0, 255, 127, 1)',
+                    'rgba(64, 224, 208, 1)', 'rgba(240, 128, 128, 1)', 'rgba(60, 179, 113, 1)',
+                    'rgba(176, 196, 222, 1)', 'rgba(123, 104, 238, 1)', 'rgba(0, 191, 255, 1)',
+                    'rgba(255, 20, 147, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        var ctx_movimiento = document.getElementById('MovimientoChart').getContext('2d');
+        var chartData_movimiento = {
+            labels: @Html.Raw(Json.Serialize(Model.listaMovimientos.Select(d => d.ubicacion_bodega))),
+            datasets: [{
+                label: 'Porcentaje de Movimientos por Bodega',
+                data: @Html.Raw(Json.Serialize(Model.listaMovimientos.Select(d => d.cantidad_movimiento))),
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(255, 206, 86, 0.6)',
+                    'rgba(75, 192, 192, 0.6)', 'rgba(153, 102, 255, 0.6)', 'rgba(255, 159, 64, 0.6)',
+                    'rgba(99, 255, 132, 0.6)', 'rgba(255, 0, 255, 0.6)', 'rgba(0, 255, 255, 0.6)',
+                    'rgba(128, 128, 0, 0.6)', 'rgba(255, 140, 0, 0.6)', 'rgba(0, 128, 128, 0.6)',
+                    'rgba(128, 0, 128, 0.6)', 'rgba(75, 0, 130, 0.6)', 'rgba(139, 0, 139, 0.6)',
+                    'rgba(255, 69, 0, 0.6)', 'rgba(255, 215, 0, 0.6)', 'rgba(0, 255, 127, 0.6)',
+                    'rgba(64, 224, 208, 0.6)', 'rgba(240, 128, 128, 0.6)', 'rgba(60, 179, 113, 0.6)',
+                    'rgba(176, 196, 222, 0.6)', 'rgba(123, 104, 238, 0.6)', 'rgba(0, 191, 255, 0.6)',
+                    'rgba(255, 20, 147, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)', 'rgba(255, 159, 64, 1)',
+                    'rgba(99, 255, 132, 1)', 'rgba(255, 0, 255, 1)', 'rgba(0, 255, 255, 1)',
+                    'rgba(128, 128, 0, 1)', 'rgba(255, 140, 0, 1)', 'rgba(0, 128, 128, 1)',
+                    'rgba(128, 0, 128, 1)', 'rgba(75, 0, 130, 1)', 'rgba(139, 0, 139, 1)',
+                    'rgba(255, 69, 0, 1)', 'rgba(255, 215, 0, 1)', 'rgba(0, 255, 127, 1)',
+                    'rgba(64, 224, 208, 1)', 'rgba(240, 128, 128, 1)', 'rgba(60, 179, 113, 1)',
+                    'rgba(176, 196, 222, 1)', 'rgba(123, 104, 238, 1)', 'rgba(0, 191, 255, 1)',
+                    'rgba(255, 20, 147, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        var EntradaChart = new Chart(ctx_entrada, {
+            type: 'pie',
+            data: chartData_entrada,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            color: 'white'
+                        }
+                    },
+                    tooltip: {
+                        enabled: true
+                    }
+                }
+            }
+        });
+
+        var SalidaChart = new Chart(ctx_salida, {
+            type: 'pie',
+            data: chartData_salida,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            color: 'white'
+                        }
+                    },
+                    tooltip: {
+                        enabled: true
+                    }
+                }
+            }
+        });
+
+        var MovimientoChart = new Chart(ctx_movimiento, {
+            type: 'pie',
+            data: chartData_movimiento,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            color: 'white'
+                        }
+                    },
+                    tooltip: {
+                        enabled: true
+                    }
+                }
+            }
+        });
+    </script>
+}

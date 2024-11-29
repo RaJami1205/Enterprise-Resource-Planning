@@ -93,20 +93,13 @@ namespace ERP.Pages.Cotizacion.CotizacionArticulo
 
                 // Capturar el mensaje de error, si existe
                 string errorMsg = (string)command.Parameters["@ErrorMsg"].Value;
+                mensaje_exito = "Cotización registrada exitosamente.";
 
-                if (string.IsNullOrEmpty(errorMsg))
-                {
-                    mensaje_exito = "Artículo agregado a la cotización exitosamente.";
-                }
-                else
-                {
-                    mensaje_error = $"Error al agregar el artículo: {errorMsg}";
-                }
                 conexionBD.cerrar();
             }
             catch (Exception ex)
             {
-                mensaje_error = ex.Message;
+                mensaje_error = $"Error al registrar el articulo de cotización";
                 conexionBD.cerrar();
             }
 

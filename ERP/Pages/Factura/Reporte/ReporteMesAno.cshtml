@@ -1,0 +1,131 @@
+﻿@page
+@model ERP.Pages.Factura.Reporte.ReporteMesAnoModel
+@{
+}
+
+<style>
+    body {
+        background: linear-gradient(130deg, #0074D9, #001f3f);
+        font-family: Calibri, sans-serif;
+        color: white;
+    }
+
+    h2 {
+        text-align: center;
+        font-size: 28px;
+        margin-bottom: 20px;
+        color: #ffffff;
+    }
+
+    form {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    label {
+        font-size: 18px;
+        color: #ffffff;
+    }
+
+    input[type="date"] {
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 4px;
+        border: none;
+        background-color: #ffffff;
+        color: #24303c;
+    }
+
+    button[type="submit"] {
+        padding: 10px 20px;
+        font-size: 16px;
+        color: white;
+        background-color: #0074D9;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        button[type="submit"]:hover {
+            background-color: #001f3f;
+        }
+
+    .error-message {
+        color: #ff6b6b;
+        text-align: center;
+        font-size: 18px;
+        margin-top: 10px;
+    }
+
+    .chart-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #24303c;
+        border-radius: 8px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+</style>
+
+<div class="container">
+    <h2>Reporte Ventas y Cotizaciones por Mes y Año</h2>
+
+    @if (!string.IsNullOrEmpty(Model.mensajeError))
+    {
+        <div class="error-message">@Model.mensajeError</div>
+    }
+
+    <div class="chart-container">
+        <canvas id="comparativoChart" width="800" height="400"></canvas>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('comparativoChart').getContext('2d');
+        var chartData = {
+            labels: @Html.Raw(Json.Serialize(Model.CotizacionesVentasData.Select(d => d.Mes.ToString() + '-' + d.Año.ToString()))),
+            datasets: [
+                {
+                    label: 'Ventas',
+                    data: @Html.Raw(Json.Serialize(Model.CotizacionesVentasData.Select(d => d.CantidadVentas))),
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Cotizaciones',
+                    data: @Html.Raw(Json.Serialize(Model.CotizacionesVentasData.Select(d => d.CantidadCotizaciones))),
+                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }
+            ]
+        };
+        var comparativoChart = new Chart(ctx, {
+            type: 'bar',
+            data: chartData,
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: 'white' }
+                    },
+                    x: {
+                        ticks: { color: 'white' }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: { color: 'white' }
+                    }
+                }
+            }
+        });
+    </script>
+}

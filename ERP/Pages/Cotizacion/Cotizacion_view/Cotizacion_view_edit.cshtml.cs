@@ -197,15 +197,7 @@ namespace ERP.Pages.Cotizacion.Cotizacion_view
 
                 // Capturar el mensaje de error, si existe
                 string errorMsg = (string)command.Parameters["@ErrorMsg"].Value;
-
-                if (string.IsNullOrEmpty(errorMsg))
-                {
-                    mensaje_exito = "Cotización registrada exitosamente.";
-                }
-                else
-                {
-                    mensaje_error = $"Error al registrar la cotización: {errorMsg}";
-                }
+                mensaje_exito = "Cotización registrada exitosamente.";
 
                 conexionBD.cerrar();
             }
