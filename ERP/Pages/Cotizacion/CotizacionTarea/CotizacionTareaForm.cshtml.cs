@@ -70,20 +70,13 @@ namespace ERP.Pages.Cotizacion.CotizacionTarea
                 // Capturar el mensaje de error, si existe
                 string errorMsg = (string)command.Parameters["@ErrorMsg"].Value;
 
-                if (string.IsNullOrEmpty(errorMsg))
-                {
-                    mensaje_exito = "Tarea registrada exitosamente.";
-                }
-                else
-                {
-                    mensaje_error = $"Error al registrar la tarea: {errorMsg}";
-                }
+                mensaje_exito = "Cotización registrada exitosamente.";
 
                 conexionBD.cerrar();
             }
             catch (Exception ex)
             {
-                mensaje_error = ex.Message;
+                mensaje_error = $"Error al registrar la cotización";
                 conexionBD.cerrar();
             }
 

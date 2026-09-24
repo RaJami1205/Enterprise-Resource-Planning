@@ -2,37 +2,38 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Data.SqlClient;
 using System.Data;
+using System.Reflection.Metadata;
 
 namespace ERP.Pages.Inventario.Entrada
 {
     public class Entrada_formModel : PageModel
     {
-        public EntradaInfo Entrada { get; set; } = new EntradaInfo(); // Lista que guarda toda la información de los requests
-        public Conexion conexionBD = new Conexion(); // Instancia de la clase Conexion para manejar la conexión a la base de datos
+        public EntradaInfo Entrada { get; set; } = new EntradaInfo(); // Lista que guarda toda la informaciÃ³n de los requests
+        public Conexion conexionBD = new Conexion(); // Instancia de la clase Conexion para manejar la conexiÃ³n a la base de datos
         public List<string> listaBodegas { get; set; } = new List<string>();
         public List<string> listaEmpleados { get; set; } = new List<string>();
         public List<string> listaArticulos { get; set; } = new List<string>();
         public List<string> listaArticulosEnBodega { get; set; } = new List<string>();
         public List<string> listaCodigosFamilias { get; set; } = new List<string>();
         public string mensaje_error = ""; // Variable para almacenar mensajes de error
-        public string mensaje_exito = ""; // Variable para almacenar mensajes de éxito
+        public string mensaje_exito = ""; // Variable para almacenar mensajes de Ã©xito
 
         /// <summary>
-        /// Método que se ejecuta cuando se ingresa al formulario (GET request).
-        /// Objetivo: Extraer los datos de los códigos de bodegas y artículos y la cédulas de los empleados y manejar errores.
+        /// MÃ©todo que se ejecuta cuando se ingresa al formulario (GET request).
+        /// Objetivo: Extraer los datos de los cÃ³digos de bodegas y artÃ­culos y la cÃ©dulas de los empleados y manejar errores.
         /// Entradas: Ninguna.
-        /// Salidas: Mensaje de éxito o mensaje de error.
+        /// Salidas: Mensaje de Ã©xito o mensaje de error.
         /// </summary>
         public void OnGet()
         {
             conexionBD.abrir();
-            string sqlBodega = "SELECT codigo_bodega FROM Bodega";
+            string sqlBodega = "SELECT ubicacion FROM Bodega";
             SqlCommand command_bodega = conexionBD.obtenerComando(sqlBodega);
             using (SqlDataReader reader = command_bodega.ExecuteReader())
             {
                 while (reader.Read())
                 {
-                    listaBodegas.Add("" + reader.GetInt32(0));
+                    listaBodegas.Add("" + reader.GetString(0));
                 }
             }
             conexionBD.cerrar();
@@ -50,32 +51,59 @@ namespace ERP.Pages.Inventario.Entrada
             conexionBD.cerrar();
 
             conexionBD.abrir();
-            string sqlArticulo = "SELECT codigo FROM Articulo";
+            string sqlArticulo = "SELECT nombre FROM Articulo";
             SqlCommand command_articulo = conexionBD.obtenerComando(sqlArticulo);
             using (SqlDataReader reader = command_articulo.ExecuteReader())
             {
                 while (reader.Read())
                 {
-                    listaArticulos.Add("" + reader.GetInt32(0));
+                    listaArticulos.Add("" + reader.GetString(0));
                 }
             }
             conexionBD.cerrar();
         }
 
         /// <summary>
-        /// Método que se ejecuta cuando se envía el formulario (POST request).
+        /// MÃ©todo que se ejecuta cuando se envÃ­a el formulario (POST request).
         /// Objetivo: Recibir los datos del formulario de entrada, insertarlos en la base de datos y manejar errores.
         /// Entradas: Datos del formulario (fecha_hora, cedula_empleado, bodega_destino, codigo_articulo, cantidad).
-        /// Salidas: Mensaje de éxito o mensaje de error.
-        /// Restricciones: Todos los campos deben estar debidamente validados antes de enviarse y debe preservarse la integridad entre los artículos y las bodegas.
+        /// Salidas: Mensaje de Ã©xito o mensaje de error.
+        /// Restricciones: Todos los campos deben estar debidamente validados antes de enviarse y debe preservarse la integridad entre los artÃ­culos y las bodegas.
         /// </summary>
         public void OnPost()
         {
+            string ubicacion_bodega = Request.Form["bodega_destino"];
+            string nombre_articulo = Request.Form["codigo_articulo"];
+
+            conexionBD.abrir();
+            String sqlAsignarCodigoBodega = "SELECT codigo_bodega FROM Bodega WHERE ubicacion = @ubicacion_bodega";
+            SqlCommand command_bodega = conexionBD.obtenerComando(sqlAsignarCodigoBodega);
+            command_bodega.Parameters.AddWithValue("@ubicacion_bodega", ubicacion_bodega);
+            using (SqlDataReader reader = command_bodega.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    Entrada.codigo_bodega = reader.GetInt32(0).ToString();
+                }
+            }
+            conexionBD.cerrar();
+
+            conexionBD.abrir();
+            String sqlAsignarCodigoArticulo = "SELECT codigo FROM Articulo WHERE nombre = @nombre_articulo";
+            SqlCommand command_articulo = conexionBD.obtenerComando(sqlAsignarCodigoArticulo);
+            command_articulo.Parameters.AddWithValue("@nombre_articulo", nombre_articulo);
+            using (SqlDataReader reader = command_articulo.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    Entrada.codigo_articulo = reader.GetInt32(0).ToString();
+                }
+            }
+            conexionBD.cerrar();
+
             Entrada.id = Request.Form["id"];
             Entrada.fecha_hora = Request.Form["fecha_hora"];
             Entrada.cedula_administrador = Request.Form["cedula_empleado"];
-            Entrada.codigo_bodega = Request.Form["bodega_destino"];
-            Entrada.codigo_articulo = Request.Form["codigo_articulo"];
             Entrada.cantidad = Request.Form["cantidad"];
             string codigo_familia_articulo = "";
             int capacidad_bodega = 0;
@@ -170,7 +198,7 @@ namespace ERP.Pages.Inventario.Entrada
 
             if (!check_codigo_familia)
             {
-                mensaje_error = "Error: El artículo no coincide con ninguna familia de la bodega";
+                mensaje_error = "Error: El artÃ­culo no coincide con ninguna familia de la bodega";
                 conexionBD.cerrar();
                 OnGet();
                 return;
@@ -241,6 +269,7 @@ namespace ERP.Pages.Inventario.Entrada
                 conexionBD.cerrar();
 
                 if (!validar_existencia_articulo) 
+
                 {
                     conexionBD.abrir();
                     string query_8 = "InsertarBodegaArticulo";

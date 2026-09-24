@@ -1,0 +1,146 @@
+﻿@page
+@model ERP.Pages.Factura.Reporte.ReporteZonaModel
+@{
+    ViewData["Title"] = "Reporte de Ventas por Zona";
+}
+
+<style>
+    .reporte-container {
+        background: linear-gradient(130deg, #0074D9, #001f3f);
+        font-family: Calibri, sans-serif;
+        color: white;
+        padding: 20px;
+    }
+
+    .reporte-container .container {
+        width: 80%;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #24303c;
+        border-radius: 8px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .reporte-container h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .reporte-container form {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .reporte-container input[type="date"] {
+        padding: 8px;
+        font-size: 16px;
+        border-radius: 4px;
+        border: none;
+        background-color: #ffffff;
+        color: #24303c;
+    }
+
+    .reporte-container button {
+        padding: 10px 15px;
+        font-size: 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        background-color: #0074D9;
+        color: white;
+        transition: background-color 0.3s ease;
+    }
+
+    .reporte-container button:hover {
+        background-color: #001f3f;
+    }
+
+    .reporte-container .error-message {
+        color: #ff6b6b;
+        text-align: center;
+        font-size: 18px;
+        margin-top: 10px;
+    }
+
+    .reporte-container .chart-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #24303c;
+        border-radius: 8px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+</style>
+
+<div class="reporte-container">
+    <div class="container">
+        <h2>Reporte de Ventas por Zona</h2>
+
+        <form method="post">
+            <label for="FechaInicio">Fecha Inicio:</label>
+            <input type="date" id="FechaInicio" name="FechaInicio" required />
+
+            <label for="FechaFin">Fecha Fin:</label>
+            <input type="date" id="FechaFin" name="FechaFin" required />
+
+            <button type="submit">Generar Reporte</button>
+        </form>
+
+        @if (!string.IsNullOrEmpty(Model.mensajeError))
+        {
+            <div class="error-message">@Model.mensajeError</div>
+        }
+        <div class="chart-container">
+            <canvas id="zonaChart" width="400" height="200"></canvas>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('zonaChart').getContext('2d');
+        var chartData = {
+            labels: @Html.Raw(Json.Serialize(Model.ZonaVentaData.Select(d => d.Zona))),
+            datasets: [{
+                label: 'Monto Total por Zona',
+                data: @Html.Raw(Json.Serialize(Model.ZonaVentaData.Select(d => d.MontoTotal))),
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(255, 206, 86, 0.6)',
+                    'rgba(75, 192, 192, 0.6)', 'rgba(153, 102, 255, 0.6)', 'rgba(255, 159, 64, 0.6)',
+                    'rgba(99, 255, 132, 0.6)', 'rgba(255, 0, 255, 0.6)', 'rgba(0, 255, 255, 0.6)',
+                    'rgba(128, 128, 0, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)', 'rgba(255, 159, 64, 1)',
+                    'rgba(99, 255, 132, 1)', 'rgba(255, 0, 255, 1)', 'rgba(0, 255, 255, 1)',
+                    'rgba(128, 128, 0, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
+        var zonaChart = new Chart(ctx, {
+            type: 'pie',
+            data: chartData,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            color: 'white'
+                        }
+                    },
+                    tooltip: {
+                        enabled: true
+                    }
+                }
+            }
+        });
+    </script>
+}

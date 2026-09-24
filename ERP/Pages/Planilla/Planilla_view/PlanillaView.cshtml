@@ -2,3 +2,31 @@
 @model ERP.Pages.Planilla.Planilla_view.PlanillaViewModel
 @{
 }
+
+<h1>Vista de Planillas Mensuales</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Año</th>
+            <th>Mes</th>
+            <th>Cantidad de Salarios</th>
+            <th>Total Pago</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var planilla in Model.ListaPlanillas)
+        {
+            <tr>
+                <td>@planilla.Año</td>
+                <td>@planilla.Mes</td>
+                <td>@planilla.CantidadSalarios</td>
+                <td>@planilla.TotalPago</td>
+                <td>
+                    <a class="btn btn-primary btn-sm" href="/Planilla/DetallesPlanilla/?mes=@planilla.Mes&anno=@planilla.Año">Ver detalles</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

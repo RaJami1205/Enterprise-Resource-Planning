@@ -72,7 +72,7 @@ namespace ERP.Pages.Planilla.Planilla_view
                     // Agregar parámetros al procedimiento almacenado
                     command.Parameters.AddWithValue("@anno", anno);
                     command.Parameters.AddWithValue("@mes", mes);
-                    command.Parameters.AddWithValue("@pago", "0.00"); // El pago se calculará en el SP
+                    command.Parameters.AddWithValue("@pago", empleado.salario_actual); // El pago se calculará en el SP
                     command.Parameters.AddWithValue("@cantidad_horas", empleado.horas);
                     command.Parameters.AddWithValue("@cedula_empleado", empleado.cedula);
                     command.Parameters.Add(errorParameter);
@@ -82,20 +82,19 @@ namespace ERP.Pages.Planilla.Planilla_view
 
                     // Capturar el mensaje de error, si existe
                     string errorMsg = (string)command.Parameters["@ErrorMsg"].Value;
-
-                    if (string.IsNullOrEmpty(errorMsg))
-                    {
-                        mensaje_exito = "Planilla registrada exitosamente.";
-                    }
-
-                    conexionBD.cerrar();
                 }
                 catch (Exception ex)
                 {
-                    mensaje_error = ex.Message;
+                    mensaje_error = $"Error al registrar la planilla";
                     conexionBD.cerrar();
                 }
+
             }
+            mensaje_exito = "Planilla registrada exitosamente.";
+
+            conexionBD.cerrar();
+            
+            OnGet();
         }
     }
 

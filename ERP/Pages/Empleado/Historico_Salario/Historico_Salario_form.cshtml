@@ -31,7 +31,7 @@
 
             <input class="controls" type="date" name="fecha_final" id="fecha_final" required value="@Model.HistoricoSalario.fecha_final">
 
-            <input class="controls" type="number" name="monto" id="monto" placeholder="Ingrese el monto del salario mensual" required value="@Model.HistoricoSalario.monto">
+            <input class="controls" type="number" step="0.01" name="monto" id="monto" placeholder="Ingrese el monto del salario mensual" required value="@Model.HistoricoSalario.monto">
 
             <!-- Agregar el combobox para seleccionar la cedula del empleado -->
             <select class="controls" name="cedula" id="cedula" required value="@Model.HistoricoSalario.cedula">

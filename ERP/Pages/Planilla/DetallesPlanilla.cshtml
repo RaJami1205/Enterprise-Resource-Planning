@@ -1,0 +1,27 @@
+﻿@page
+@model ERP.Pages.Planilla.DetallesPlanillaModel
+@{
+    ViewData["Title"] = "Detalles de Planilla Mensual";
+}
+
+<h2>Detalles de Planilla</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Cédula Empleado</th>
+            <th>Cantidad de Horas</th>
+            <th>Pago</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var detalle in Model.DetalleSalarios)
+        {
+            <tr>
+                <td>@detalle.CedulaEmpleado</td>
+                <td>@detalle.CantidadHoras</td>
+                <td>@detalle.Pago</td>
+            </tr>
+        }
+    </tbody>
+</table>
